@@ -44,6 +44,9 @@ captures/
 .idea/caches
 .idea
 
+# Archivos DS_store
+.ds_store
+
 # Keystore files
 # Uncomment the following line if you do not want to check your keystore files in.
 #*.jks
