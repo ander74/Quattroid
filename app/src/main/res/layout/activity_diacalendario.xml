@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+style="@style/vertical"
+android:layout_height="match_parent"
+android:background="#ffe0ebff"
+android:padding="5dp">
+
+<!-- LAYOUT PARA RECIBIR EL FOCO -->
+<LinearLayout
+    android:id="@+id/ly_focus"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" />
+
+<!-- INCIDENCIA -->
+<TextView
+    android:id="@+id/tv_incidencia"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignBottom="@+id/bt_nuevo_servicio"
+    android:layout_alignParentLeft="true"
+    android:layout_alignTop="@+id/bt_nuevo_servicio"
+    android:background="@drawable/bt_incidencia"
+    android:clickable="true"
+    android:gravity="center"
+    android:onClick="botonPulsado"
+    android:padding="8dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginRight="4dp"
+    android:text="Incidencia Desconocida"
+    android:textSize="18sp"
+    android:textStyle="bold" />
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginRight="5dp"
+    android:background="#000000" />
+
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/principal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffe0ebff"
+        android:orientation="vertical">
+
+        <!-- SUSTI -->
+        <LinearLayout
+            android:id="@+id/ly_susti"
+            style="@style/horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_susti"
+                    style="@style/text_view"
+                    android:text="Compañero/a" />
+
+                <EditText
+                    android:id="@+id/et_matricula_susti"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:hint="Matrícula"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_apellidos_susti"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="2">
+
+                <TextView style="@style/text_view" />
+
+                <EditText
+                    android:id="@+id/et_apellidos_susti"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:hint="Apellidos"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/et_linea"
+                    android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- HUELGA -->
+        <LinearLayout
+            android:id="@+id/ly_huelga"
+            style="@style/vertical">
+
+                <TextView
+                    android:id="@+id/tv_huelga"
+                    style="@style/text_view"
+                    android:text="Huelga" />
+
+                <LinearLayout
+                    style="@style/horizontal"
+                    android:layout_width="match_parent">
+
+                <CheckBox
+                    android:id="@+id/cb_huelga"
+                    style="@style/text_view"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:text="Huelga parcial (por horas)" />
+
+                <EditText
+                    android:id="@+id/et_huelga"
+                    style="@style/edit_text"
+                    android:gravity="center"
+                    android:hint="Horas de paro"
+                    android:nextFocusDown="@+id/et_linea"
+                    android:inputType="numberDecimal"
+                    android:text="" />
+
+
+                </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <!-- LINEA - SERVICIO - TURNO -->
+        <LinearLayout
+            android:id="@+id/ly_linea"
+            style="@style/horizontal">
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_linea"
+                    style="@style/text_view"
+                    android:text="Línea" />
+
+                <EditText
+                    android:id="@+id/et_linea"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:nextFocusDown="@+id/et_servicio"
+                    android:text="">
+
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_servicio"
+                    style="@style/text_view"
+                    android:text="Servicio" />
+
+                <EditText
+                    android:id="@+id/et_servicio"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:nextFocusDown="@+id/et_turno"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_turno"
+                    style="@style/text_view"
+                    android:text="Turno" />
+
+                <EditText
+                    android:id="@+id/et_turno"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:nextFocusDown="@+id/et_texto_linea"
+                    android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- TEXTO LINEA -->
+        <EditText
+            android:id="@+id/et_texto_linea"
+            style="@style/edit_text"
+            android:layout_width="match_parent"
+            android:nextFocusDown="@+id/et_inicio"
+            android:inputType="textCapWords"
+            android:hint="Texto de línea"
+            android:text="" />
+
+        <!-- INICIO  -->
+        <LinearLayout
+            style="@style/horizontal">
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/text_view"
+                    android:text="Inicio" />
+
+                <EditText
+                    android:id="@+id/et_inicio"
+                    style="@style/edit_text"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:layout_width="match_parent"
+                    android:nextFocusDown="@+id/et_lugarInicio"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="2">
+
+                <TextView
+                    style="@style/text_view"
+                    android:text="Lugar de inicio" />
+
+                <EditText
+                    android:id="@+id/et_lugarInicio"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/et_final"
+                    android:text="" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- FINAL  -->
+        <LinearLayout
+            style="@style/horizontal">
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/text_view"
+                    android:text="Final" />
+
+                <EditText
+                    android:id="@+id/et_final"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_lugarFinal"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="2">
+
+                <TextView
+                    android:id="@+id/tv_final"
+                    style="@style/text_view"
+                    android:text="Lugar de finalización" />
+
+                <EditText
+                    android:id="@+id/et_lugarFinal"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/et_bus"
+                    android:text="" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- BUS Y DEMAS -->
+        <LinearLayout
+        android:weightSum="3"
+        style="@style/horizontal">
+
+            <!-- BUS -->
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+            <TextView
+                style="@style/text_view"
+                android:text="Bus" />
+
+            <EditText
+                android:id="@+id/et_bus"
+                style="@style/edit_text"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:nextFocusDown="@+id/et_tomaDeje"
+                android:text="" />
+
+            </LinearLayout>
+
+            <!-- TOMA Y DEJE -->
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/text_view"
+                    android:text="Toma y Deje" />
+
+                <EditText
+                    android:id="@+id/et_tomaDeje"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_euros"
+                    android:text="" />
+
+            </LinearLayout>
+
+            <!-- EUROS -->
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/text_view"
+                    android:text="€/Serv." />
+
+                <EditText
+                    android:id="@+id/et_euros"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_matricula_relevo"
+                    android:text="" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- RELEVO -->
+        <LinearLayout
+            android:id="@+id/ly_relevo"
+            style="@style/horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_relevo"
+                    style="@style/text_view"
+                    android:text="Relevo" />
+
+                <EditText
+                    android:id="@+id/et_matricula_relevo"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:hint="Matrícula"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_apellidos_relevo"
+                    android:text="" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/vertical"
+                android:layout_width="0dp"
+                android:layout_weight="2">
+
+                <TextView style="@style/text_view" />
+
+                <EditText
+                    android:id="@+id/et_apellidos_relevo"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:hint="Apellidos"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/et_notas"
+                    android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- CALCULO DE HORAS -->
+        <LinearLayout
+            android:id="@+id/ly_horas"
+            style="@style/horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/tv_trabajadas"
+                style="@style/text_view"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:background="@drawable/fondo_horas_dia"
+                android:gravity="center_horizontal"
+                android:text="Trab. : 0,00"
+                android:textColor="#ff000000" />
+
+            <TextView
+                android:id="@+id/tv_acumuladas"
+                style="@style/text_view"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:longClickable="true"
+                android:padding="5dp"
+                android:background="@drawable/fondo_horas_dia"
+                android:gravity="center_horizontal"
+                android:text="Acum. : 0,00"
+                android:textColor="#ffff0003" />
+
+            <TextView
+                android:id="@+id/tv_nocturnas"
+                style="@style/text_view"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:padding="5dp"
+                android:background="@drawable/fondo_horas_dia"
+                android:text="Noct. : 0,00"
+                android:textColor="#ff3432ff" />
+
+        </LinearLayout>
+
+        <!-- SERVICIOS COMPLEMENTARIOS -->
+        <LinearLayout
+            android:id="@+id/ly_auxiliares"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_complementarios"
+                style="@style/text_view"
+                android:text="Servicios Complementarios" />
+
+            <!-- TABLA CON LOS ENCABEZADOS -->
+            <ListView
+                android:id="@+id/listaAuxiliares"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="-1dp"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+        <!-- NOTAS -->
+        <TextView
+            android:id="@+id/tv_notas"
+            style="@style/text_view"
+            android:text="Notas" />
+
+        <EditText
+            android:id="@+id/et_notas"
+            style="@style/edit_text_multilinea"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minLines="8" />
+
+    </LinearLayout>
+
+</ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,265 @@
+
+Quattroid
+=========
+
+    Beta 1
+    ======
+
+    Versión inicial lanzada el 26-12-2014.
+
+
+    Beta 2
+    ======
+
+    Al mostrar la lista de relevos, aparece la deuda de cada relevo en lugar del teléfono.
+
+    En el menú principal se cambia "Relevos" por "Compañeros".
+
+    Se añade la Jornada mínima a las opciones y se utiliza en los cálculos.
+
+
+    Beta 3
+    ======
+
+    Se admite 01 y 02 como turnos válidos, pero se establecen en 1 y 2 tras escribirlos.
+
+    En la pantalla de las horas ajenas, ahora se muestran agrupadas por días.
+
+    Las opciones Jornada Media y Jornada Mínima pasan de ser int con los minutos a tener valores
+    long con los bits del double que contiene las horas, por lo que pasan a ser doubles. De esta
+    manera, se facilita los calculos con porcentajes de jornada menores a 100.
+
+    Se añade la función de crear y restaurar una copia de seguridad. Esta función no hace copia
+    de los ajustes.
+
+
+    R.C. 1
+    ======
+
+    Se corrige un fallo al repetir el día anterior seleccionando 0 en la lista de incidencias.
+    Este fallo consiste en que si el día anterior contenía servicios complementarios, estos
+    servicios no se repetían en el día actual.
+
+    Se añade la opción de mostrar el mes actual, la cual hace que al iniciarse el calendario se
+    muestre el mes actual o el mes que se mostraba la última vez que se cerró.
+
+    En la pantalla de edición de un día, la incidencia adquiere la apariencia de un botón para
+    que sea más intuitivo que para cambiarla hay que pulsarlo.
+
+    Se añaden textos descriptivos a algunos campos de edición.
+
+    Se corrige un error que provocaba que en algunos dispositivos se vieran de color negro algunas
+    o todas las partes de las tablas.
+
+    Se corrige un error en el que al poner una incidencia que borra los datos, los servicios
+    complementarios, aunque son borrados, su tabla no se actualiza.
+
+
+    R.C. 2
+    ======
+
+    Se añade la opción de buscar por el número de autobus.
+
+    En la vista de día, se permite editar las horas trabajadas, acumuladas y nocturnas para
+    modificar voluntariamente sus valores.
+
+
+    Version 1.0 Final
+    =================
+
+    La versión final se denominará Quattroid 1.0 y su versión interna será la 10. Todas las betas
+    y las RCs están entre la 1 y la 5 (equivalentes de 0.1 a 0.5).
+
+    Al hacer una copia de seguridad o restaurarla, también se guardan o restauran los ajustes.
+
+    Se corrige un error que no permitia modificar la descripción de la línea individualmente.
+
+    Ahora se pueden añadir los lugares de inicio y finalización del servicio.
+
+    Se añade un icono al calendario que indica si se han escrito anotaciones en un día.
+
+    Ahora se puede introducir el tiempo de "Toma y deje", el cuál podrá ser sumado al acumulador o computado
+    individualmente. Este comportamiento se decide en una opción nueva en los ajustes.
+
+    Se ha añadido un campo llamado "Euros por servicio" en el que se puede introducir una cantidad de dinero que
+    te pueda corresponder, por ejemplo, por el "Toma y deje".
+
+    En las estadísticas, tanto del mes o del año, se añaden los campos de "Toma y deje" y "Euros por servicio".
+
+    Si la opción de sumar el "Toma y deje" está activada, las horas acumuladas de las estadísticas reflejarán todas
+    las horas (incluidas las del "Toma y deje").
+
+    Ahora, tocando sobre los contadores del calendario (acumuladas y nocturnas), éstos alternan entre el valor
+    inicial y el "Toma y deje" y los "Euros por servicio" respectivamente.
+
+
+    Version 1.1
+    ===========
+
+    Se corrige un error que provocaba que la jornada media y mínima no podían cambiarse.
+
+    Se añade la opción de iniciar directamente en el calendario.
+
+    Se reorganizan levemente los ajustes.
+
+    Se añade una opción en el calendario (menu contextual) para guardar el servicio.
+
+    Se corrige un error que no modificaba la jornada media para algunos aspectos del programa.
+
+    Se añaden las dietas a las estadísticas.
+
+    Se añaden los sábados trabajados y los domingos trabajados a las estadisticas.
+
+    Se añaden las horas trabajadas y acumuladas en días a las estadísticas.
+
+    Se añade la opción de ver las estadisticas anuales comenzando en un mes en concreto.
+
+    Se modifica el aspecto de las estadisticas, agrupandolas por categorías.
+
+    Se afinan las líneas de las tablas poniendo su margen inferior o derecho a -1.
+
+
+    Versión 1.2
+    ===========
+
+    Se permite modificar el texto de las incidencias protegidas. Si se cambia, todos los días que tienen la
+    incidencia serán actualizados al nuevo texto.
+
+    El menú contextual del calendario, mostrará el texto de la incidencia Franqueo si éste es modificado.
+
+    Se añade el botón Incidencias en el menú "Herramientas" que permite editar, crear y borrar incidencias sin tener
+    que pasar por el calendario.
+
+    Se resuelve el problema con la reutilizacion de los views en las busquedas.
+
+    Se corrige un problema que calculaba mal las horas nocturnas en ciertas ocasiones.
+
+    Se corrige un problema que marcaba las horas acumuladas como -0,00 cuando eran 0.
+
+
+    Versión 1.3
+    ===========
+
+    En las estadísticas, en el apartado Franqueos, ahora aparece el nombre que se le haya dado, en caso de haber
+    cambiado el texto de la incidencia 'Franqueo'.
+
+    Se modernizan los iconos de la aplicación.
+
+    Se crea el tipo de incidencia 6. Este tipo se aplica para los días que, a pesar de no trabajar de forma
+    habitual, se cuenta como trabajado. Las incidencias que incluyan este tipo, computaran en las horas trabajadas la
+    jornada media.
+
+    Se actualiza el tipo de la incidencia '8:Permiso' al nuevo tipo 6.
+
+
+    Version 1.4
+    ===========
+
+    Se añade la integración con DropBox, por lo que ahora es posible autorizar la aplicación y sincronizar
+    la base de datos en la nube tanto manual, como automáticamente.
+
+            La aplicación sólo tiene acceso a su propia carpeta en Dropbox (/Aplicaciones/Quattroid). Esto
+            significa que el resto de carpetas del usuario no son accesibles, manteniendo su privacidad.
+
+            La sincronización automática no se inicia con la opción de iniciar directamente en
+            el calendario, aunque tras volver del calendario al menú principal, si se iniciará.
+
+            Es importante que la primera vez que se autentique en Dropbox, se suban los datos de la
+            aplicación, a no ser que ya haya datos disponibles en el servidor.
+
+            Aunque los datos en Dropbox suponen de por sí una copia de seguridad, es recomendable hacer
+            una copia de seguridad local de vez en cuando.
+
+    Se amplía la funcionalidad de la incidencia '15:Huelga' haciendo que reconozca si la huelga es del día
+    completo o parcial. En cada caso, calcula las horas trabajadas, así como las horas acumuladas del día.
+
+    Se añade un icono a los días del calendario para marcar los días de huelga.
+
+    Se añade un apartado a las estadísticas con los totales de los días y horas de huelga.
+
+    Se reorganiza el apartado 'Resumen por incidencia', colocando las incidencias al principio y tres
+    resúmenes al final: total días con incidencia, total días sin incidencia y total días.
+
+    Se ajusta el ancho de las matrículas de compañeros en la lista de los mismos.
+
+    Se añade una opción a los ajustes para hacer que se regule la jornada al final de año teniendo en cuenta
+    la jornada anual. Este ajuste se hace por medio de una hora ajena automática creada al guardar el
+    día 31 de diciembre.
+
+    Se añade una opción a los ajustes para hacer que se regule la jornada en los años bisiestos. Esta
+    regulación se realiza por medio de una hora ajena automática creada al guardar el día 29 de febrero.
+
+    Al hacer una pulsación larga sobre una de las horas en la vista individual de un día, ahora, en el
+    inputbox se muestra el valor anterior.
+
+    Al hacer una pulsación larga sobre la matrícula del compañero que nos releva o del compañero al que le
+    hacemos o nos hace el día en la vista individual, se abrirá la lista de compañeros para que, al pulsar
+    en uno de ellos, sea añadido.
+
+
+    Versión 1.4.1
+    =============
+
+    Se corrige un error que no mostraba las horas nocturnas los días de huelga parcial.
+
+
+    Versión 1.4.2
+    =============
+
+    Se reorganizan las estadísticas para que los sábados y domingos que tenemos permiso, cuenten
+    como trbajados para calcular los pluses.
+
+    Se añade una estadística para los días que hacemos a alguien en franqueos.
+
+    Se cambia el comportamiento, haciendo que al restaurar una copia de seguridad, se desactive la
+    sincronización automática con Dropbox.
+
+    Al poner una incidencia con el tipo 6, ya no se borran los campos del servicio.
+
+    Se cambia algún comportamiento referente a las huelgas en la vista de día individual.
+
+    Se corrige un comportamiento en la lista de las líneas y en la de incidencias que no alineaba
+    los bordes de las casillas cuando una de ellas era más alta que la otra.
+
+    Se añade la opción de listar los compañeros desde el modo 'Búsquedas por matrícula', por medio de
+    un toque largo en el campo 'Matrícula'.
+
+
+    Versión 1.5
+    ===========
+
+    Se modifica la forma en la que se regulan las horas a final de año. Antes se contaban todas las horas
+    trabajadas y ahora se multiplica la jornada media por todos los días que se hayan trabajado, o se hayan
+    tenido F.O.D. Los días con tipo de incidencia 6 (comité, etc.) tambien se cuentan a efectos de horas.
+
+    Se añade la estadística "Horas Trabajadas Convenio" que cuenta las horas de los días con el tipo de
+    incidencia 1, 3 y 6, multiplicado por la jornada media.
+
+
+    Versión 1.5.1
+    =============
+
+    Se añade un scroll en el menú principal y en el menú herramientas para que en los móviles con pantalla
+    pequeña se puedan desplazar los botones y acceder a los que queden ocultos.
+
+    Versión 1.6
+    ===========
+
+    Se añade la opción de cambiar el tipo de teclado en ciertos campos. También se añade el cambio de teclado
+    al pulsar largo en esos campos.
+
+    Se añade la opción de 'Relevo Fijo', que introduce automáticamente el relevo al introducir un servicio.
+
+    Se añade la opción 'Auto-Rellenar Semana' que rellena los días de la semana que estén vacíos con los
+    datos que introduzcamos el lunes.
+
+    Se añade un botón en el calendario para generar un PDF con una tabla con los datos del calendario. Si la
+    tabla se genera en horizontal, se añaden los campos de dietas. Si se genera en vertical, los campos de
+    dietas desaparecen, ya que no caben.
+
+    Se añade en el calendario la selección múltiple de días. Las acciones que antes se realizaban de día en
+    día mediante una pulsación larga, ahora se pueden realizar sobre varios días a la vez. No todas están
+    disponibles. Para múltiples días sólo se puede pegar sobre los días un día copiado, vacíar los días y
+    asignarlos como franqueos y/o festivos.
+
+

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bt_copiar"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/copiar"
+        android:title="Copiar dia"/>
+    <item
+        android:id="@+id/bt_pegar"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/pegar"
+        android:title="Pegar dia"/>
+    <item
+        android:id="@+id/bt_repetirAnterior"
+        android:showAsAction="never"
+        android:title="Repite Día Anterior"/>
+    <item
+        android:id="@+id/bt_marcarFranqueo"
+        android:showAsAction="never"
+        android:title="Franqueo"/>
+    <item
+        android:id="@+id/bt_marcarFestivo"
+        android:showAsAction="never"
+        android:title="Festivo"/>
+    <item
+        android:id="@+id/bt_guardarServicio"
+        android:showAsAction="never"
+        android:title="Guardar Servicio"/>
+    <item
+        android:id="@+id/bt_ajenas"
+        android:showAsAction="never"
+        android:title="Añadir Horas Ajenas"/>
+    <item
+        android:id="@+id/bt_vaciar"
+        android:showAsAction="never"
+        android:title="Vaciar día"/>
+    <item
+        android:id="@+id/bt_verRelevo"
+        android:showAsAction="never"
+        android:title="Ver compañero/a"/>
+</menu>

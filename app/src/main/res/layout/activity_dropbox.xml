@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TITULO DE LA ACTIVITY -->
+    <TextView
+        android:id="@+id/tv_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:text="SINCRONIZACIÓN DROPBOX"
+        />
+
+    <!-- SEPARADOR -->
+    <View
+        android:id="@+id/v_separador"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="5dp"
+        android:background="#000000"
+        android:layout_below="@id/tv_titulo"/>
+
+    <!-- COPYRIGHT DROPBOX -->
+    <TextView
+        android:id="@+id/tv_copyright"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|center_horizontal"
+        android:padding="5dp"
+        android:textSize="12sp"
+        android:layout_alignParentBottom="true"
+        android:text="Dropbox y el logotipo de Dropbox\nson marcas registradas de Dropbox, Inc."/>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/v_separador"
+        android:layout_above="@id/tv_copyright">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- AUTORIZACION -->
+            <LinearLayout
+                android:id="@+id/ly_autorizacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/bt_autorizar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:onClick="BtAutorizarPulsado"
+                    android:background="@drawable/bt_calendario"
+                    android:text="Autorizar en Dropbox"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="¿No tienes una cuenta de Dropbox?"/>
+
+                <TextView
+                    android:id="@+id/tv_fecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:textStyle="italic"
+                    android:text="Pulsa en el siguiente botón y crea una cuenta.\n\nAl hacerlo desde aquí, recibirás 500MB extra de espacio y ayudarás a que el creador de la aplicación reciba otros 500MB.\n\nGracias de antemano."/>
+
+                <Button
+                    android:id="@+id/bt_crearCuenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:onClick="BtCrearCuentaPulsado"
+                    android:background="@drawable/bt_servicios"
+                    android:text="Crear Cuenta en Dropbox"/>
+
+            </LinearLayout>
+
+            <!-- PETICION COPIA SEGURIDAD -->
+            <LinearLayout
+                android:id="@+id/ly_peticionCopia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="20sp"
+                    android:text="Deberías hacer una copia de seguridad antes de sincronizar con Dropbox por primera vez."/>
+
+                <Button
+                    android:id="@+id/bt_siHacerCopia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:onClick="BtSiHacerCopiaPulsado"
+                    android:background="@drawable/bt_calendario"
+                    android:text="@string/dropbox_siHacerCopia"/>
+
+                <Button
+                    android:id="@+id/bt_noHacerCopia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:onClick="BtNoHacerCopiaPulsado"
+                    android:background="@drawable/bt_revocar"
+                    android:text="@string/dropbox_noHacerCopia"/>
+
+            </LinearLayout>
+
+            <!-- PRIMERA OPERACIÓN -->
+            <LinearLayout
+                android:id="@+id/ly_primeraOperacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:gravity="center_horizontal"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:text="INICIALIZACIÓN"/>
+
+                <Button
+                    android:id="@+id/bt_descargarPrimera"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:onClick="BtDescargarPrimeraPulsado"
+                    android:background="@drawable/bt_incidencia"
+                    android:text="DESCARGAR DATOS\n\nSi tienes datos en Dropbox que quieras bajar al teléfono, pulsa aquí para descargarlos"/>
+
+                <Button
+                    android:id="@+id/bt_subirPrimera"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="10dp"
+                    android:onClick="BtSubirPrimeraPulsado"
+                    android:background="@drawable/bt_relevos"
+                    android:text="SUBIR DATOS\n\nSi tienes datos en el teléfono que quieres subir a Dropbox, pulsa aquí para subirlos."/>
+
+                <TextView
+                    android:id="@+id/tv_ayuda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:text="Si nunca has usado Dropbox\npulsa SUBIR DATOS."/>
+
+                <Button
+                    android:id="@+id/bt_noHacerNada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="10dp"
+                    android:onClick="BtNoHacerNadaPulsado"
+                    android:background="@drawable/bt_revocar"
+                    android:text="NO HACER NADA. Sé lo que hago."/>
+
+            </LinearLayout>
+
+            <!-- PRINCIPAL -->
+            <LinearLayout
+                android:id="@+id/ly_principal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:text="Cuenta: "/>
+
+                    <TextView
+                        android:id="@+id/txtCuentaDropbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:text="Sin cuenta registrada."/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/bt_descargar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="15dp"
+                    android:onClick="BtDescargarPulsado"
+                    android:background="@drawable/bt_incidencia"
+                    android:text="DESCARGAR DATOS"/>
+
+                <Button
+                    android:id="@+id/bt_subir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="15dp"
+                    android:onClick="BtSubirPulsado"
+                    android:background="@drawable/bt_relevos"
+                    android:text="SUBIR DATOS"/>
+
+                <CheckBox
+                    android:id="@+id/cb_autoSincronizar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Sincronizar automáticamente"/>
+
+                <CheckBox
+                    android:id="@+id/cb_soloWifi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="Solo con Wifi"/>
+
+                <Button
+                    android:id="@+id/bt_revocar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="15dp"
+                    android:onClick="BtRevocarPulsado"
+                    android:background="@drawable/bt_revocar"
+                    android:text="REVOCAR CERTIFICADO"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TITULO DE LA ACTIVITY -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="COPIA DE SEGURIDAD"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="5dp"
+        android:background="#000000"/>
+
+    <!-- INTERFAZ COPIA DE SEGURIDAD -->
+    <LinearLayout
+        android:id="@+id/ly_copia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <Button
+        android:id="@+id/bt_hacerCopia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="botonPulsado"
+        android:background="@drawable/bt_calendario"
+        android:text="Hacer Copia de Seguridad"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Última copia de seguridad:"/>
+
+    <TextView
+        android:id="@+id/tv_fecha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:text="Fecha : 16-12-2014"/>
+
+    <Button
+        android:id="@+id/bt_restaurarCopia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="botonPulsado"
+        android:background="@drawable/bt_ajenas"
+        android:text="Restaurar Copia de Seguridad"/>
+
+    </LinearLayout>
+
+    <!-- CONFIRMACION -->
+    <LinearLayout
+        android:id="@+id/ly_confirmacion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:text="Al restaurar la copia de seguridad perderás todos los datos que hay actualmente en la aplicación."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:text="Es recomendable que, tras la restauración, reinicies la aplicación para un ajuste óptimo de las opciones."/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:text="¿Seguro que quieres continuar?"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bt_aceptar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:onClick="botonPulsado"
+                android:background="@drawable/bt_ajustes"
+                android:text="Si. Restaurar"/>
+
+            <Button
+                android:id="@+id/bt_cancelar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:onClick="botonPulsado"
+                android:background="@drawable/bt_ajustes"
+                android:text="No. Volver"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

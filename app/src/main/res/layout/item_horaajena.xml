@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_dia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#FF0000AA"
+        android:padding="4dp"
+        android:text="Esto es el dia"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/fondo_ajenas_p"
+        android:layout_gravity="top|left">
+        <TextView
+            android:id="@+id/tv_horas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:padding="4dp"
+            android:text="Hora"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/tv_motivo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:text="Motivo"
+            android:padding="4dp"
+            android:textStyle="italic"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

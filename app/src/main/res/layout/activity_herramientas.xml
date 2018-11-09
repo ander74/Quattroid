@@ -1,0 +1,231 @@
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF000000">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:gravity="center"
+    android:background="#000000">
+
+    <!-- TITULO -->
+    <LinearLayout
+        style="@style/vertical"
+        android:clickable="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/herramientas"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffdcdcdc"
+            android:textStyle="bold"
+            android:text="@string/bt_herramientas"/>
+
+    </LinearLayout>
+
+    <!-- ESTADISTICAS -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"
+        android:clickable="true"
+        android:longClickable="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_busquedas"
+        android:onClick="BotonPulsado"
+        android:id="@+id/bt_estadisticas">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/graficobarras"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bt_estadisticas"
+            android:paddingLeft="25dp"/>
+    </LinearLayout>
+
+    <!-- BUSQUEDAS -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"
+        android:clickable="true"
+        android:longClickable="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_calendario"
+        android:onClick="BotonPulsado"
+        android:id="@+id/bt_busquedas">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/busquedas"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bt_busquedas"
+            android:paddingLeft="25dp"/>
+
+    </LinearLayout>
+
+    <!-- INCIDENCIAS -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"
+        android:clickable="true"
+        android:longClickable="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_ajenas"
+        android:onClick="BotonPulsado"
+        android:id="@+id/bt_incidencias">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/incidencias"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bt_incidencias"
+            android:paddingLeft="25dp"/>
+
+    </LinearLayout>
+
+    <!-- COPIA DE SEGURIDAD -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"
+        android:clickable="true"
+        android:longClickable="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_relevos"
+        android:onClick="BotonPulsado"
+        android:id="@+id/bt_copiaSeguridad">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/guardar"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bt_copiaSeguridad"
+            android:paddingLeft="25dp"/>
+
+    </LinearLayout>
+
+    <!-- DROPBOX -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"
+        android:clickable="true"
+        android:longClickable="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_dropbox"
+        android:onClick="BotonPulsado"
+        android:id="@+id/bt_dropBox">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/dropbox"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bt_dropbox"
+            android:paddingLeft="25dp"/>
+
+    </LinearLayout>
+
+    <!-- AJUSTES -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="10dp"
+        android:clickable="true"
+        android:longClickable="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bt_ajustes"
+        android:onClick="BotonPulsado"
+        android:id="@+id/bt_ajustes">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ajustes"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/bt_ajustes"
+            android:paddingLeft="25dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+</ScrollView>

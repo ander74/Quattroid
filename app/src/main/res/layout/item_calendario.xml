@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<LinearLayout
+    android:id="@+id/item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:orientation="horizontal">
+
+    <!-- TextoDia -->
+    <RelativeLayout
+        android:id="@+id/textoDia"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="4dp"
+        android:background="@drawable/fondo_calendario_p"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="1dp">
+        <!-- Dia -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/dia"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <!-- DiaSemana -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:id="@+id/diaSemana"
+            android:textSize="13dp"
+            android:layout_below="@id/dia"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/resto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:background="@drawable/fondo_calendario_p"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="1dp">
+
+        <!-- HayCompañero -->
+        <ImageView
+            android:id="@+id/esHuelga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/bandera_pirata"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
+        <!-- EsHuelga -->
+        <ImageView
+            android:id="@+id/hayCompañero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/usuario_verde"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/esHuelga"/>
+
+        <!-- Servicio -->
+        <TextView
+            android:id="@+id/servicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:maxLines="1"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/hayCompañero"/>
+
+        <!-- Notas -->
+        <ImageView
+            android:id="@+id/notas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/notas"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"/>
+
+        <!-- Desayuno -->
+        <ImageView
+            android:id="@+id/desayuno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/desayuno"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/notas"/>
+
+        <!-- Comida -->
+        <ImageView
+            android:id="@+id/comida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/comida"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/desayuno"/>
+
+        <!-- Cena -->
+        <ImageView
+            android:id="@+id/cena"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/cena"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/comida"/>
+
+        <!-- Relevo -->
+        <TextView
+            android:id="@+id/relevo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textSize="13sp"
+            android:padding="4dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/cena"/>
+
+        <!-- Calificacion -->
+        <ImageView
+            android:id="@+id/calificacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/buenrelevo"
+            android:padding="4dp"
+            android:maxHeight="25dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/relevo"/>
+
+        <!-- Horario -->
+        <TextView
+            android:id="@+id/horario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_marginLeft="2dp"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"/>
+
+        <!-- Nocturnas -->
+        <TextView
+            android:id="@+id/nocturnas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_marginRight="2dp"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textColor="#ff0000ff"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+        <!-- Guion -->
+        <TextView
+            android:id="@+id/guion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="-"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/nocturnas"/>
+
+        <!-- Acumuladas -->
+        <TextView
+            android:id="@+id/acumuladas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textColor="#ffff0000"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/guion"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

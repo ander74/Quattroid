@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<resources>
+
+    <!-- APLICACION-->
+    <string name="app_name">Quattroid</string>
+
+
+    <!-- ACTIVITY PRINCIPAL -->
+    <string name="nombreAplicacion">Quattroid 1.6</string>
+    <string name="creditoPrincipal">A. Herrero</string>
+    <string name="bt_calendario">Calendario</string>
+    <string name="bt_relevos">Compañeros/as</string>
+    <string name="bt_servicios">Servicios</string>
+    <string name="bt_ajenas">Horas Ajenas</string>
+    <string name="bt_herramientas">Herramientas</string>
+    <string name="bt_copiaSeguridad">Copia de Seguridad</string>
+    <string name="bt_dropbox">Dropbox</string>
+    <string name="bt_incidencias">Incidencias</string>
+
+    <!-- ACTIVITY HERRAMIENTAS -->
+    <string name="bt_ajustes">Ajustes</string>
+    <string name="bt_estadisticas">Estadisticas</string>
+    <string name="bt_busquedas">Búsquedas</string>
+
+
+    <!-- ACTIVITY CALENDARIO -->
+    <string name="mensaje_acumuladas">Horas acumuladas hasta este mes</string>
+    <string name="mensaje_nocturnas">Horas nocturnas de este mes</string>
+    <string name="mensaje_tomaDeje">Toma y deje total de este mes</string>
+    <string name="mensaje_euros">Euros por servicio de este mes</string>
+    <string name="error_fechaLimite">No se puede retroceder más</string>
+    <string name="mensaje_primerDia">Este es el primer día mostrado</string>
+    <string name="mensaje_mesNoExiste">Mes anterior aún no existe</string>
+    <string name="mensaje_diaCopiado">Se ha copiado el día</string>
+
+
+    <!-- ACTIVITY DIA CALENDARIO -->
+    <string name="mensaje_diaGuardado">Se han guardado los datos</string>
+    <string name="error_diaGuardado">No se han podido guardar los datos</string>
+    <string name="mensaje_diaVaciado">Se han vaciado los días</string>
+    <string name="error_diaVaciado">No se han podido vaciar los días</string>
+
+
+    <!-- ACTIVITY INCIDENCIAS -->
+    <string name="error_incidenciaProtegida">No puedes modificar esta incidencia</string>
+    <string name="error_incidenciaProtegida2">No puedes borrar esta incidencia</string>
+
+
+    <!-- ACTIVITY HORAS AJENAS -->
+    <string name="mensaje_ajenaBorrada">Se han borrado las horas ajenas</string>
+    <string name="error_ajenaBorrada">No se ha podido borrar</string>
+    <string name="mensaje_ajenaCreada">Horas ajenas creadas</string>
+
+    <!-- ACTIVITY RELEVOS -->
+    <string name="mensaje_nuevoRelevo">Compañero/a creado o editado</string>
+    <string name="error_nuevoRelevo">No se ha podido crear o editar el compañero/a</string>
+
+    <!-- ACTIVITY EDITAR SERVICIO -->
+    <string name="error_crearServicioAuxiliar">No se puede crear el servicio</string>
+
+    <!-- ACTIVITY ESTADISTICAS -->
+    <string name="error_añoNoExiste">El año no contiene datos</string>
+    <string name="error_mesNoExiste">El mes no contiene datos</string>
+    <string name="error_fueraLimite">La fecha está fuera del límite</string>
+
+    <!-- ACTIVITY DROPBOX -->
+    <string name="dropbox_siHacerCopia"><h1>SI</h1>\nQuiero ir a Copia de Seguridad y proteger mis datos de un borrado accidental.</string>
+    <string name="dropbox_noHacerCopia">NO\nSoy un/a irresponsable y me arriesgo a perder todos los datos.</string>
+
+</resources>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="4dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:background="#ffeeeeee">
+
+    <!-- TITULO -->
+    <TextView
+        android:id="@+id/titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="SERVICIOS COMPLEMENTARIOS"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#ff000000"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <!-- CREACION Y EDICION DE SERVICIOS -->
+
+    <LinearLayout
+        style="@style/horizontal"
+        android:padding="4dp">
+
+        <!-- LINEA -->
+        <LinearLayout
+            style="@style/vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1">
+            <TextView
+                style="@style/text_view"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Línea"/>
+            <EditText
+                android:id="@+id/et_linea"
+                style="@style/edit_text"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:selectAllOnFocus="true"
+                android:nextFocusDown="@+id/et_servicio"/>
+        </LinearLayout>
+
+        <!-- SERVICIO -->
+        <LinearLayout
+            style="@style/vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1">
+            <TextView
+                style="@style/text_view"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Servicio"/>
+            <EditText
+                android:id="@+id/et_servicio"
+                style="@style/edit_text"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:selectAllOnFocus="true"
+                android:nextFocusDown="@+id/et_turno"/>
+        </LinearLayout>
+
+        <!-- TURNO -->
+        <LinearLayout
+            style="@style/vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1">
+            <TextView
+                style="@style/text_view"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Turno"/>
+            <EditText
+                android:id="@+id/et_turno"
+                style="@style/edit_text"
+                android:inputType="numberDecimal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:selectAllOnFocus="true"
+                android:nextFocusDown="@+id/et_inicio"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+            <!-- INICIO -->
+            <LinearLayout
+                style="@style/horizontal"
+                android:weightSum="3"
+                android:padding="4dp">
+
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1">
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Inicio"/>
+                    <EditText
+                        android:id="@+id/et_inicio"
+                        style="@style/edit_text"
+                        android:inputType="numberDecimal"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:selectAllOnFocus="true"
+                        android:nextFocusDown="@+id/et_lugarInicio"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="2">
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Lugar de inicio"/>
+                    <EditText
+                        android:id="@+id/et_lugarInicio"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:inputType="textCapWords"
+                        android:selectAllOnFocus="true"
+                        android:nextFocusDown="@+id/et_final"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- FINAL -->
+            <LinearLayout
+                style="@style/horizontal"
+                android:weightSum="3"
+                android:padding="4dp">
+
+                <!-- INICIO -->
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1">
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Final"/>
+                    <EditText
+                        android:id="@+id/et_final"
+                        style="@style/edit_text"
+                        android:inputType="numberDecimal"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:selectAllOnFocus="true"
+                        android:nextFocusDown="@+id/et_lugarFinal"/>
+                </LinearLayout>
+
+                <!-- FINAL -->
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="2">
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Lugar de finalización"/>
+                    <EditText
+                        android:id="@+id/et_lugarFinal"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:inputType="textCapWords"
+                        android:selectAllOnFocus="true"
+                        android:nextFocusDown="@+id/et_linea"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+</ScrollView>

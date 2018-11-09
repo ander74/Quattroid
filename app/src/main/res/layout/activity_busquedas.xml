@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
+    android:orientation="vertical">
+
+
+    <!-- BOTONES -->
+    <LinearLayout
+        android:id="@+id/ly_botones"
+        style="@style/vertical">
+        <Button
+            android:id="@+id/bt_servicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_servicios"
+            android:text="Lista por servicio"/>
+        <Button
+            android:id="@+id/bt_matricula"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_relevos"
+            android:text="Lista por matrícula"/>
+        <Button
+            android:id="@+id/bt_incidencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_ajenas"
+            android:text="Lista por incidencia"/>
+        <Button
+            android:id="@+id/bt_bus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_calendario"
+            android:text="Lista por autobus"/>
+        <LinearLayout
+            style="@style/horizontal"
+            android:gravity="center">
+            <CheckBox
+                android:id="@+id/ch_limitarAño"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="Limitar al año "/>
+            <EditText
+                android:id="@+id/et_año"
+                style="@style/edit_text"
+                android:inputType="number"
+                android:minWidth="70dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- POR SERVICIO -->
+    <LinearLayout
+        android:id="@+id/ly_porServicio"
+        android:baselineAligned="false"
+        style="@style/horizontal">
+        <!-- LINEA -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text="Linea"/>
+            <EditText
+                android:id="@+id/et_linea"
+                style="@style/edit_text"
+                android:nextFocusDown="@+id/et_servicio"
+                android:layout_width="match_parent"/>
+        </LinearLayout>
+        <!-- SERVICIO -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text="Servicio"/>
+            <EditText
+                android:id="@+id/et_servicio"
+                style="@style/edit_text"
+                android:nextFocusDown="@+id/et_turno"
+                android:layout_width="match_parent"/>
+        </LinearLayout>
+        <!-- TURNO -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text="Turno"/>
+            <EditText
+                android:id="@+id/et_turno"
+                style="@style/edit_text"
+                android:nextFocusDown="@+id/et_linea"
+                android:inputType="number"
+                android:layout_width="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- POR MATRICULA -->
+    <LinearLayout
+        android:id="@+id/ly_porMatricula"
+        android:baselineAligned="false"
+        style="@style/horizontal">
+        <!-- MATRICULA -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text="Matrícula"/>
+            <EditText
+                android:id="@+id/et_matricula"
+                style="@style/edit_text"
+                android:inputType="number"
+                android:layout_width="match_parent"/>
+        </LinearLayout>
+        <!-- DEUDA -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="2">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text=""/>
+            <CheckBox
+                android:id="@+id/ch_deuda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="16sp"
+                android:text="Nos Hacen / Hacemos"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- POR BUS -->
+    <LinearLayout
+        android:id="@+id/ly_porBus"
+        android:baselineAligned="false"
+        android:weightSum="3"
+        style="@style/horizontal">
+        <!-- NUMERO BUS -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text="Número Bus"/>
+            <EditText
+                android:id="@+id/et_bus"
+                style="@style/edit_text"
+                android:inputType="number"
+                android:layout_width="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- BOTON VER LISTADO -->
+    <LinearLayout
+        android:id="@+id/ly_verListado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/bt_verlistado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_ajustes"
+            android:layout_margin="10dp"
+            android:text="Ver Listado"/>
+    </LinearLayout>
+
+
+    <!-- LISTADO -->
+    <ListView
+        android:id="@+id/lw_listaBusquedas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:background="#FFFFFFFF"/>
+
+
+</LinearLayout>

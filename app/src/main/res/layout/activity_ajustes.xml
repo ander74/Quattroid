@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <!-- GENERAL -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="General"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+
+        <!-- PRIMER MES MOSTRADO -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_primerMes"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Primer Mes Mostrado"
+                android:layout_alignBaseline="@+id/et_primerMes"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Primer mes que se puede mostrar.\nAntes de este mes, no se pueden\nintroducir datos."
+                android:layout_below="@+id/et_primerMes"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- PRIMER AÑO MOSTRADO -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_primerAño"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Primer Año Mostrado"
+                android:layout_alignBaseline="@+id/et_primerAño"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Año al que pertenece el primer\nmes mostrado."
+                android:layout_below="@+id/et_primerAño"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- HORAS ANTERIORES -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_acumuladasAnteriores"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Horas Anteriores"
+                android:layout_alignBaseline="@+id/et_acumuladasAnteriores"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Horas acumuladas anteriores al primer\nmes mostrado o, en su defecto, al\nprimer mes que contiene datos."
+                android:layout_below="@+id/et_acumuladasAnteriores"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- RELEVO FIJO -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_relevoFijo"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="number"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Relevo Fijo"
+                android:layout_alignBaseline="@+id/et_relevoFijo"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Matrícula del compañero/a con el que\nnos relevamos habitualmente."
+                android:layout_below="@+id/et_relevoFijo"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- RELLENAR SEMANA -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_rellenarSemana"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Auto-Rellenar Semana"
+                android:layout_alignBaseline="@+id/sw_rellenarSemana"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Rellenar la semana automáticamente\nal rellenar el lunes."
+                android:layout_below="@+id/sw_rellenarSemana"/>
+        </RelativeLayout>
+        <View style="@style/op_sep_verde"/>
+
+
+        <!-- CONVENIO -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="Convenio"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+
+        <!-- JORNADA MEDIA -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_jornadaMedia"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Jornada Media"
+                android:layout_alignBaseline="@+id/et_jornadaMedia"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Jornada media que se tendrá en cuenta\npara los cálculos."
+                android:layout_below="@+id/et_jornadaMedia"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- JORNADA MINIMA -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_jornadaMinima"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Jornada Mínima"
+                android:layout_alignBaseline="@+id/et_jornadaMinima"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Jornada mínima que se usará\npara los cálculos."
+                android:layout_below="@+id/et_jornadaMinima"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- LIMITE ENTRE SERVICIOS -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_limiteServicios"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Limite Entre Servicios"
+                android:layout_alignBaseline="@+id/et_limiteServicios"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Límite de tiempo que pasa entre dos\nservicios y se acumula."
+                android:layout_below="@+id/et_limiteServicios"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- JORNADA ANUAL -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_jornadaAnual"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Jornada Anual"
+                android:layout_alignBaseline="@+id/et_jornadaAnual"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Jornada anual en horas. "
+                android:layout_below="@+id/et_jornadaAnual"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- REGULAR LA JORNADA ANUAL AL FINAL DE AÑO -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_regularJornada"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Regular Jornada Anual"
+                android:layout_alignBaseline="@+id/sw_regularJornada"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, la jornada anual será\nregulada al guardar el día 31 de diciembre.."
+                android:layout_below="@+id/sw_regularJornada"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- REGULAR AÑOS BISIESTOS -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_RegularBisiestos"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Regular Años Bisiestos"
+                android:layout_alignBaseline="@+id/sw_RegularBisiestos"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, Se regulará la\njornada al guardar el día 29 de febrero."
+                android:layout_below="@+id/sw_RegularBisiestos"/>
+        </RelativeLayout>
+        <View style="@style/op_sep_verde"/>
+
+
+        <!-- HORAS NOCTURNAS -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="Horas Nocturnas"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+
+        <!-- INICIO NOCTURNAS -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_inicioNocturnas"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Inicio"
+                android:layout_alignBaseline="@+id/et_inicioNocturnas"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Inicio del periodo de horas nocturnas."
+                android:layout_below="@+id/et_inicioNocturnas"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- FINAL NOCTURNAS -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_finalNocturnas"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Final"
+                android:layout_alignBaseline="@+id/et_finalNocturnas"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Final del periodo de horas nocturnas."
+                android:layout_below="@+id/et_finalNocturnas"/>
+        </RelativeLayout>
+        <View style="@style/op_sep_verde"/>
+
+
+        <!-- DIETAS -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="Dietas"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+
+        <!-- DIETA DESAYUNO -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_desayuno"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Desayuno"
+                android:layout_alignBaseline="@+id/et_desayuno"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Hora límite para cobrar la dieta de desayuno."
+                android:layout_below="@+id/et_desayuno"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- DIETA COMIDA TURNO 1 -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_comida1"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Comida (Turno 1)"
+                android:layout_alignBaseline="@+id/et_comida1"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Hora límite para cobrar la dieta de\ncomida en el turno 1."
+                android:layout_below="@+id/et_comida1"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- DIETA COMIDA TURNO 2 -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_comida2"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Comida (Turno 2)"
+                android:layout_alignBaseline="@+id/et_comida2"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Hora límite para cobrar la dieta de\ncomida en el turno 2."
+                android:layout_below="@+id/et_comida2"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- DIETA CENA -->
+        <RelativeLayout style="@style/op_rl">
+            <EditText
+                android:id="@+id/et_cena"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:nextFocusDown="@+id/et_primerMes"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Cena"
+                android:layout_alignBaseline="@+id/et_cena"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Hora límite para cobrar la dieta de cena."
+                android:layout_below="@+id/et_cena"/>
+        </RelativeLayout>
+        <View style="@style/op_sep_verde"/>
+
+
+        <!-- AJUSTES PDF -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="Ajustes PDF"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+        <!-- HORIZONTAL -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_pdfHorizontal"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="PDF en Horizontal"
+                android:layout_alignBaseline="@+id/sw_pdfHorizontal"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, se generará el PDF\nen horizontal."
+                android:layout_below="@+id/sw_pdfHorizontal"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+        <!-- INCLUIR SERVICIOS -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_pdfIncluirServicios"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Incluir Servicios"
+                android:layout_alignBaseline="@+id/sw_pdfIncluirServicios"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, se incluirán los\nservicios añadidos al servicio principal."
+                android:layout_below="@+id/sw_pdfIncluirServicios"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+        <!-- INCLUIR NOTAS -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_pdfIncluirNotas"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Incluir Notas"
+                android:layout_alignBaseline="@+id/sw_pdfIncluirNotas"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, se incluirán las\nnotas al informe PDF."
+                android:layout_below="@+id/sw_pdfIncluirNotas"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+        <!-- AGRUPAR NOTAS -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_pdfAgruparNotas"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Agrupar Notas"
+                android:layout_alignBaseline="@+id/sw_pdfAgruparNotas"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, se agruparán las\nnotas en una sóla línea."
+                android:layout_below="@+id/sw_pdfAgruparNotas"/>
+        </RelativeLayout>
+
+        <View style="@style/op_sep_verde"/>
+
+
+        <!-- OTROS AJUSTES -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="Otros Ajustes"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+
+        <!-- MOSTRAR ULTIMO MES -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+
+                android:id="@+id/sw_verMesActual"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Iniciar Mes Actual"
+                android:layout_alignBaseline="@+id/sw_verMesActual"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Al iniciar el programa mostrar el mes\nactual o el último mes que se mostraba"
+                android:layout_below="@+id/sw_verMesActual"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- INICIAR EN EL CALENDARIO -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+
+                android:id="@+id/sw_iniarCalendario"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Iniciar en el Calendario"
+                android:layout_alignBaseline="@+id/sw_iniarCalendario"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Iniciar la aplicación directamente\nen el calendario."
+                android:layout_below="@+id/sw_iniarCalendario"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
+        <!-- SUMAR TOMA Y DEJE -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+
+                android:id="@+id/sw_sumarTomaDeje"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Acumular Toma y Deje"
+                android:layout_alignBaseline="@+id/sw_sumarTomaDeje"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, el tiempo de toma y\ndeje se suma en el acumulador principal"
+                android:layout_below="@+id/sw_sumarTomaDeje"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+        <!-- ACTIVAR TECLADO NUMÉRICO -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+
+                android:id="@+id/sw_TecladoNumerico"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Activar Teclado Numérico"
+                android:layout_alignBaseline="@+id/sw_TecladoNumerico"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, se activará el teclado numérico en\nlos campos que normalmente son numéricos."
+                android:layout_below="@+id/sw_TecladoNumerico"/>
+        </RelativeLayout>
+
+        <View style="@style/op_sep_verde"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

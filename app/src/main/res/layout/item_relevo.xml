@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fondo_relevo_i">
+
+    <TextView
+        android:id="@+id/tv_matricula"
+        android:layout_width="wrap_content"
+        android:minWidth="80dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:background="@drawable/fondo_transparente_b"/>
+    <TextView
+        android:id="@+id/tv_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:layout_toRightOf="@id/tv_matricula"
+        android:layout_alignTop="@id/tv_matricula"/>
+    <TextView
+        android:id="@+id/tv_apellidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="18sp"
+        android:layout_toRightOf="@id/tv_matricula"
+        android:layout_alignBottom="@id/tv_matricula"/>
+    <TextView
+        android:id="@+id/tv_deuda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:layout_marginTop="2dp"
+        android:textSize="16sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_matricula"/>
+    <ImageView
+        android:id="@+id/im_calificacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/buenrelevo"
+        android:layout_margin="4dp"
+        android:maxHeight="26dp"
+        android:adjustViewBounds="true"
+        android:layout_alignBottom="@+id/tv_matricula"
+        android:layout_alignParentRight="true"/>
+
+
+</RelativeLayout>

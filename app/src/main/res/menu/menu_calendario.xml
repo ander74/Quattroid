@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bt_anterior"
+        android:title="Mes Anterior"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_media_previous"
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
+    <item
+        android:id="@+id/bt_pdf"
+        android:title="Generar PDF"
+        android:orderInCategory="100"
+        android:icon="@drawable/impresora"
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
+    <item
+        android:id="@+id/bt_siguiente"
+        android:title="Mes Siguiente"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_media_next"
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
+</menu>

@@ -1,0 +1,135 @@
+
+<!--
+  ~ Copyright 2015 - Quattroid 1.0
+  ~
+  ~ Creado por A. Herrero en Enero de 2015
+  ~ http://sites.google.com/site/qtroid
+  ~ acumulador.admin@gmail.com
+  ~
+  ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
+  ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~
+  ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
+  ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
+  ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:gravity="center"
+    android:background="#000000">
+
+    <LinearLayout
+        android:id="@+id/ly_creditos"
+        style="@style/vertical"
+        android:gravity="center">
+
+        <!-- TITULO -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="128dp"
+            android:src="@drawable/bus"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="26sp"
+            android:textColor="#ffdcdcdc"
+            android:textStyle="bold"
+            android:text="@string/nombreAplicacion"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textColor="#ffdcdcdc"
+            android:textStyle="bold"
+            android:text="Por A. Herrero"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"
+            android:textColor="#ffdcdcdc"
+            android:textStyle="bold"
+            android:text="acumulador.admin@gmail.com"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="#ffdcdcdc"
+            android:textStyle="bold"
+            android:text="Este programa está distirbuido bajo la licencia GPL Versión 3."/>
+        
+        <Button
+            android:id="@+id/bt_licencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_busquedas"
+            android:textStyle="bold"
+            android:text="Ver Licencia"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ry_licencia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffffff"
+        android:visibility="gone">
+
+
+        <TextView
+            android:id="@+id/tituloLicencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="Licencia GPL - V3"/>
+        <LinearLayout
+            android:id="@+id/botonesLicencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:id="@+id/bt_aceptar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Volver"
+                android:onClick="botonPulsado"/>
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_below="@+id/tituloLicencia"
+            android:layout_above="@+id/botonesLicencia">
+
+            <TextView
+                android:id="@+id/tv_licencia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </ScrollView>
+
+    </RelativeLayout>
+
+</LinearLayout>
