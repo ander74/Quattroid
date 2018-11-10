@@ -289,7 +289,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     opciones.edit().putInt("RelevoFijo", i).apply();
                     break;
                 case R.id.et_jornadaMedia:
-                    if (Hora.validaHoraDecimal(jornadaMedia.getText().toString()) == ""){
+                    if (Hora.validaHoraDecimal(jornadaMedia.getText().toString()).equals("")){
                         jornadaMedia.setText(jMedia);
                     }
                     long jmed = Double.doubleToRawLongBits(Double.valueOf(jornadaMedia.getText().toString().replace(",", ".")));
@@ -297,7 +297,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     jornadaMedia.setText(Hora.validaHoraDecimal(jornadaMedia.getText().toString()).replace(".", ","));
                     break;
                 case R.id.et_jornadaMinima:
-                    if (Hora.validaHoraDecimal(jornadaMinima.getText().toString()) == ""){
+                    if (Hora.validaHoraDecimal(jornadaMinima.getText().toString()).equals("")){
                         jornadaMinima.setText(jMinima);
                     }
                     long jmin = Double.doubleToRawLongBits(Double.valueOf(jornadaMinima.getText().toString().replace(",", ".")));
@@ -305,7 +305,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     jornadaMinima.setText(Hora.validaHoraDecimal(jornadaMinima.getText().toString()).replace(".", ","));
                     break;
                 case R.id.et_limiteServicios:
-                    if (Hora.horaToString(limiteServicios.getText().toString()) == ""){
+                    if (Hora.horaToString(limiteServicios.getText().toString()).equals("")){
                         limiteServicios.setText(lServicios);
                     }
                     limiteServicios.setText(Hora.horaToString(limiteServicios.getText().toString()));
@@ -324,42 +324,42 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     opciones.edit().putInt("JornadaAnual", i).apply();
                     break;
                 case R.id.et_inicioNocturnas:
-                    if (Hora.horaToString(inicioNocturnas.getText().toString()) == ""){
+                    if (Hora.horaToString(inicioNocturnas.getText().toString()).equals("")){
                         inicioNocturnas.setText(iNocturnas);
                     }
                     inicioNocturnas.setText(Hora.horaToString(inicioNocturnas.getText().toString()));
                     opciones.edit().putInt("InicioNocturnas", Hora.horaToInt(inicioNocturnas.getText().toString())).apply();
                     break;
                 case R.id.et_finalNocturnas:
-                    if (Hora.horaToString(finalNocturnas.getText().toString()) == ""){
+                    if (Hora.horaToString(finalNocturnas.getText().toString()).equals("")){
                         finalNocturnas.setText(fNocturnas);
                     }
                     finalNocturnas.setText(Hora.horaToString(finalNocturnas.getText().toString()));
                     opciones.edit().putInt("FinalNocturnas", Hora.horaToInt(finalNocturnas.getText().toString())).apply();
                     break;
                 case R.id.et_desayuno:
-                    if (Hora.horaToString(desayuno.getText().toString()) == ""){
+                    if (Hora.horaToString(desayuno.getText().toString()).equals("")){
                         desayuno.setText(dDesayuno);
                     }
                     desayuno.setText(Hora.horaToString(desayuno.getText().toString()));
                     opciones.edit().putInt("LimiteDesayuno", Hora.horaToInt(desayuno.getText().toString())).apply();
                     break;
                 case R.id.et_comida1:
-                    if (Hora.horaToString(comida1.getText().toString()) == ""){
+                    if (Hora.horaToString(comida1.getText().toString()).equals("")){
                         comida1.setText(dComida1);
                     }
                     comida1.setText(Hora.horaToString(comida1.getText().toString()));
                     opciones.edit().putInt("LimiteComida1", Hora.horaToInt(comida1.getText().toString())).apply();
                     break;
                 case R.id.et_comida2:
-                    if (Hora.horaToString(comida2.getText().toString()) == ""){
+                    if (Hora.horaToString(comida2.getText().toString()).equals("")){
                         comida2.setText(dComida2);
                     }
                     comida2.setText(Hora.horaToString(comida2.getText().toString()));
                     opciones.edit().putInt("LimiteComida2", Hora.horaToInt(comida2.getText().toString())).apply();
                     break;
                 case R.id.et_cena:
-                    if (Hora.horaToString(cena.getText().toString()) == ""){
+                    if (Hora.horaToString(cena.getText().toString()).equals("")){
                         cena.setText(dCena);
                     }
                     cena.setText(Hora.horaToString(cena.getText().toString()));

@@ -61,48 +61,31 @@ public class Licencia extends Activity {
     }
 
     // LEE EL ARCHIVO LICENCIA Y LO DEVUELVE EN UNA CADENA
-    private String leeLicencia() {
-
+    private String leeLicencia()
+    {
         // Cadenas de texto que se usarán
-        String texto = "";
-        String linea = "";
-
+        StringBuilder texto = new StringBuilder();
         // Manager de la carpeta Assets
         AssetManager am = getAssets();
 
-        // Lectores de flujo para leer el archivo
-        InputStream is = null;
-        InputStreamReader isr = null;
-        BufferedReader br = null;
-
-        try {
-            is = am.open("Licencia/licencia.txt");
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
+        try (InputStream is = am.open("Licencia/licencia.txt");
+             InputStreamReader isr = new InputStreamReader(is);
+             BufferedReader br = new BufferedReader(isr))
+        {
             // Leemos la primera línea del archivo.
-            linea = br.readLine();
+            String linea = br.readLine();
             // Mientras las líneas existan, las leemos
-            while (linea != null){
-                texto += linea + "\n";
+            while (linea != null)
+            {
+                texto.append(linea).append("\n");
                 linea = br.readLine();
             }
-            // Cerramos los lectores
-            br.close();
-            isr.close();
-            is.close();
-
-        } catch (IOException e){
-            // Intentamos cerrar los lectores que han quedado abiertos
-            try {
-                if (br != null) br.close();
-                if (isr != null) isr.close();
-                if (is != null) is.close();
-            } catch (IOException ee){
-                // No emitimos mensaje alguno.
-            }
         }
-        return texto;
+        catch (IOException e)
+        {
+            // No hacemos nada.
+        }
+        return texto.toString();
     }
 
 }

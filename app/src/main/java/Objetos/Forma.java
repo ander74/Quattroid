@@ -22,7 +22,7 @@ import android.graphics.drawable.GradientDrawable;
 
 public class Forma {
 
-    private GradientDrawable forma = null;
+    private GradientDrawable forma;
 
     /**
      *  Este método devuelve un fondo rectangular en el que se puede elegir el color del fondo,
@@ -33,7 +33,6 @@ public class Forma {
      * @param radio Radio de las esquinas en dp. Cero si no se quieren esquinas redondeadas.
      * @param colorBorde Color que se usará para el borde.
      * @param borde Grosor del borde en dp. Cero si no se quiere borde.
-     * @return Drawable con el fondo definido.
      */
     public Forma(Context context, int colorFondo, int radio, int borde, int colorBorde){
 
@@ -60,7 +59,6 @@ public class Forma {
      * @param colorFondo Color que se usará para el fondo.
      * @param radio Radio de las esquinas en dp. Cero si no se quieren esquinas redondeadas.
      * @param borde Grosor del borde en dp. Cero si no se quiere borde.
-     * @return Drawable con el fondo definido.
      */
     public Forma(Context context, int colorFondo, int radio, int borde){
 
@@ -86,7 +84,6 @@ public class Forma {
      * @param context Contexto donde se va a usar el fondo.
      * @param colorFondo Color que se usará para el fondo.
      * @param radio Radio de las esquinas en dp. Cero si no se quieren esquinas redondeadas.
-     * @return Drawable con el fondo definido.
      */
     public Forma(Context context, int colorFondo, int radio){
 
@@ -107,7 +104,6 @@ public class Forma {
      *
      * @param context Contexto donde se va a usar el fondo.
      * @param colorFondo Color que se usará para el fondo.
-     * @return Drawable con el fondo definido.
      */
     public Forma(Context context, int colorFondo){
 
