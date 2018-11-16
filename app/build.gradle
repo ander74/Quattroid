@@ -20,10 +20,10 @@ android {
         // Accedemos a las claves de firma del APK a través del objeto keystoreProperties creado
         // anteriormente, para ocultar estas claves en los repositorios de código.
         Quattroid {
-            keyAlias keystoreProperties['keyAlias']
-            storeFile file(keystoreProperties['storeFile'])
-            keyPassword keystoreProperties['keyPassword']
-            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties["keyAlias"]
+            storeFile file(keystoreProperties["storeFile"])
+            keyPassword keystoreProperties["keyPassword"]
+            storePassword keystoreProperties["storePassword"]
         }
     }
     compileSdkVersion 28
@@ -32,8 +32,8 @@ android {
         applicationId "com.quattro.quattroid"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 16
-        versionName '1.6'
+        versionCode 161 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
+        versionName '1.6.1'
         signingConfig signingConfigs.Quattroid
     }
     buildTypes {
@@ -44,14 +44,14 @@ android {
             // Creamos una variable con la clave secreta de Dropbox, accesible desde el código
             // java. Esta clave secreta se encuentra en el objeto keystoreProperties, fuera del
             // alcance de los repositorios de código.
-            buildConfigField 'String', "DropboxAppKey", keystoreProperties['dropboxAppKey']
+            buildConfigField "String", "DropboxAppKey", keystoreProperties["dropboxAppKey"]
         }
         debug {
             signingConfig signingConfigs.Quattroid
             // Creamos una variable con la clave secreta de Dropbox, accesible desde el código
             // java. Esta clave secreta se encuentra en el objeto keystoreProperties, fuera del
             // alcance de los repositorios de código.
-            buildConfigField 'String', "DropboxAppKey", keystoreProperties['dropboxAppKey']
+            buildConfigField "String", "DropboxAppKey", keystoreProperties["dropboxAppKey"]
         }
     }
     packagingOptions {

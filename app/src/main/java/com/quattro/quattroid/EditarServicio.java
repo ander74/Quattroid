@@ -56,7 +56,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     Cursor cursor = null;
     AdaptadorServiciosAuxiliares adaptador = null;
     Servicio serv = null;
-    String linea = "";
+    String lineatext = "";
     int id = -1;
     Vibrator vibrador = null;
     SharedPreferences opciones = null;
@@ -65,6 +65,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     // ELEMENTOS DEL VIEW
     TextView titulo = null;
     TextView complementarios = null;
+	EditText linea = null;
     EditText servicio = null;
     EditText turno = null;
     EditText inicio = null;
@@ -88,7 +89,8 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         context = this;
         titulo = (TextView) findViewById(R.id.tv_titulo);
         complementarios = (TextView) findViewById(R.id.tv_complementarios);
-        servicio = (EditText) findViewById(R.id.et_servicio);
+        servicio = (EditText) findViewById(R.id.et_linea);
+	    servicio = (EditText) findViewById(R.id.et_servicio);
         turno = (EditText) findViewById(R.id.et_turno);
         inicio = (EditText) findViewById(R.id.et_inicio);
         fin = (EditText) findViewById(R.id.et_final);
@@ -112,6 +114,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
 
         // Registrar los listeners
+	    linea.setOnFocusChangeListener(this);
         servicio.setOnFocusChangeListener(this);
         servicio.setOnLongClickListener(this);
         turno.setOnFocusChangeListener(this);
@@ -124,16 +127,16 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
         // Recogemos los datos del intent
         datosIntent = getIntent().getExtras();
-        linea = datosIntent.getString("Linea");
-        if (linea == null) linea = "";
+        lineatext = datosIntent.getString("Linea");
+        if (lineatext == null) lineatext = "";
         id = datosIntent.getInt("Id", -1);
 
         // Definir si vamos a editar un servicio o crear una nuevo.
         if (id == -1){
             //SERVICIO NUEVO
-            if (linea == "") finish();
+            if (lineatext == "") finish();
             serv = new Servicio();
-            serv.setLinea(linea);
+            serv.setLinea(lineatext);
             servicio.setText("");
             turno.setText("");
             inicio.setText("");
@@ -293,6 +296,9 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) return;
         switch (v.getId()){
+	        case R.id.et_linea:
+		        linea.setText(linea.getText().toString().trim().toUpperCase());
+		        break;
             case R.id.et_servicio:
                 servicio.setText(Hora.validarServicio(servicio.getText().toString()));
                 break;

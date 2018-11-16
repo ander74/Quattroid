@@ -76,6 +76,7 @@ public class Calculos {
         int Comida1 = opciones.getInt("LimiteComida1", 930);
         int Comida2 = opciones.getInt("LimiteComida2", 810);
         int Cena = opciones.getInt("LimiteCena", 30);
+        boolean NoAcumulaNegativo = opciones.getBoolean("NoAcumulaNegativo", false);
 
         // NUEVO
         // Convertimos minutos en horas decimales.
@@ -219,8 +220,8 @@ public class Calculos {
                 resultado.setTrabajadas(ht);
                 resultado.setNocturnas(hn);
                 // Nueva incorporación
-                if (ht < JornadaMinima) ht = JornadaMinima;
-                resultado.setAcumuladas(ht - Jornada);
+	            if (ht < JornadaMinima) ht = JornadaMinima;
+	            resultado.setAcumuladas(ht - Jornada);
                 resultado.setDesayuno(DietaDesayuno);
                 resultado.setComida(DietaComida);
                 resultado.setCena(DietaCena);

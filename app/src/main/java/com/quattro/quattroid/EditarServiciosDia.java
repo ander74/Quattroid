@@ -63,6 +63,7 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
         lugarFinal = (EditText) findViewById(R.id.et_lugarFinal);
 
         // Registramos los listeners
+	    linea.setOnFocusChangeListener(this);
         servicio.setOnFocusChangeListener(this);
         turno.setOnFocusChangeListener(this);
         inicio.setOnFocusChangeListener(this);

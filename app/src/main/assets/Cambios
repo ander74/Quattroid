@@ -263,3 +263,19 @@ Quattroid
     asignarlos como franqueos y/o festivos.
 
 
+    Versión 1.6.1
+    =============
+
+    Se corrige un problema que hacía que cuando se insertaban los servicios de la semana automáticamente,
+    éstos no aparecieran en la lista, aunque se habían guardado correctamente (al pasar de mes y volver
+    los cambios aparecían).
+
+    Ahora al volver de editar un día del calendario, éste muestra la lista de días tal y como la habíamos
+    dejado y no en el día 1 del mes.
+
+    Al añadir un servicio al día en el calendario, ahora la línea se pone en mayúsculas.
+
+    
+
+
+

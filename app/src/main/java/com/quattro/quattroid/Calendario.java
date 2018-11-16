@@ -241,7 +241,10 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         intent.putExtra("Año", dia.getAño());
         intent.putExtra("Posicion", position);
 
-        // Lanzamos la activity
+        // Guardamos la posición de la lista
+	    opciones.edit().putInt("PosicionCalendario", listaCalendario.getFirstVisiblePosition()).apply();
+
+	    // Lanzamos la activity
         startActivityForResult(intent, ACCION_DIA_CALENDARIO);
 
     }
@@ -254,6 +257,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         super.onDestroy();
     }
 
+
     // AL PAUSARSE LA APLICACION
     @Override
     public void onPause(){
@@ -262,6 +266,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         opciones.edit().putInt("UltimoAñoMostrado", añoActual).apply();
         super.onPause();
     }
+
 
     // AL VOLVER DE UNA PAUSA
     @Override
@@ -273,6 +278,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         escribeHoras();
         actualizaLista();
     }
+
 
     // AL VOLVER DE UNA SUBACTIVITY
     @Override
@@ -318,6 +324,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             default:
                 break;
         }
+
     }
 
 
@@ -632,7 +639,10 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // ACTUALIZA LA LISTA DEL CALENDARIO
     private void actualizaLista(){
-        adaptador.notifyDataSetChanged();
+	    listaDias = datos.datosMes(mesActual, añoActual);
+	    adaptador = new AdaptadorDiaCalendario(this, listaDias);
+	    listaCalendario.setAdapter(adaptador);
+	    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
     }
 
     // AL PULSAR EN LAS HORAS ACUMULADAS O NOCTURNAS TOTALES

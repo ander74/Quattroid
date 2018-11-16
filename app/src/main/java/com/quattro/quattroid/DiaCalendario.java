@@ -1485,7 +1485,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         }
         // Introducimos el texto de la línea
         datosDia.setTextoLinea(tl);
-        // Si linea está vacío, se sale.
+        // Si lineatext está vacío, se sale.
         if (datosDia.getLinea().equals("")) return;
         // Si existe la línea, se sale.
         Linea l = datos.getLinea(datosDia.getLinea());
