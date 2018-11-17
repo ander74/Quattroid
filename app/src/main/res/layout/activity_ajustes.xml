@@ -118,6 +118,27 @@
         <View style="@style/op_separador"/>
 
 
+        <!-- MODO BASICO -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:id="@+id/sw_modoBasico"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Mostrar Día Básico"
+                android:layout_alignBaseline="@+id/sw_modoBasico"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Mostrar menos opciones al rellenar un\ndía del calendario."
+                android:layout_below="@+id/sw_modoBasico"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
         <!-- RELLENAR SEMANA -->
         <RelativeLayout style="@style/op_rl">
             <Switch

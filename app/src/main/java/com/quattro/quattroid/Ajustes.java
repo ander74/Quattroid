@@ -47,6 +47,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
     EditText horasAnteriores = null;
     EditText relevoFijo = null;
     Switch rellenarSemana = null;
+	Switch modoBasico = null;
     EditText jornadaMedia = null;
     EditText jornadaMinima = null;
     EditText limiteServicios = null;
@@ -85,6 +86,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         horasAnteriores = (EditText) findViewById(R.id.et_acumuladasAnteriores);
         relevoFijo = (EditText) findViewById(R.id.et_relevoFijo);
         rellenarSemana = (Switch) findViewById(R.id.sw_rellenarSemana);
+	    modoBasico = (Switch) findViewById(R.id.sw_modoBasico);
         jornadaMedia = (EditText) findViewById(R.id.et_jornadaMedia);
         jornadaMinima = (EditText) findViewById(R.id.et_jornadaMinima);
         limiteServicios = (EditText) findViewById(R.id.et_limiteServicios);
@@ -122,6 +124,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         cena.setOnFocusChangeListener(this);
 
         rellenarSemana.setOnCheckedChangeListener(this);
+	    modoBasico.setOnCheckedChangeListener(this);
         verMesActual.setOnCheckedChangeListener(this);
         sumarTomaDeje.setOnCheckedChangeListener(this);
         iniciarCalendario.setOnCheckedChangeListener(this);
@@ -146,6 +149,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         horasAnteriores.setText(Hora.textoDecimal(Double.longBitsToDouble(acumAnteriores)));
 
         relevoFijo.setText(String.valueOf(opciones.getInt("RelevoFijo", 0)));
+	    modoBasico.setChecked(opciones.getBoolean("ModoBasico", false));
         rellenarSemana.setChecked(opciones.getBoolean("RellenarSemana", false));
 
         long jorMedia = opciones.getLong("JorMedia", 0);
@@ -392,6 +396,9 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         BaseDatos.hayCambios = true;
 
         switch (buttonView.getId()){
+	        case R.id.sw_modoBasico:
+		        opciones.edit().putBoolean("ModoBasico", modoBasico.isChecked()).apply();
+		        break;
             case R.id.sw_rellenarSemana:
                 opciones.edit().putBoolean("RellenarSemana", rellenarSemana.isChecked()).apply();
                 break;

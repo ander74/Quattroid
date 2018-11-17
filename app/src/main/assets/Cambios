@@ -242,6 +242,7 @@ Quattroid
     Se añade un scroll en el menú principal y en el menú herramientas para que en los móviles con pantalla
     pequeña se puedan desplazar los botones y acceder a los que queden ocultos.
 
+
     Versión 1.6
     ===========
 
@@ -275,7 +276,14 @@ Quattroid
 
     Al añadir un servicio al día en el calendario, ahora la línea se pone en mayúsculas.
 
-    
+    Se añade el modo básico para la edición de un día del calendario, mostrando menos opciones y más grandes.
+    Esta opción puede activarse o desactivarse en los ajustes, pero en el propio día se podrá alternar
+    entre un modo y otro haciendo clic largo en la incidencia. ¡OJO! Si has hecho cambios y cambias el modo
+    en el propio día, los cambios se pierden.
+
+    Ahora, en las notas, las frases comenzarán por mayúsculas automáticamente.
+
+
 
 
 

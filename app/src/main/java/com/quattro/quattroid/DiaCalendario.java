@@ -26,6 +26,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -148,8 +149,14 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setLogo(R.drawable.calendario);
-        setContentView(R.layout.activity_diacalendario);
-
+	    // Instanciar las opciones
+	    opciones = PreferenceManager.getDefaultSharedPreferences(this);
+	    if (opciones.getBoolean("ModoBasico", false)) {
+		    setContentView(R.layout.activity_diacalendario_basico);
+	    } else {
+		    setContentView(R.layout.activity_diacalendario);
+	    }
+	    
         // Instanciamos los elementos de la activity
         context = this;
         datosDia = new DatosDia();
@@ -158,7 +165,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         instanciarElementos();
 
         // Instanciar las opciones y la base de datos.
-        opciones = PreferenceManager.getDefaultSharedPreferences(this);
+        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
         datos = new BaseDatos(this);
 
         // Definimos el vibrador.
@@ -196,6 +203,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         // Registramos los listeners
         listaServiciosDia.setOnItemClickListener(this);
         registerForContextMenu(listaServiciosDia);
+        inputIncidencia.setOnLongClickListener(this);
         textoTrabajadas.setOnLongClickListener(this);
         textoAcumuladas.setOnLongClickListener(this);
         textoNocturnas.setOnLongClickListener(this);
@@ -753,6 +761,12 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                     ((EditText)v).setInputType(InputType.TYPE_CLASS_TEXT);
                 }
                 break;
+	        case R.id.tv_incidencia:
+	        	boolean modoBasico = opciones.getBoolean("ModoBasico", false);
+	        	opciones.edit().putBoolean("ModoBasico", !modoBasico).apply();
+	        	finish();
+	        	startActivity(getIntent());
+	        	break;
         }
         return false;
     }
@@ -841,13 +855,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     // ESCRIBIR LAS HORAS EN SUS HUECOS
     private void escribirHoras(){
         String txt = "";
-        txt = "Trab. : ";
+        txt = "Tra. : ";
         txt += Hora.textoDecimal(datosDia.getTrabajadas());
         textoTrabajadas.setText(txt);
-        txt = "Noct. : ";
+        txt = "Noc. : ";
         txt += Hora.textoDecimal(datosDia.getNocturnas());
         textoNocturnas.setText(txt);
-        txt = "Acum. : ";
+        txt = "Acu. : ";
         if (datosDia.getAcumuladas() > -0.01) {
             textoAcumuladas.setTextColor(Colores.VERDE_OSCURO);
         } else {

@@ -44,7 +44,7 @@
         <item name="android:gravity">top|left</item>
         <item name="android:padding">8dp</item>
         <item name="android:selectAllOnFocus">false</item>
-        <item name="android:inputType">textMultiLine</item>
+        <item name="android:inputType">textMultiLine|textCapSentences</item>
         <item name="android:maxLines">1000</item>
     </style>
 
@@ -176,6 +176,50 @@
         <item name="android:layout_weight">3</item>
         <item name="android:textSize">16sp</item>
     </style>
+
+
+    <!-- ===================== -->
+    <!--  ESTILOS MODO BÁSICO  -->
+    <!-- ===================== -->
+
+    <!-- TEXT VIEW BASICO -->
+    <style name="text_view_basico">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+
+    <!-- EDIT TEXT BASICO -->
+    <style name="edit_text_basico">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:selectAllOnFocus">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@drawable/fondo_edittext</item>
+    </style>
+
+
+    <!-- EDIT TEXT MULTILINEA -->
+    <style name="edit_text_multilinea_basico" parent="edit_text_basico">
+        <item name="android:gravity">top|left</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:selectAllOnFocus">false</item>
+        <item name="android:inputType">textMultiLine|textCapSentences</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:maxLines">1000</item>
+    </style>
+
 
 
 </resources>
