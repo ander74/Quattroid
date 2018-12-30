@@ -32,7 +32,7 @@
         <!-- TITULO -->
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="128dp"
+            android:layout_height="64dp"
             android:src="@drawable/bus"/>
 
         <TextView
@@ -59,30 +59,48 @@
             android:layout_marginTop="5dp"
             android:textSize="16sp"
             android:textColor="#ffdcdcdc"
-            android:textStyle="bold"
             android:text="acumulador.admin@gmail.com"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
             android:textSize="16sp"
             android:textColor="#ffdcdcdc"
-            android:textStyle="bold"
             android:text="Este programa está distirbuido bajo la licencia GPL Versión 3."/>
-        
+
         <Button
             android:id="@+id/bt_licencia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_margin="25dp"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
             android:onClick="botonPulsado"
             android:background="@drawable/bt_busquedas"
             android:textStyle="bold"
             android:text="Ver Licencia"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#ffdcdcdc"
+            android:text="iText v7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="#ffdcdcdc"
+            android:text="Licencia Pública General Affero\nhttps://www.gnu.org/licenses/agpl.html"/>
+
     </LinearLayout>
 
     <RelativeLayout

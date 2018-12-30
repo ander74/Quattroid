@@ -93,6 +93,14 @@
             android:nextFocusDown="@+id/et_notas"
             android:text="" />
 
+        <EditText
+            android:id="@+id/et_bus"
+            style="@style/edit_text_basico"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:nextFocusDown="@+id/et_tomaDeje"
+            android:text="" />
+
         <!-- SERVICIOS COMPLEMENTARIOS -->
         <LinearLayout
             android:id="@+id/ly_auxiliares"
@@ -148,7 +156,7 @@
         android:layout_marginRight="5dp"
         android:background="#000000" />
 
-
+    <!-- CONTENIDO -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -164,29 +172,22 @@
             <!-- SUSTI -->
             <LinearLayout
                 android:id="@+id/ly_susti"
-                style="@style/horizontal"
-                android:weightSum="3">
-
-                <LinearLayout
-                    style="@style/vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="1">
+                style="@style/horizontal">
 
                     <TextView
                         android:id="@+id/tv_susti"
                         style="@style/text_view_basico"
-                        android:text="Compañero/a" />
+                        android:text="Compañero/a: " />
 
                     <EditText
                         android:id="@+id/et_matricula_susti"
                         style="@style/edit_text_basico"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:gravity="center"
                         android:hint="Matrícula"
                         android:inputType="numberDecimal"
                         android:nextFocusDown="@+id/et_apellidos_susti"
                         android:text="" />
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -194,39 +195,26 @@
             <!-- HUELGA -->
             <LinearLayout
                 android:id="@+id/ly_huelga"
-                style="@style/vertical">
+                style="@style/horizontal"
+                android:layout_width="match_parent">
 
-                <TextView
-                    android:id="@+id/tv_huelga"
+                <CheckBox
+                    android:id="@+id/cb_huelga"
                     style="@style/text_view_basico"
-                    android:text="Huelga" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:text="Huelga Parcial: " />
 
-                <LinearLayout
-                    style="@style/horizontal"
-                    android:layout_width="match_parent">
-
-                    <CheckBox
-                        android:id="@+id/cb_huelga"
-                        style="@style/text_view_basico"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:gravity="left|center_vertical"
-                        android:text="H. Parcial" />
-
-                    <EditText
-                        android:id="@+id/et_huelga"
-                        style="@style/edit_text_basico"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:hint="Horas de paro"
-                        android:nextFocusDown="@+id/et_linea"
-                        android:inputType="numberDecimal"
-                        android:text="" />
-
-
-                </LinearLayout>
-
-
+                <EditText
+                    android:id="@+id/et_huelga"
+                    style="@style/edit_text_basico"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:hint="Horas de paro"
+                    android:nextFocusDown="@+id/et_linea"
+                    android:inputType="numberDecimal"
+                    android:text="" />
 
             </LinearLayout>
 
@@ -234,6 +222,7 @@
             <!-- LINEA - SERVICIO - TURNO -->
             <LinearLayout
                 android:id="@+id/ly_linea"
+                android:layout_marginTop="10dp"
                 style="@style/horizontal"
                 android:weightSum="3">
 
@@ -299,9 +288,10 @@
             </LinearLayout>
 
 
-            <!-- INICIO - FINAL - RELEVO - BUS - HORAS -->
+            <!-- INICIO - FINAL - RELEVO -->
             <LinearLayout
                 style="@style/horizontal"
+                android:layout_marginTop="10dp"
                 android:weightSum="3">
 
                 <LinearLayout
@@ -320,21 +310,6 @@
                         android:inputType="numberDecimal"
                         android:layout_width="match_parent"
                         android:nextFocusDown="@+id/et_lugarInicio"
-                        android:text="" />
-
-                    <TextView
-                        android:id="@+id/tv_relevo"
-                        style="@style/text_view_basico"
-                        android:text="Relevo" />
-
-                    <EditText
-                        android:id="@+id/et_matricula_relevo"
-                        style="@style/edit_text_basico"
-                        android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:hint="Matrícula"
-                        android:inputType="numberDecimal"
-                        android:nextFocusDown="@+id/et_apellidos_relevo"
                         android:text="" />
                 </LinearLayout>
 
@@ -355,61 +330,72 @@
                         android:inputType="numberDecimal"
                         android:nextFocusDown="@+id/et_lugarFinal"
                         android:text="" />
-
-                    <TextView
-                        style="@style/text_view_basico"
-                        android:text="Bus" />
-
-                    <EditText
-                        android:id="@+id/et_bus"
-                        style="@style/edit_text_basico"
-                        android:layout_width="match_parent"
-                        android:gravity="center"
-                        android:nextFocusDown="@+id/et_tomaDeje"
-                        android:text="" />
-
                 </LinearLayout>
 
                 <LinearLayout
                     style="@style/vertical"
                     android:layout_width="0dp"
-                    android:gravity="center|center_horizontal"
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_trabajadas"
+                        android:id="@+id/tv_relevo"
                         style="@style/text_view_basico"
-                        android:layout_weight="1"
-                        android:padding="5dp"
-                        android:background="@drawable/fondo_horas_dia"
-                        android:gravity="center_horizontal"
-                        android:text="Tra.: 0,00"
-                        android:textColor="#ff000000" />
+                        android:text="Relevo" />
 
-                    <TextView
-                        android:id="@+id/tv_acumuladas"
-                        style="@style/text_view_basico"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:longClickable="true"
-                        android:padding="5dp"
-                        android:background="@drawable/fondo_horas_dia"
-                        android:gravity="center_horizontal"
-                        android:text="Acu.: 0,00"
-                        android:textColor="#ffff0003" />
-
-                    <TextView
-                        android:id="@+id/tv_nocturnas"
-                        style="@style/text_view_basico"
-                        android:layout_weight="1"
-                        android:gravity="center_horizontal"
-                        android:padding="5dp"
-                        android:background="@drawable/fondo_horas_dia"
-                        android:text="Noc.: 0,00"
-                        android:textColor="#ff3432ff" />
-
+                    <EditText
+                        android:id="@+id/et_matricula_relevo"
+                        style="@style/edit_text_basico"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:hint="Matrícula"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/et_apellidos_relevo"
+                        android:text="" />
                 </LinearLayout>
 
+            </LinearLayout>
+
+
+            <!-- HORAS -->
+            <LinearLayout
+                style="@style/horizontal"
+                android:gravity="center_horizontal"
+                android:layout_weight="3">
+
+                <TextView
+                    android:id="@+id/tv_trabajadas"
+                    style="@style/text_view_basico"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:background="@drawable/fondo_horas_dia"
+                    android:gravity="center_horizontal"
+                    android:text="Tra.: 0,00"
+                    android:textColor="#ff000000" />
+
+                <TextView
+                    android:id="@+id/tv_acumuladas"
+                    style="@style/text_view_basico"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:longClickable="true"
+                    android:padding="5dp"
+                    android:background="@drawable/fondo_horas_dia"
+                    android:gravity="center_horizontal"
+                    android:text="Acu.: 0,00"
+                    android:textColor="#ffff0003" />
+
+                <TextView
+                    android:id="@+id/tv_nocturnas"
+                    style="@style/text_view_basico"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:padding="5dp"
+                    android:background="@drawable/fondo_horas_dia"
+                    android:text="Noc.: 0,00"
+                    android:textColor="#ff3432ff" />
 
             </LinearLayout>
 

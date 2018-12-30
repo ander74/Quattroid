@@ -65,7 +65,6 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     // ELEMENTOS DEL VIEW
     TextView titulo = null;
     TextView complementarios = null;
-	EditText linea = null;
     EditText servicio = null;
     EditText turno = null;
     EditText inicio = null;
@@ -114,7 +113,6 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
 
         // Registrar los listeners
-	    linea.setOnFocusChangeListener(this);
         servicio.setOnFocusChangeListener(this);
         servicio.setOnLongClickListener(this);
         turno.setOnFocusChangeListener(this);
@@ -296,9 +294,6 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) return;
         switch (v.getId()){
-	        case R.id.et_linea:
-		        linea.setText(linea.getText().toString().trim().toUpperCase());
-		        break;
             case R.id.et_servicio:
                 servicio.setText(Hora.validarServicio(servicio.getText().toString()));
                 break;

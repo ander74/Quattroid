@@ -20,6 +20,7 @@ import android.database.Cursor;
 
 public class DatosDia {
 
+	
     //region VARIABLES PRIVADAS
 
     private int Dia = 0;
@@ -69,7 +70,7 @@ public class DatosDia {
 
     public DatosDia(){ }
 
-    public DatosDia(Cursor cursor){
+    DatosDia(Cursor cursor){
 
         Dia = cursor.getInt(cursor.getColumnIndex("Dia"));
         Mes = cursor.getInt(cursor.getColumnIndex("Mes"));

@@ -127,7 +127,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         getActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_calendario);
         context = this;
-
+        
         // Inicializar los elementos del view
         listaCalendario = (ListView) findViewById(R.id.lw_listaCalendario);
         acumuladas = (TextView) findViewById(R.id.tv_acumuladas);
@@ -166,7 +166,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
         // MULTI-SELECCION
         listaCalendario.setMultiChoiceModeListener(this);
-
 
         listaDias = datos.datosMes(mesActual, añoActual);
         adaptador = new AdaptadorDiaCalendario(this, listaDias);
@@ -461,7 +460,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 }
                 actualizaLista();
                 escribeHoras();
-                return true;
+	            return true;
             case R.id.bt_ajenas:
                 //DatosDia dia = listaSeleccionados.get(0);
                 DatosDia dia = listaDias.get(listaIds.get(0));
@@ -482,7 +481,9 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     public void onClick(DialogInterface dialog, int which) {
                         //for (DatosDia d : listaSeleccionados) {
                         for (int id : listaIds) {
+	                    //for (DatosDia d : listaDias){
                             vaciarDia(listaDias.get(id));
+		                    //if (d.isSeleccionado()) vaciarDia(d);
                         }
                         actualizaLista();
                     }
@@ -494,6 +495,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     }
                 });
                 aviso.show();
+                //TODO: Eliminar los servicios auxiliares.
                 return true;
             case R.id.bt_verRelevo:
                 //DatosDia datosD = listaSeleccionados.get(0);
@@ -844,7 +846,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         dia.setCalificacion(0);
         dia.setNotas("");
         if (datos.guardaDia(dia)){
-            datos.vaciarServiciosDia(diaTemporal, mesActual, añoActual);
+            datos.vaciarServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());
             Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
             setResult(RESULT_OK, null);
             escribeHoras();

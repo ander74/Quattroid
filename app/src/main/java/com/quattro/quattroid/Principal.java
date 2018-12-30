@@ -41,7 +41,7 @@ import Objetos.Hora;
 import Objetos.Utils;
 
 
-public class Principal extends Activity {
+public class Principal extends Activity implements View.OnLongClickListener {
 
     // CONSTANTES
     final static int ACCION_LICENCIA = 1;
@@ -54,11 +54,7 @@ public class Principal extends Activity {
     Boolean TienePermisoEscritura = false;
 
     // ELEMENTOS
-    LinearLayout btCalendario = null;
-    LinearLayout btRelevos = null;
-    LinearLayout btServicios = null;
-    LinearLayout btAjenas = null;
-    LinearLayout btHerramientas = null;
+	LinearLayout lyTitulo = null;
     TextView tvActualizando = null;
 
 
@@ -74,6 +70,10 @@ public class Principal extends Activity {
 
         // Declaramos los elementos visuales
         tvActualizando = (TextView) findViewById(R.id.tv_actualizando);
+        lyTitulo = (LinearLayout) findViewById(R.id.ly_titulo);
+        
+        // Establecemos los listeners
+	    lyTitulo.setOnLongClickListener(this);
 
         // Flag para actualizar
         ACTUALIZAR = true;
@@ -270,6 +270,19 @@ public class Principal extends Activity {
         }
 
     }
-
-
+	
+	
+    // AL PULSAR LARGO EN EL TÍTULO
+	@Override
+	public boolean onLongClick(View v)
+	{
+		if (v.getId() != R.id.ly_titulo) return false;
+		
+		//TODO: Aquí es donde irá la llamada a alguna activity que nos muestre los datos que se requieran.
+		Toast.makeText(this,"Has pulsado el título" , Toast.LENGTH_SHORT).show();
+		
+		return true;
+	}
+	
+	
 }

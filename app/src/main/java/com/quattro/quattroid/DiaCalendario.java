@@ -66,6 +66,8 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                                                        AdapterView.OnItemClickListener,
                                                        View.OnLongClickListener{
 
+	//region DECLARACIONES INICIALES
+	
     // CONSTANTES
     static final int ACCION_LISTA_INCIDENCIA = 1;
     static final int ACCION_SERVICIOS_DIA = 2;
@@ -143,6 +145,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
     ListView listaServiciosDia = null;
 
+    //endregion
 
     // AL CREARSE LA ACTIVITY
     @Override
@@ -842,14 +845,12 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
     // COMPRUEBA QUE LAS HORAS ESTEN VACIAS
     private boolean isHorasVacio(){
-        if (datosDia.getInicio().trim() == ""){
+        if (datosDia.getInicio().trim().equals("")){
             return true;
-        } else if (datosDia.getFinal().trim() == ""){
+        } else if (datosDia.getFinal().trim().equals("")){
             return true;
-        } else if (datosDia.getTurno() == 0){
-            return true;
-        }
-        return false;
+        } else
+        	return datosDia.getTurno() == 0;
     }
 
     // ESCRIBIR LAS HORAS EN SUS HUECOS
@@ -899,12 +900,9 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
     // COMPRUEBA QUE EL SERVICIO ESTE VACIO
     private boolean isServicioVacio(){
-        if (datosDia.getLinea().trim().equals("") ||
-                datosDia.getServicio().equals("") ||
-                datosDia.getTurno() == 0){
-            return true;
-        }
-        return false;
+	    return datosDia.getLinea().trim().equals("") ||
+			    datosDia.getServicio().equals("") ||
+			    datosDia.getTurno() == 0;
     }
 
     // ACTUALIZA EL CURSOR CON LOS SERVICIOS DEL DIA
@@ -1135,14 +1133,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         // Declaramos las variables.
         MathContext mathContext = new MathContext(4, RoundingMode.HALF_UP);
-        double jAnual = Double.valueOf(opciones.getInt("JornadaAnual", 1592));
+        double jAnual = (double) opciones.getInt("JornadaAnual", 1592);
         long jorMedia = opciones.getLong("JorMedia", 0);
         double jMedia = Double.longBitsToDouble(jorMedia);
 
         // Si es el día 31 de diciembre...
         if (datosDia.getDia() == 31 && datosDia.getMes() == 12 && opciones.getBoolean("RegularJornadaAnual", true)) {
             double trabajadas = datos.diasTrabajadosConvenio(datosDia.getAño()) * jMedia;
-            //TODO: Añadimos los días enfermo que no son franqueos.
             trabajadas += datos.diasEnfermoComputables(datosDia.getAño()) * jMedia;
             double diff = trabajadas - jAnual;
             datos.setAjenaFinAño(diff, datosDia.getAño());
@@ -1279,6 +1276,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 datosDia.setTrabajadas(0);
                 datosDia.setAcumuladas(0);
                 datosDia.setNocturnas(0);
+                if (datosDia.isHuelgaParcial()) calcularHoras();
                 rellenarDia();
                 break;
             // JORNADA MEDIA
@@ -1533,17 +1531,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         if (datosDia.getTipoIncidencia() == 1 || datosDia.getTipoIncidencia() == 2) {
             calcularHoras();
         }
-        // Si la incidencia es la 15:Huelga, calculamos las horas igualmente.
-        //if (datosDia.getCodigoIncidencia() == 15){
-        //    calcularHoras();
-       // }
     }
 
     // AL CAMBIAR MATRICULA RELEVO
     public void cambiaMatriculaRelevo(){
         // Extraemos el texto escrito y lo validamos
         String mt = inputMatriculaRelevo.getText().toString().trim();
-        int m = 0;
+        int m;
         try{
             m = Integer.valueOf(mt);
         } catch (NumberFormatException e){
@@ -1592,7 +1586,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     public void cambiaMatriculaSusti(){
         // Extraemos el texto escrito y lo validamos
         String mt = inputMatriculaSusti.getText().toString().trim();
-        int m = 0;
+        int m;
         try{
             m = Integer.valueOf(mt);
         } catch (NumberFormatException e){
@@ -1636,9 +1630,9 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     public void cambiaHorasHuelga(){
         validarCampos();
         // Si la incidencia es la 15:Huelga, calculamos las horas igualmente.
-        if (datosDia.getCodigoIncidencia() == 15){
+        //if (datosDia.getCodigoIncidencia() == 15){
             calcularHoras();
-        }
+        //}
     }
 
     //endregion
@@ -1714,14 +1708,9 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                         datos.guardaServicioDia(sd);
                     } while (cursor.moveToNext());
                 }
-
             }
         }
-
-
-
-
-
-
     }
+    
+    
 }

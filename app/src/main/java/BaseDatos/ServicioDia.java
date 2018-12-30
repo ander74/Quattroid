@@ -63,7 +63,7 @@ public class ServicioDia {
     public String getFinal() {
         return Final;
     }
-
+	
     public String getLugarInicio() {
         return LugarInicio;
     }

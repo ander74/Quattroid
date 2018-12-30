@@ -267,6 +267,9 @@ Quattroid
     Versión 1.6.1
     =============
 
+    Se actualiza el código interno de la versión para albergar las versiones menores.
+    Esta versión será la 161. Versiones mayores posteriores serán la 170, 180, etc.
+
     Se corrige un problema que hacía que cuando se insertaban los servicios de la semana automáticamente,
     éstos no aparecieran en la lista, aunque se habían guardado correctamente (al pasar de mes y volver
     los cambios aparecían).
@@ -282,6 +285,11 @@ Quattroid
     en el propio día, los cambios se pierden.
 
     Ahora, en las notas, las frases comenzarán por mayúsculas automáticamente.
+
+    En el calendario, los números de día ya aparecen bien centrados.
+
+    Se añade la función de pulsación larga al título de la página principal para acceso de administración.
+    Está sin implementar.
 
 
 

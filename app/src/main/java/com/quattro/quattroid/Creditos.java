@@ -60,7 +60,7 @@ public class Creditos extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().hide();
+	    getActionBar().hide();
         setContentView(R.layout.activity_creditos);
 
         // Establecemos el contexto

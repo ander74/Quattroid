@@ -30,6 +30,7 @@
     android:background="#000000">
 
     <LinearLayout
+        android:id="@+id/ly_titulo"
         style="@style/vertical"
         android:layout_marginTop="32dp"
         android:clickable="true"
