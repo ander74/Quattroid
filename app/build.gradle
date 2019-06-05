@@ -32,8 +32,8 @@ android {
         applicationId "com.quattro.quattroid"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 162 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
-        versionName '1.6.2'
+        versionCode 164 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
+        versionName '1.6.4'
         signingConfig signingConfigs.Quattroid
     }
     buildTypes {

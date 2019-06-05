@@ -276,6 +276,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         datos = new BaseDatos(context);
         escribeHoras();
         actualizaLista();
+	    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
     }
 
 
@@ -294,6 +295,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                         diaActual.copiarDe(diaNuevo);
                     }
                     actualizaLista();
+	                listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
                     escribeHoras();
                 }
                 break;
@@ -319,6 +321,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                         if(dia.getMatricula() == matricula) dia.setApellidos(apellidos);
                     }
                     actualizaLista();
+	                listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
                 }
             default:
                 break;
@@ -385,6 +388,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 //repiteDiaAnterior(listaSeleccionados.get(0));
                 repiteDiaAnterior(listaDias.get(listaIds.get(0)));
                 escribeHoras();
+	            //mode.finish();
                 return true;
             case R.id.bt_marcarFranqueo:
                 //for (DatosDia d : listaSeleccionados) {
@@ -393,6 +397,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 for (int id : listaIds) {
                     marcaFranqueo(listaDias.get(id));
                 }
+                //mode.finish();
                 return true;
             case R.id.bt_marcarFestivo:
                 //for (DatosDia d : listaSeleccionados) {
@@ -401,6 +406,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 for (int id : listaIds) {
                     marcarFestivo(listaDias.get(id));
                 }
+	            //mode.finish();
                 return true;
             case R.id.bt_copiar:
                 //copiar(listaSeleccionados.get(0));
@@ -460,6 +466,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 }
                 actualizaLista();
                 escribeHoras();
+	            //mode.finish();
 	            return true;
             case R.id.bt_ajenas:
                 //DatosDia dia = listaSeleccionados.get(0);
@@ -471,6 +478,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 intent.putExtra("Año", dia.getAño());
                 intent.putExtra("Nuevo", true);
                 startActivityForResult(intent, ACCION_EDITA_AJENA);
+	            //mode.finish();
                 return true;
             case R.id.bt_vaciar:
                 AlertDialog.Builder aviso = new AlertDialog.Builder(context);
@@ -486,6 +494,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 		                    //if (d.isSeleccionado()) vaciarDia(d);
                         }
                         actualizaLista();
+	                    //mode.finish();
                     }
                 });
                 aviso.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -511,6 +520,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 i.putExtra("Telefono", r.getTelefono());
                 i.putExtra("Notas", r.getNotas());
                 startActivityForResult(i, ACCION_EDITA_RELEVO);
+	            //mode.finish();
                 return true;
             case R.id.bt_guardarServicio:
                 //DatosDia datosDia = listaSeleccionados.get(0);
@@ -522,6 +532,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                         datosDia.getInicio().equals("") ||
                         datosDia.getFinal().equals("")) {
                     Toast.makeText(context, "Servicio Incompleto", Toast.LENGTH_SHORT).show();
+	                //mode.finish();
                     return true;
                 }
                 // Se crea el servicio que será guardado.
@@ -530,6 +541,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 servicio = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
                 if (servicio != null) {
                     Toast.makeText(context, "El servicio ya existe", Toast.LENGTH_SHORT).show();
+	                //mode.finish();
                     return true;
                 }
                 // Si la línea no existe, se crea.
@@ -575,6 +587,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 }
                 cur.close();
                 Toast.makeText(context, "Se ha creado el servicio", Toast.LENGTH_SHORT).show();
+	            //mode.finish();
                 return true;
         }
         return true;
@@ -641,10 +654,10 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // ACTUALIZA LA LISTA DEL CALENDARIO
     private void actualizaLista(){
-	    listaDias = datos.datosMes(mesActual, añoActual);
-	    adaptador = new AdaptadorDiaCalendario(this, listaDias);
-	    listaCalendario.setAdapter(adaptador);
-	    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
+	    //listaDias = datos.datosMes(mesActual, añoActual);
+	    //adaptador = new AdaptadorDiaCalendario(this, listaDias);
+	    //listaCalendario.setAdapter(adaptador);
+	    adaptador.notifyDataSetChanged();
     }
 
     // AL PULSAR EN LAS HORAS ACUMULADAS O NOCTURNAS TOTALES

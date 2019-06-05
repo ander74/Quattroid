@@ -31,7 +31,7 @@ public class DropBoxFactory {
     public static DbxClientV2 GetCliente(String token){
         if (Cliente == null) {
             String userLocale = Locale.getDefault().toString();
-            DbxRequestConfig requestConfig = new DbxRequestConfig("Quattroid/1.4", userLocale);
+            DbxRequestConfig requestConfig = new DbxRequestConfig("Quattroid/1.6.2", userLocale);
             Cliente = new DbxClientV2(requestConfig, token);
             try {
                 emailCuenta = Cliente.users().getCurrentAccount().getEmail();

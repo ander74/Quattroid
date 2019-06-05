@@ -292,6 +292,25 @@ Quattroid
     Está sin implementar.
 
 
+    Versión 1.6.2
+    =============
+
+    Se corrige un problema que impedía obtener el token de autorización de Dropbox.
+
+    Se corrige un problema que hacía que la aplicación se cerrara al producirse la regulación de fin de año.
+
+
+    Versión 1.6.3
+    =============
+
+    Se corrige un problema que hacía que se moviera la lista de días en el calendario al ejecutar alguna acción
+    sobre un día.
+
+    Se resuelve el problema al seleccionar días en el calendario por el cual, al ejecutar una acción sobre
+    los mismos, seguían seleccionados, pero sin mostrarlos.
+
+
+
 
 
 

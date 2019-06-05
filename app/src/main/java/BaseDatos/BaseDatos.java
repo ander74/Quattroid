@@ -710,7 +710,7 @@ public class BaseDatos {
     public int diasEnfermoComputables(int año){
         int diasEnfermo = 0;
         String consulta = "SELECT * FROM Calendario WHERE Año=" + año +
-                " AND (CodigoIncidencia=6 OR CodigoIncidencia=7) AND EsFranqueo=0)";
+                " AND (CodigoIncidencia=6 OR CodigoIncidencia=7) AND EsFranqueo=0";
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) diasEnfermo = c.getCount();
         c.close();
@@ -1413,7 +1413,7 @@ public class BaseDatos {
 
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.getCount() > 0){
-            String args[] = {String.valueOf(año), "Regulación año bisiesto."};
+            String[] args = {String.valueOf(año), "Regulación año bisiesto."};
             String where = "Año=? AND Motivo=?";
             baseDatos.delete(TABLA_HORAS_AJENAS, where, args);
         }
@@ -1440,7 +1440,7 @@ public class BaseDatos {
 
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.getCount() > 0){
-            String args[] = {String.valueOf(año), "Regulación fin de año."};
+            String[] args = {String.valueOf(año), "Regulación fin de año."};
             String where = "Año=? AND Motivo=?";
             baseDatos.delete(TABLA_HORAS_AJENAS, where, args);
         }
