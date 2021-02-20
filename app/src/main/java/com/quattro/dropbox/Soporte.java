@@ -16,12 +16,15 @@
 
 package com.quattro.dropbox;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.dropbox.core.DbxDownloader;
 import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.UploadUploader;
 import com.dropbox.core.v2.files.WriteMode;
@@ -48,14 +51,16 @@ public class Soporte {
 
 
     // Metodo estático que descarga la base de datos.
-    public static Resultado DescargarBaseDatos(String Token){
+    public static Resultado DescargarBaseDatos(Context context){
 
         DbxDownloader<FileMetadata> descargador;
         FileMetadata metadatos;
         File archivo = new File(ARCHIVO_BASEDATOS);
 
         try {
-            descargador = DropBoxFactory.GetCliente(Token).files().download(ARCHIVO_DATOS);
+            DbxClientV2 cliente = DropBoxFactory.GetCliente(context);
+            if (cliente == null) return Soporte.Resultado.ERROR_DROPBOX;
+            descargador = cliente.files().download(ARCHIVO_DATOS);
         } catch (DbxException dbe) {
             return Resultado.ERROR_DROPBOX;
         }
@@ -79,13 +84,15 @@ public class Soporte {
 
 
     // Método estático que sube la base de datos.
-    public static Resultado SubirBaseDatos(String Token){
+    public static Resultado SubirBaseDatos(Context context){
 
         UploadUploader subidor;
         File archivo = new File(ARCHIVO_BASEDATOS);
 
         try {
-            subidor = DropBoxFactory.GetCliente(Token).files().uploadBuilder(ARCHIVO_DATOS)
+            DbxClientV2 cliente = DropBoxFactory.GetCliente(context);
+            if (cliente == null) return Soporte.Resultado.ERROR_DROPBOX;
+            subidor = cliente.files().uploadBuilder(ARCHIVO_DATOS)
                     .withMode(WriteMode.OVERWRITE)
                     .withClientModified(new Date(archivo.lastModified()))
                     .start();
@@ -110,8 +117,10 @@ public class Soporte {
 
 
     // Método estático que descarga las opciones.
-    public static Resultado DescargarOpciones(String Token, SharedPreferences Opciones){
+    public static Resultado DescargarOpciones(Context context){
 
+        // Extraemos las opciones
+        SharedPreferences Opciones = PreferenceManager.getDefaultSharedPreferences(context);
         // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
         String estadoMemoria = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
@@ -123,7 +132,9 @@ public class Soporte {
         DbxDownloader<FileMetadata> descargador;
 
         try {
-            descargador = DropBoxFactory.GetCliente(Token).files().download(ARCHIVO_OPCIONES);
+            DbxClientV2 cliente = DropBoxFactory.GetCliente(context);
+            if (cliente == null) return Soporte.Resultado.ERROR_DROPBOX;
+            descargador = cliente.files().download(ARCHIVO_OPCIONES);
         } catch (DbxException dbe) {
             return Resultado.ERROR_DROPBOX;
         }
@@ -146,8 +157,10 @@ public class Soporte {
 
 
     // Método estático que sube las opciones a DropBox
-    public static Resultado SubirOpciones(String Token, SharedPreferences Opciones){
+    public static Resultado SubirOpciones(Context context){
 
+        // Extraemos las opciones
+        SharedPreferences Opciones = PreferenceManager.getDefaultSharedPreferences(context);
         // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
         String estadoMemoria = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
@@ -162,7 +175,9 @@ public class Soporte {
         if (!Utils.guardarOpcionesTemp(Opciones)) return Resultado.ERROR_ARCHIVOS;
 
         try {
-            subidor = DropBoxFactory.GetCliente(Token).files().uploadBuilder(ARCHIVO_OPCIONES)
+            DbxClientV2 cliente = DropBoxFactory.GetCliente(context);
+            if (cliente == null) return Soporte.Resultado.ERROR_DROPBOX;
+            subidor = cliente.files().uploadBuilder(ARCHIVO_OPCIONES)
                     .withMode(WriteMode.OVERWRITE)
                     .start();
         } catch (DbxException dbe) {

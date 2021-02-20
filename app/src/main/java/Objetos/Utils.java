@@ -22,18 +22,15 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -113,6 +110,9 @@ public class Utils {
             return false;
         }
 
+        // Definimos si la sincronización con dropbox está activada.
+        boolean sincronizarDropbox = Opciones.getBoolean("SincronizarDropBox", false);
+
         // Definimos el path de destino y lo creamos si no existe.
         String destino = Environment.getExternalStorageDirectory().getPath();
         destino = destino + "/Quattroid/opciones.tmp";
@@ -143,6 +143,8 @@ public class Utils {
                 else if (v instanceof String)
                     prefEdit.putString(key, ((String) v));
             }
+            // Restauramos el estado de la sincronización con dropbox antes de la restauración.
+            prefEdit.putBoolean("SincronizarDropBox", sincronizarDropbox);
             prefEdit.commit();
             res = true;
         } catch (FileNotFoundException e) {

@@ -697,10 +697,20 @@ public class BaseDatos {
      * Días con tipo incidencia 1-Trabajo, 3-FOD, 6-Jornada Media.
      *
      */
+    public int diasTrabajadosConvenio(int mes, int año){
+        int trab = 0;
+        String consulta = "SELECT * FROM Calendario WHERE Mes=" + mes + " AND año=" + año +
+        " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) trab = c.getCount();
+        c.close();
+        return trab;
+    }
+
     public int diasTrabajadosConvenio(int año){
         int trab = 0;
         String consulta = "SELECT * FROM Calendario WHERE Año=" + año +
-        " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
+                " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) trab = c.getCount();
         c.close();

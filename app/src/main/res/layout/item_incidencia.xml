@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/codigo"
-        android:layout_width="40dp"
+        android:layout_width="45dp"
         android:layout_height="match_parent"
         android:layout_marginRight="-1dp"
         android:padding="8dp"

@@ -17,16 +17,15 @@ package com.quattro.quattroid;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -55,6 +54,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
 
     // ELEMENTOS
 	LinearLayout lyTitulo = null;
+	TextView textTitulo = null;
     TextView tvActualizando = null;
 
 
@@ -70,6 +70,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
 
         // Declaramos los elementos visuales
         tvActualizando = (TextView) findViewById(R.id.tv_actualizando);
+        textTitulo = (TextView) findViewById(R.id.textTitulo);
         lyTitulo = (LinearLayout) findViewById(R.id.ly_titulo);
         
         // Establecemos los listeners
@@ -173,9 +174,9 @@ public class Principal extends Activity implements View.OnLongClickListener {
         if (!opciones.getBoolean("SincronizarDropBox", false)) return;
         // Si internet no está disponible, salimos
         if (!Utils.hayInternet(this)) return;
+
         // Si sólo conectamos con wifi...
         if (opciones.getBoolean("SincronizarSoloWifi", false)) {
-
             // Si hay wifi
             if (Utils.hayWifi(this)) {
                 tvActualizando.setText("Actualizando...");
@@ -247,25 +248,23 @@ public class Principal extends Activity implements View.OnLongClickListener {
     // SINCRONIZAR CON DROPBOX
     private void SincronizarDropBox(){
 
-        final String Token = opciones.getString("Token", null);
+        final String dropboxCredential = opciones.getString("DropboxCredential", null);
 
-        if (Token != null) {
+        if (dropboxCredential != null) {
 
-            new SincronizarTask(Token, opciones, new SincronizarTask.Callback() {
+            new SincronizarTask(new SincronizarTask.Callback() {
                 @Override
                 public void onComplete() {
                     tvActualizando.setText("Actualizado");
                     BaseDatos.hayCambios = false;
                     ACTUALIZAR = false;
-                    opciones.edit().putString("Token", Token).apply();
                 }
 
                 @Override
                 public void onError(Soporte.Resultado resultado) {
                     tvActualizando.setText("Error al actualizar");
-                    opciones.edit().putString("Token", Token).apply();
                 }
-            }).execute();
+            }, this).execute();
 
         }
 

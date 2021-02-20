@@ -17,33 +17,30 @@
 package com.quattro.dropbox;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 
 import java.io.File;
 import java.util.Date;
 
-import BaseDatos.BaseDatos;
-
 public class SincronizarTask extends AsyncTask<Void, Void, Soporte.Resultado>{
 
-    private final String Token;
     private final Callback mCallback;
-    private final SharedPreferences Opciones;
+    private final Context context;
 
     public interface Callback{
         void onComplete();
         void onError(Soporte.Resultado resultado);
     }
 
-    public SincronizarTask(String token, SharedPreferences opciones, Callback callback){
-        Token = token;
-        Opciones = opciones;
+    public SincronizarTask(Callback callback, Context c){
         mCallback = callback;
+        context = c;
     }
 
     @Override
@@ -55,8 +52,12 @@ public class SincronizarTask extends AsyncTask<Void, Void, Soporte.Resultado>{
         Date FechaRemoto;
         Soporte.Resultado resultado;
 
+
         try {
-            metadatos = (FileMetadata) DropBoxFactory.GetCliente(Token).files().getMetadata(Soporte.ARCHIVO_DATOS);
+            // Se sustituye por la versión nueva de GetCliente.
+            DbxClientV2 cliente = DropBoxFactory.GetCliente(context);
+            if (cliente == null) return Soporte.Resultado.ERROR_DROPBOX;
+            metadatos = (FileMetadata) cliente.files().getMetadata(Soporte.ARCHIVO_DATOS);
         } catch (DbxException dbe) {
             return Soporte.Resultado.ERROR_DROPBOX;
         }
@@ -72,18 +73,18 @@ public class SincronizarTask extends AsyncTask<Void, Void, Soporte.Resultado>{
             return Soporte.Resultado.OK;
 
         } else if (FechaLocal.before(FechaRemoto)) {
-            resultado = Soporte.DescargarBaseDatos(Token);
+            resultado = Soporte.DescargarBaseDatos(context);
             if (resultado == Soporte.Resultado.OK) {
-                resultado = Soporte.DescargarOpciones(Token, Opciones);
+                resultado = Soporte.DescargarOpciones(context);
             } else {
                 return Soporte.Resultado.NULL;
             }
             return resultado;
 
         } else if (FechaLocal.after(FechaRemoto)) {
-            resultado = Soporte.SubirBaseDatos(Token);
+            resultado = Soporte.SubirBaseDatos(context);
             if (resultado == Soporte.Resultado.OK) {
-                resultado = Soporte.SubirOpciones(Token, Opciones);
+                resultado = Soporte.SubirOpciones(context);
             } else {
                 return Soporte.Resultado.NULL;
             }
@@ -97,13 +98,10 @@ public class SincronizarTask extends AsyncTask<Void, Void, Soporte.Resultado>{
     protected void onPostExecute(Soporte.Resultado resultado) {
         super.onPostExecute(resultado);
 
-        switch (resultado){
-            case OK:
-                mCallback.onComplete();
-                break;
-            default:
-                mCallback.onError(resultado);
-                break;
+        if (resultado == Soporte.Resultado.OK) {
+            mCallback.onComplete();
+        } else {
+            mCallback.onError(resultado);
         }
     }
 }

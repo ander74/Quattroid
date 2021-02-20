@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
   ~ Creado por A. Herrero en Enero de 2015
@@ -15,8 +14,7 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,53 +23,54 @@
     <TextView
         android:id="@+id/tv_matricula"
         android:layout_width="wrap_content"
-        android:minWidth="80dp"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
+        android:background="@drawable/fondo_transparente_b"
         android:gravity="center"
+        android:minWidth="80dp"
         android:padding="6dp"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:background="@drawable/fondo_transparente_b"/>
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/tv_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:layout_marginTop="2dp"
+        android:layout_alignTop="@id/tv_matricula"
         android:layout_marginLeft="5dp"
-        android:textSize="18sp"
+        android:layout_marginTop="4dp"
         android:layout_toRightOf="@id/tv_matricula"
-        android:layout_alignTop="@id/tv_matricula"/>
+        android:textSize="18sp" />
+
     <TextView
         android:id="@+id/tv_apellidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:layout_marginBottom="2dp"
+        android:layout_alignBottom="@id/tv_matricula"
         android:layout_marginLeft="5dp"
-        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
         android:layout_toRightOf="@id/tv_matricula"
-        android:layout_alignBottom="@id/tv_matricula"/>
+        android:textSize="18sp" />
+
     <TextView
         android:id="@+id/tv_deuda"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:layout_marginTop="2dp"
-        android:textSize="16sp"
+        android:layout_alignTop="@id/tv_matricula"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/tv_matricula"/>
+        android:layout_marginTop="4dp"
+        android:textSize="16sp" />
+
     <ImageView
         android:id="@+id/im_calificacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/buenrelevo"
-        android:layout_margin="4dp"
-        android:maxHeight="26dp"
-        android:adjustViewBounds="true"
         android:layout_alignBottom="@+id/tv_matricula"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="4dp"
+        android:adjustViewBounds="true"
+        android:maxHeight="26dp"
+        android:src="@drawable/buenrelevo" />
 
 
 </RelativeLayout>

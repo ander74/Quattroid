@@ -125,6 +125,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_modoBasico"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -146,6 +148,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_rellenarSemana"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -256,6 +260,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_regularJornada"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -278,6 +284,8 @@
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
                 android:id="@+id/sw_RegularBisiestos"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:layout_alignParentRight="true"/>
             <TextView
                 style="@style/op_titulo"
@@ -444,6 +452,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:padding="5dp"
                 android:id="@+id/sw_pdfHorizontal"
                 android:layout_alignParentRight="true"/>
@@ -465,6 +475,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_pdfIncluirServicios"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -484,6 +496,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:padding="5dp"
                 android:id="@+id/sw_pdfIncluirNotas"
                 android:layout_alignParentRight="true"/>
@@ -505,6 +519,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_pdfAgruparNotas"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -536,7 +552,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_verMesActual"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -558,7 +575,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_iniarCalendario"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -580,7 +598,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_sumarTomaDeje"
                 android:layout_alignParentRight="true"/>
             <TextView
@@ -601,7 +620,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-
+                android:textOn="ON"
+                android:textOff="OFF"
                 android:id="@+id/sw_TecladoNumerico"
                 android:layout_alignParentRight="true"/>
             <TextView

@@ -30,11 +30,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dropbox.core.DbxAppInfo;
+import com.dropbox.core.DbxAuthFinish;
+import com.dropbox.core.DbxPKCEWebAuth;
+import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.http.OkHttp3Requestor;
+import com.dropbox.core.json.JsonReadException;
+import com.dropbox.core.oauth.DbxCredential;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.quattro.dropbox.DescargarTask;
 import com.quattro.dropbox.EmailTask;
 import com.quattro.dropbox.Soporte;
 import com.quattro.dropbox.SubirTask;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
 
 import BaseDatos.BaseDatos;
 import Objetos.Utils;
@@ -155,7 +169,7 @@ public class DropBox extends Activity {
     /**
      * PROCESOS EN EL ONRESUME
      */
-    private void ProcesosOnResume(){
+    private void ProcesosOnResume() {
         // Si no nos hemos autenticado en DropBox...
         if (!Opciones.getBoolean("Logueado", false)){
             setModo(ModoVista.AUTORIZACION);
@@ -166,16 +180,25 @@ public class DropBox extends Activity {
             setModo(ModoVista.PETICION_COPIA);
             return;
         }
-        // Recuperamos el token de las opciones.
-        String Token = Opciones.getString("Token", null);
+        // Recuperamos las credenciales de las opciones
+        String credentialJson = Opciones.getString("DropboxCredential", null);
+        DbxCredential credential = null;
+        try{
+            if (credentialJson != null) credential = DbxCredential.Reader.readFully(credentialJson);
+        } catch (JsonReadException ex){
+            credential = null;
+        }
 
-        // Si el token no existe, lo pedimos
-        if (Token == null){
-            Token = Auth.getOAuth2Token();
-            if (Token != null) {
-                Opciones.edit().putString("Token", Token).apply();
+        // Si la credencial no existe, la generamos.
+        if (credential == null){
+            credential = Auth.getDbxCredential();
+            if (credential != null) {
+                credentialJson = DbxCredential.Writer.writeToString(credential);
+                Opciones.edit().putString("DropboxCredential", credentialJson).apply();
             } else {
-                Opciones.edit().putBoolean("Logueado", false).apply();
+                Opciones.edit()
+                        .putBoolean("Logueado", false)
+                        .putString("DropboxCredential", null).apply();
                 setModo(ModoVista.AUTORIZACION);
                 return;
             }
@@ -188,17 +211,18 @@ public class DropBox extends Activity {
             CbAutoSincronizar.setChecked(Opciones.getBoolean("SincronizarDropBox", false));
         }
 
-        new EmailTask(Token, Opciones, new EmailTask.Callback() {
+        new EmailTask(new EmailTask.Callback() {
             @Override
             public void onComplete() {
-                TxtCuentaDropbox.setText(Opciones.getString("EmailDropbox", "Sin cuenta habilitada"));
+                String email = Opciones.getString("EmailDropbox", "Sin cuenta habilitada");
+                TxtCuentaDropbox.setText(email);
             }
 
             @Override
             public void onError(Soporte.Resultado resultado) {
                 Toast.makeText(DropBox.this, "Se ha producido un problema con la cuenta.", Toast.LENGTH_LONG).show();
             }
-        }).execute();
+        }, this).execute();
 
         // Introducimos el email de la cuenta de dropbox, si la hubiera.
         TxtCuentaDropbox.setText(Opciones.getString("EmailDropbox", "Sin cuenta habilitada"));
@@ -211,8 +235,12 @@ public class DropBox extends Activity {
     public void BtAutorizarPulsado(View view){
         // Lanzamos la autorización por medio de Auth si hay internet.
         if (!Utils.hayInternet(this)) return;
-        Auth.startOAuth2Authentication(getApplicationContext(), BuildConfig.DropboxAppKey);
-        Opciones.edit().putBoolean("Logueado", true).apply();
+        DbxRequestConfig requestConfig = new DbxRequestConfig("Quattroid");
+        List<String> scope = Arrays.asList("account_info.read","files.metadata.read","files.metadata.write","files.content.read","files.content.write");
+        Auth.startOAuth2PKCE(getApplicationContext(), BuildConfig.DropboxAppKey, requestConfig, scope);
+        Opciones.edit()
+                .putBoolean("Logueado", true)
+                .apply();
     }
 
     /**
@@ -247,7 +275,7 @@ public class DropBox extends Activity {
      * AL PULSAR EL BOTON DESCARGAR PRIMERA
      */
     public void BtDescargarPrimeraPulsado(View view){
-        if (Opciones.getString("Token", null) == null || !Utils.hayInternet(this)) return;
+        if (Opciones.getString("DropboxCredential", null) == null || !Utils.hayInternet(this)) return;
         Opciones.edit().putBoolean("PrimerAccesoDropBox", false).apply();
         BtDescargarPulsado(null);
         ProcesosOnResume();
@@ -257,7 +285,7 @@ public class DropBox extends Activity {
      * AL PULSAR EL BOTON SUBIR PRIMERA
      */
     public void BtSubirPrimeraPulsado(View view){
-        if (Opciones.getString("Token", null) == null || !Utils.hayInternet(this)) return;
+        if (Opciones.getString("DropboxCredential", null) == null || !Utils.hayInternet(this)) return;
         Opciones.edit().putBoolean("PrimerAccesoDropBox", false).apply();
         BtSubirPulsado(null);
         ProcesosOnResume();
@@ -276,25 +304,23 @@ public class DropBox extends Activity {
      */
     public void BtDescargarPulsado(View view){
 
-        final String Token = Opciones.getString("Token", null);
-        if (Token == null || !Utils.hayInternet(this)) return;
+        final String dropboxCredential = Opciones.getString("DropboxCredential", null);
+        if (dropboxCredential == null || !Utils.hayInternet(this)) return;
 
         Toast.makeText(DropBox.this, "Descargando...", Toast.LENGTH_SHORT).show();
         BaseDatos.hayCambios = false;
 
-        new DescargarTask(Token, Opciones, new DescargarTask.Callback() {
+        new DescargarTask(new DescargarTask.Callback() {
             @Override
             public void onComplete() {
-                Opciones.edit().putString("Token", Token).apply();
                 Toast.makeText(DropBox.this, "Descarga completada.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Soporte.Resultado resultado) {
-                Opciones.edit().putString("Token", Token).apply();
                 Toast.makeText(DropBox.this, "Se ha producido un problema con la descarga.", Toast.LENGTH_LONG).show();
             }
-        }).execute();
+        }, this).execute();
     }
 
     /**
@@ -302,13 +328,13 @@ public class DropBox extends Activity {
      */
     public void BtSubirPulsado(View view){
 
-        String Token = Opciones.getString("Token", null);
-        if (Token == null || !Utils.hayInternet(this)) return;
+        String dropboxCredential = Opciones.getString("DropboxCredential", null);
+        if (dropboxCredential == null || !Utils.hayInternet(this)) return;
 
         Toast.makeText(DropBox.this, "Subiendo...", Toast.LENGTH_SHORT).show();
         BaseDatos.hayCambios = false;
 
-        new SubirTask(Token, Opciones, new SubirTask.Callback() {
+        new SubirTask(new SubirTask.Callback() {
             @Override
             public void onComplete() {
                 Toast.makeText(DropBox.this, "Subida completada.", Toast.LENGTH_SHORT).show();
@@ -318,7 +344,7 @@ public class DropBox extends Activity {
             public void onError(Soporte.Resultado resultado) {
                 Toast.makeText(DropBox.this, "Se ha producido un problema con la subida.", Toast.LENGTH_LONG).show();
             }
-        }).execute();
+        }, this).execute();
 
     }
 
@@ -332,10 +358,13 @@ public class DropBox extends Activity {
         Confirmar.setMessage("Vas a revocar el certificado de Dropbox\n¿Estás seguro?");
         Confirmar.setPositiveButton("SI", (dialog, which) ->
         {
-            Opciones.edit().putString("Token", null).apply();
-            Opciones.edit().putBoolean("Logueado", false).apply();
-            Opciones.edit().putBoolean("PrimerAccesoDropBox", true).apply();
-            Opciones.edit().putString("EmailDropbox", null).apply();
+            Opciones.edit()
+                    .putString("DropboxCredential", null)
+                    .putBoolean("Logueado", false)
+                    .putBoolean("PrimerAccesoDropBox", true)
+                    .putBoolean("SincronizarDropBox", false)
+                    .putBoolean("SincronizarSoloWifi", false)
+                    .putString("EmailDropbox", null).apply();
             ProcesosOnResume();
         });
 

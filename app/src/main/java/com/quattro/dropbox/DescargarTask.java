@@ -16,36 +16,38 @@
 
 package com.quattro.dropbox;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+
+import com.dropbox.core.v2.files.FileMetadata;
 
 
 public class DescargarTask extends AsyncTask<Void, Void, Soporte.Resultado> {
 
-    private final String Token;
     private final Callback mCallback;
-    private final SharedPreferences Opciones;
+    private final Context context;
 
     public interface Callback{
         void onComplete();
         void onError(Soporte.Resultado resultado);
     }
 
-    public DescargarTask(String token, SharedPreferences opciones, Callback callback){
-        Token = token;
-        Opciones = opciones;
+    public DescargarTask(Callback callback, Context c){
         mCallback = callback;
+        context = c;
     }
 
     @Override
     protected Soporte.Resultado doInBackground(Void... params) {
 
         Soporte.Resultado resultado;
-
-        resultado = Soporte.DescargarBaseDatos(Token);
+        // Se sustituye por la versión nueva
+        resultado = Soporte.DescargarBaseDatos(context);
 
         if (resultado == Soporte.Resultado.OK) {
-            resultado = Soporte.DescargarOpciones(Token, Opciones);
+            resultado = Soporte.DescargarOpciones(context);
         }
 
         return resultado;
@@ -55,13 +57,10 @@ public class DescargarTask extends AsyncTask<Void, Void, Soporte.Resultado> {
     protected void onPostExecute(Soporte.Resultado resultado) {
         super.onPostExecute(resultado);
 
-        switch (resultado){
-            case OK:
-                mCallback.onComplete();
-                break;
-            default:
-                mCallback.onError(resultado);
-                break;
+        if (resultado == Soporte.Resultado.OK) {
+            mCallback.onComplete();
+        } else {
+            mCallback.onError(resultado);
         }
     }
 }

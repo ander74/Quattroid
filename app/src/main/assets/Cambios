@@ -306,8 +306,32 @@ Quattroid
     Se corrige un problema que hacía que se moviera la lista de días en el calendario al ejecutar alguna acción
     sobre un día.
 
+
+    Versión 1.6.4
+    =============
+
     Se resuelve el problema al seleccionar días en el calendario por el cual, al ejecutar una acción sobre
     los mismos, seguían seleccionados, pero sin mostrarlos.
+
+
+    Versión 1.6.5
+    =============
+
+    Se añade un texto debajo del título anunciando el próximo lanzamiento de Quattro X.
+
+    Al restaurar las opciones desde una copia de seguridad o Dropbox, el estado de la sincronización
+    de Dropbox permanece como estaba antes de la restauración.
+
+    Se corrigen problemas visuales con la lista de días en el calendario, la lista de relevos y la
+    lista de incidencias.
+
+    Versión 1.7
+    ===========
+
+    Se migra desde Android.App.Compat a AndroidX
+
+    Se publica la app para Google Play.
+
 
 
 

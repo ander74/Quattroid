@@ -26,9 +26,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.InputType;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,7 +42,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Calendar;
@@ -59,7 +57,6 @@ import Objetos.Colores;
 import Objetos.EstadoDia;
 import Objetos.Hora;
 import Objetos.HorasServicio;
-import Objetos.Utils;
 
 
 public class DiaCalendario extends Activity implements View.OnFocusChangeListener,

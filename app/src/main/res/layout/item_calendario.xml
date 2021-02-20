@@ -25,7 +25,7 @@
     <!-- TextoDia -->
     <RelativeLayout
         android:id="@+id/textoDia"
-        android:layout_width="40dp"
+        android:layout_width="45dp"
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="4dp"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal"
             android:id="@+id/dia"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
         <!-- DiaSemana -->
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal"
             android:id="@+id/diaSemana"
-            android:textSize="13dp"
+            android:textSize="13sp"
             android:layout_below="@id/dia"/>
     </RelativeLayout>
 
@@ -56,7 +56,7 @@
         android:id="@+id/resto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp"
+        android:padding="2dp"
         android:background="@drawable/fondo_calendario_p"
         android:layout_marginTop="2dp"
         android:layout_marginRight="2dp"
@@ -95,8 +95,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:padding="4dp"
             android:maxLines="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="2dp"
             android:textSize="15sp"
             android:textStyle="bold"
             android:layout_alignParentTop="true"
@@ -108,8 +109,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/notas"
             android:padding="4dp"
+            android:src="@drawable/notas"
             android:maxHeight="25dp"
             android:adjustViewBounds="true"
             android:layout_alignParentLeft="true"
@@ -120,9 +121,9 @@
             android:id="@+id/desayuno"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="4dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/desayuno"
-            android:padding="4dp"
             android:maxHeight="25dp"
             android:adjustViewBounds="true"
             android:layout_alignParentBottom="true"
@@ -134,8 +135,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/comida"
             android:padding="4dp"
+            android:src="@drawable/comida"
             android:maxHeight="25dp"
             android:adjustViewBounds="true"
             android:layout_alignParentBottom="true"
@@ -160,9 +161,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="2dp"
             android:maxLines="1"
             android:textSize="13sp"
-            android:padding="4dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/cena"/>
 
@@ -173,9 +175,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/buenrelevo"
-            android:padding="4dp"
             android:maxHeight="25dp"
             android:adjustViewBounds="true"
+            android:padding="4dp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/relevo"/>
 
@@ -184,9 +186,10 @@
             android:id="@+id/horario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginLeft="2dp"
             android:maxLines="1"
+            android:layout_marginTop="2dp"
             android:textSize="12sp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"/>
@@ -196,8 +199,8 @@
             android:id="@+id/nocturnas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:layout_marginRight="2dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="2dp"
             android:maxLines="1"
             android:textSize="12sp"
             android:textColor="#ff0000ff"
@@ -209,10 +212,10 @@
             android:id="@+id/guion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="-"
+            android:text=" - "
             android:maxLines="1"
             android:textSize="12sp"
+            android:layout_marginBottom="2dp"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/nocturnas"/>
 
@@ -221,8 +224,9 @@
             android:id="@+id/acumuladas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
             android:maxLines="1"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="4dp"
             android:textSize="12sp"
             android:textColor="#ffff0000"
             android:layout_alignParentBottom="true"

@@ -16,6 +16,7 @@
 
 package com.quattro.dropbox;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -23,19 +24,17 @@ import android.util.Log;
 
 public class SubirTask extends AsyncTask<Void, Void, Soporte.Resultado> {
 
-    private final String Token;
     private final Callback mCallback;
-    private final SharedPreferences Opciones;
+    private final Context context;
 
     public interface Callback{
         void onComplete();
         void onError(Soporte.Resultado resultado);
     }
 
-    public SubirTask(String token, SharedPreferences opciones, Callback callback){
-        Token = token;
-        Opciones = opciones;
+    public SubirTask(Callback callback, Context c){
         mCallback = callback;
+        context = c;
     }
 
     @Override
@@ -43,10 +42,10 @@ public class SubirTask extends AsyncTask<Void, Void, Soporte.Resultado> {
 
         Soporte.Resultado resultado;
 
-        resultado = Soporte.SubirBaseDatos(Token);
+        resultado = Soporte.SubirBaseDatos(context);
 
         if (resultado == Soporte.Resultado.OK){
-            resultado = Soporte.SubirOpciones(Token, Opciones);
+            resultado = Soporte.SubirOpciones(context);
         }
 
         return resultado;
@@ -56,13 +55,10 @@ public class SubirTask extends AsyncTask<Void, Void, Soporte.Resultado> {
     protected void onPostExecute(Soporte.Resultado resultado) {
         super.onPostExecute(resultado);
 
-        switch (resultado){
-            case OK:
-                mCallback.onComplete();
-                break;
-            default:
-                mCallback.onError(resultado);
-                break;
+        if (resultado == Soporte.Resultado.OK) {
+            mCallback.onComplete();
+        } else {
+            mCallback.onError(resultado);
         }
     }
 }

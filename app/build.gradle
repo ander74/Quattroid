@@ -26,15 +26,16 @@ android {
             storePassword keystoreProperties["storePassword"]
         }
     }
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 30
+    buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "com.quattro.quattroid"
         minSdkVersion 16
-        targetSdkVersion 28
-        versionCode 164 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
-        versionName '1.6.4'
+        targetSdkVersion 30
+        versionCode 180 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
+        versionName '1.8'
         signingConfig signingConfigs.Quattroid
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -75,9 +76,11 @@ android {
 }
 
 dependencies {
+    implementation "androidx.multidex:multidex:2.0.1"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.dropbox.core:dropbox-core-sdk:2.0.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.dropbox.core:dropbox-core-sdk:3.1.5'
+    //implementation 'com.squareup.okhttp3:okhttp:3.12.2'
     implementation 'com.itextpdf:kernel:7.0.2'
     implementation 'com.itextpdf:io:7.0.2'
     implementation 'com.itextpdf:layout:7.0.2'

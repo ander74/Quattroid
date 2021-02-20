@@ -1,0 +1,18 @@
+<p><i>Quattroid</i> va a cambiar de nombre. A partir de la <u>versión 2.0</u> (que saldrá próximamente), su nombre será <i>Quattro X</i>.</p>
+<p></p>
+<p><font color='#BB0000'><b>¿Por qué cambiar el nombre?</b></font><br/>
+Antes de <i>Quattroid</i>, existió <i>Quattro</i>, que sólo funcionaba en Windows. Cuando adapté <i>Quattro</i> a Android, cambié el nombre a <i>Quattroid (Quattro + Android)</i>.</p>
+<p>Muchos me habeis pedido un <i>Quattroid</i> para Windows (ya que <i>Quattro</i> se quedó obsoleto) y con la versión 2.0 llegará.</p>
+<p><i>Quattro X</i> va a tener dos versiones (por el momento): una para Android y otra para Windows. Trabajarán juntas (si queremos) y sincronizarán los datos por medio de Dropbox. Lo que hagas en una, se reflejará en la otra.</p>
+<p></p>
+<p><font color='#BB0000'><b>¿Cuándo estará lista?</b></font><br/>
+No lo sé. Mi idea es que estuviera lista para comienzos de 2020, pero no creo que vaya a poder ser.</p>
+<p></p>
+<p><font color='#BB0000'><b>¿Cómo me entero de cuando sale?</b></font><br/>
+<i>Quattro X</i> tiene una web y una cuenta de Twiter donde iré informando de las novedades.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Web:<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#0000BB'><b>quattro-x.blogspot.com</b></font></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;Twiter:<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#0000BB'><b>@quattro_x</b></font></p>
+<p></p>
+<p><font color='#BB0000'><b>¿<i>Quattro X</i> será compatible con <i>Quattroid</i>?</b></font><br/>
+No. No será compatible, pero <i>Quattro X</i> podrá importar los datos de <i>Quattroid</i> para poder contar con toda la información que has metido hasta ahora.</p>
+<p>Una vez que empieces a usar <i>Quattro X</i>, deberás dejar de usar <i>Quattroid</i>, ya que los datos son incompatibles.</p>

@@ -1,4 +1,3 @@
-
 <!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
@@ -15,8 +14,7 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF000000">
@@ -24,196 +22,242 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:gravity="center"
-    android:background="#000000">
-
-    <LinearLayout
-        android:id="@+id/ly_titulo"
-        style="@style/vertical"
-        android:layout_marginTop="32dp"
-        android:clickable="true"
-        android:onClick="tituloPulsado"
-        android:gravity="center_horizontal">
-
-    <!-- TITULO -->
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:src="@drawable/bus"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffdcdcdc"
-        android:textStyle="bold"
-        android:text="@string/nombreAplicacion"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ffdcdcdc"
-        android:textStyle="bold"
-        android:text="@string/creditoPrincipal"/>
-
-    </LinearLayout>
-
-    <!-- CALENDARIO -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_calendario"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_calendario">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/calendario"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_calendario"
-            android:paddingLeft="25dp"/>
-
-    </LinearLayout>
-
-    <!-- RELEVOS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_relevos"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_relevos">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/usuario"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_relevos"
-            android:paddingLeft="25dp"/>
-    </LinearLayout>
-
-    <!-- SERVICIOS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:background="@drawable/bt_servicios"
-        android:layout_marginBottom="10dp"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_servicios">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/servicios"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_servicios"
-            android:paddingLeft="25dp"/>
-    </LinearLayout>
-
-    <!-- HORAS AJENAS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_ajenas"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_ajenas">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ajenas"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_ajenas"
-            android:paddingLeft="25dp"/>
-    </LinearLayout>
-
-    <!-- HERRAMIENTAS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_ajustes"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_herramientas">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/herramientas"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_herramientas"
-            android:paddingLeft="25dp"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_actualizando"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="18sp"
+        android:background="#000000"
         android:gravity="center"
-        android:textColor="#ffdcdcdc"
-        android:text="Actualizando..."/>
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:id="@+id/ly_titulo"
+            style="@style/vertical"
+            android:layout_marginTop="32dp"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:onClick="tituloPulsado">
+
+            <!-- TITULO -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:src="@drawable/bus" />
+
+            <TextView
+                android:id="@+id/textTitulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/nombreAplicacion"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffdcdcdc"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textTitulo2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Próximamente Quattro X"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffdcdcdc"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/creditoPrincipal"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffdcdcdc"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- CALENDARIO -->
+            <LinearLayout
+                android:id="@+id/bt_calendario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="fill"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="7"
+                android:background="@drawable/bt_calendario"
+                android:clickable="true"
+                android:gravity="center_vertical|center_horizontal"
+                android:longClickable="true"
+                android:onClick="BotonPulsado"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/calendario" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="25dp"
+                    android:text="@string/bt_calendario"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            </LinearLayout>
+
+            <!-- QUATTRO X -->
+            <!--
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:padding="10dp"
+                android:layout_marginLeft="5dp"
+                android:clickable="true"
+                android:longClickable="true"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bt_quattrox"
+                android:onClick="BotonPulsado"
+                android:id="@+id/bt_quattrox">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/quattrox"/>
+
+            </LinearLayout>
+            -->
+        </LinearLayout>
 
 
-</LinearLayout>
+        <!-- RELEVOS -->
+        <LinearLayout
+            android:id="@+id/bt_relevos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_relevos"
+            android:clickable="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:longClickable="true"
+            android:onClick="BotonPulsado"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/usuario" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:text="@string/bt_relevos"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <!-- SERVICIOS -->
+        <LinearLayout
+            android:id="@+id/bt_servicios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_servicios"
+            android:clickable="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:longClickable="true"
+            android:onClick="BotonPulsado"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/servicios" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:text="@string/bt_servicios"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <!-- HORAS AJENAS -->
+        <LinearLayout
+            android:id="@+id/bt_ajenas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_ajenas"
+            android:clickable="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:longClickable="true"
+            android:onClick="BotonPulsado"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ajenas" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:text="@string/bt_ajenas"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <!-- HERRAMIENTAS -->
+        <LinearLayout
+            android:id="@+id/bt_herramientas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_ajustes"
+            android:clickable="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:longClickable="true"
+            android:onClick="BotonPulsado"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/herramientas" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:text="@string/bt_herramientas"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_actualizando"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="Actualizando..."
+            android:textColor="#ffdcdcdc"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
 </ScrollView>

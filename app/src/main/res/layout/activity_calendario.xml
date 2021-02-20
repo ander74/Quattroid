@@ -26,53 +26,99 @@
         android:id="@+id/ly_horas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
+        android:orientation="vertical"
+        android:background="#202020"
         android:layout_alignParentBottom="true">
 
         <!-- ACUMULADAS -->
         <TextView
             android:id="@+id/tv_acumuladas"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:onClick="horasPulsadas"
+            android:padding="8dp"
             android:clickable="true"
+            android:background="#000000"
             android:textSize="20sp"/>
 
-        <!-- TOMA Y DEJE -->
+        <!-- TITULO -->
         <TextView
-            android:id="@+id/tv_tomaDeje"
-            android:layout_width="0dp"
+            android:id="@+id/tv_titulo"
+            android:gravity="left"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="horasPulsadas"
-            android:clickable="true"
-            android:textSize="20sp"/>
+            android:padding="4dp"
+            android:text="Mes Actual"
+            android:textColor="#CACACA"
+            android:textSize="12sp"/>
+
+        <!-- ACUMLULADAS MES -->
+        <TextView
+            android:id="@+id/tv_acumuladasMes"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:textSize="18sp"/>
 
         <!-- NOCTURNAS -->
         <TextView
             android:id="@+id/tv_nocturnas"
-            android:layout_width="0dp"
+            android:gravity="left"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="horasPulsadas"
-            android:clickable="true"
-            android:textSize="20sp"/>
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:textSize="18sp"/>
+
+        <!-- TOMA DEJE -->
+        <TextView
+            android:id="@+id/tv_tomaDeje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:textSize="18sp"/>
 
         <!-- EUROS -->
         <TextView
             android:id="@+id/tv_euros"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="horasPulsadas"
-            android:clickable="true"
-            android:textSize="20sp"/>
+            android:gravity="left"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:textSize="18sp"/>
+
+        <!-- TRABAJADAS REALES -->
+        <TextView
+            android:id="@+id/tv_trabajadasReales"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:padding="4dp"
+            android:textSize="18sp"/>
+
+        <!-- TRABAJADAS CONVENIO -->
+        <TextView
+            android:id="@+id/tv_trabajadasConvenio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="8dp"
+            android:padding="4dp"
+            android:textSize="18sp"/>
 
     </LinearLayout>
 

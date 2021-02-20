@@ -15,7 +15,6 @@
  */
 package com.quattro.quattroid;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,7 +26,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,6 +95,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     ArrayList<DatosDia> listaDias = null;
     BaseDatos datos = null;
     AdaptadorDiaCalendario adaptador = null;
+    double jornadaMedia = 0d;
 
     int mesActual;
     int añoActual;
@@ -110,9 +109,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // ELEMENTOS DEL LAYOUT
     ListView listaCalendario = null;
     TextView acumuladas = null;
+    TextView titulo = null;
+    TextView acumuladasMes = null;
     TextView nocturnas = null;
     TextView tomaDeje = null;
     TextView euros = null;
+    TextView trabajadasReales = null;
+    TextView trabajadasConvenio = null;
 
     // MULTI-SELECCIÓN
     //private ArrayList<DatosDia> listaSeleccionados = new ArrayList<>();
@@ -131,13 +134,22 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         // Inicializar los elementos del view
         listaCalendario = (ListView) findViewById(R.id.lw_listaCalendario);
         acumuladas = (TextView) findViewById(R.id.tv_acumuladas);
+        titulo = (TextView) findViewById(R.id.tv_titulo);
+        acumuladasMes = (TextView) findViewById(R.id.tv_acumuladasMes);
         nocturnas = (TextView) findViewById(R.id.tv_nocturnas);
         tomaDeje = (TextView) findViewById(R.id.tv_tomaDeje);
         euros = (TextView) findViewById(R.id.tv_euros);
+        trabajadasReales = (TextView) findViewById(R.id.tv_trabajadasReales);
+        trabajadasConvenio = (TextView) findViewById(R.id.tv_trabajadasConvenio);
 
         // Ocultar TomaDeje y Euros
+        titulo.setVisibility(View.GONE);
+        acumuladasMes.setVisibility(View.GONE);
+        nocturnas.setVisibility(View.GONE);
         tomaDeje.setVisibility(View.GONE);
         euros.setVisibility(View.GONE);
+        trabajadasReales.setVisibility(View.GONE);
+        trabajadasConvenio.setVisibility(View.GONE);
 
         // Inicializar las opciones y la base de datos
         opciones = PreferenceManager.getDefaultSharedPreferences(this);
@@ -158,6 +170,9 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             mesActual = opciones.getInt("UltimoMesMostrado", fecha.get(Calendar.MONTH) + 1);
             añoActual = opciones.getInt("UltimoAñoMostrado", fecha.get(Calendar.YEAR));
         }
+        long jMedia = opciones.getLong("JorMedia", Double.doubleToRawLongBits(7.75d));
+        jornadaMedia = Double.longBitsToDouble(jMedia);
+
 
         // Registrar Listeners y menús contextuales y configuraciones
         listaCalendario.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -612,11 +627,14 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     private void escribeTitulo(){
         getActionBar().setTitle(Hora.MESES_MAY[mesActual]);
         getActionBar().setSubtitle(String.valueOf(añoActual));
-
     }
 
     // ESCRIBE LAS HORAS ACUMULADAS Y NOCTURNAS DEL MES
     private void escribeHoras(){
+
+        /*
+            DEFINIMOS ACUMULADAS HASTA MES
+         */
         // Extraemos la acumuladas hasta el mes actual
         double acumHastaMes = datos.acumuladasHastaMes(mesActual, añoActual);
         // Sumamos las acumuladas anteriores desde las opciones
@@ -628,28 +646,53 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         if (opciones.getBoolean("SumarTomaDeje", false)){
             acumHastaMes += datos.tomaDejeHastaMes(mesActual, añoActual);
         }
+
+        /*
+            DEFINIMOS LOS DEMÁS VALORES DEL MES
+         */
+        // Extraemos las acumuladas del mes actual.
+        double acumMesActual = datos.acumuladasMes(mesActual, añoActual);
         // Extraemos las nocturnas del mes actual.
         double noctMes = datos.nocturnasMes(mesActual, añoActual);
         // Extraemos las horas de toma y deje del mes actual.
         double tomaDejeMes = datos.tomaDejeMes(mesActual, añoActual);
         // Extraemos los euros por servicio del mes actual
         double eurosMes = datos.eurosMes(mesActual, añoActual);
-        // Escribimos las nocturnas
-        nocturnas.setTextColor(Colores.AZUL_CLARO);
-        nocturnas.setText("Noct. : " + Hora.textoDecimal(noctMes));
+        // Extraemos las trabajadas del mes actual.
+        double trabMes = datos.trabajadasMes(mesActual, añoActual);
+        // Extraemos las trabajadas por convenio del mes actual.
+        int diasTrabConv = datos.diasTrabajadosConvenio(mesActual, añoActual);
+        double trabConvMes = diasTrabConv * jornadaMedia;
+
         // Escribimos las acumuladas, poniendo el color correspondiente.
         if (acumHastaMes > -0.01) {
             acumuladas.setTextColor(Colores.VERDE_OSCURO);
         } else {
             acumuladas.setTextColor(Colores.ROJO);
         }
-        acumuladas.setText("Acum. : " + Hora.textoDecimal(acumHastaMes));
+        acumuladas.setText("Acum. hasta mes : " + Hora.textoDecimal(acumHastaMes));
+        // Escribimos las acumuladas del mes
+        if (acumMesActual > -0.01) {
+            acumuladasMes.setTextColor(Colores.VERDE_OSCURO);
+        } else {
+            acumuladasMes.setTextColor(Colores.ROJO);
+        }
+        acumuladasMes.setText("Horas Acumuladas : " + Hora.textoDecimal(acumMesActual));
+        // Escribimos las nocturnas
+        nocturnas.setTextColor(Colores.AZUL_CLARO);
+        nocturnas.setText("Horas Nocturnas : " + Hora.textoDecimal(noctMes));
         // Escribimos las horas del toma y deje.
-        tomaDeje.setTextColor(Colores.VERDE_OSCURO);
-        tomaDeje.setText("T & D : " + Hora.textoDecimal(tomaDejeMes));
+        tomaDeje.setTextColor(Colores.MARRON_CLARO);
+        tomaDeje.setText("Toma y Deje : " + Hora.textoDecimal(tomaDejeMes));
         // Escribimos los euros por servicio.
-        euros.setTextColor(Colores.AZUL_CLARO);
-        euros.setText("€/Serv. : " + Hora.textoDecimal(eurosMes));
+        euros.setTextColor(Colores.VIOLETA);
+        euros.setText("Euros por Servicio : " + Hora.textoDecimal(eurosMes));
+        // Escribimos las trabajadas reales.
+        trabajadasReales.setTextColor(Colores.AZUL_CLARO);
+        trabajadasReales.setText("Trabajadas : " + Hora.textoDecimal(trabMes));
+        // Escribimos las trabajadas por convenio
+        trabajadasConvenio.setTextColor(Colores.AZUL_CLARO);
+        trabajadasConvenio.setText("Trabajadas Convenio : " + Hora.textoDecimal(trabConvMes));
     }
 
     // ACTUALIZA LA LISTA DEL CALENDARIO
@@ -662,23 +705,22 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // AL PULSAR EN LAS HORAS ACUMULADAS O NOCTURNAS TOTALES
     public void horasPulsadas(View view){
-        switch (view.getId()){
-            case R.id.tv_acumuladas:
-                acumuladas.setVisibility(View.GONE);
-                tomaDeje.setVisibility(View.VISIBLE);
-                break;
-            case R.id.tv_nocturnas:
-                nocturnas.setVisibility(View.GONE);
-                euros.setVisibility(View.VISIBLE);
-                break;
-            case R.id.tv_tomaDeje:
-                tomaDeje.setVisibility(View.GONE);
-                acumuladas.setVisibility(View.VISIBLE);
-                break;
-            case R.id.tv_euros:
-                euros.setVisibility(View.GONE);
-                nocturnas.setVisibility(View.VISIBLE);
-                break;
+        if (nocturnas.getVisibility() == View.GONE){
+            titulo.setVisibility(View.VISIBLE);
+            acumuladasMes.setVisibility(View.VISIBLE);
+            nocturnas.setVisibility(View.VISIBLE);
+            tomaDeje.setVisibility(View.VISIBLE);
+            euros.setVisibility(View.VISIBLE);
+            trabajadasReales.setVisibility(View.VISIBLE);
+            trabajadasConvenio.setVisibility(View.VISIBLE);
+        } else{
+            titulo.setVisibility(View.GONE);
+            acumuladasMes.setVisibility(View.GONE);
+            nocturnas.setVisibility(View.GONE);
+            tomaDeje.setVisibility(View.GONE);
+            euros.setVisibility(View.GONE);
+            trabajadasReales.setVisibility(View.GONE);
+            trabajadasConvenio.setVisibility(View.GONE);
         }
     }
 
