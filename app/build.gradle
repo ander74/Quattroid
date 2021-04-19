@@ -30,10 +30,10 @@ android {
     buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "com.quattro.quattroid"
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 180 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
-        versionName '1.8'
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 184 // Usar versiones de tres cifras, aunque sean versiones fijas: 1.7 = 170
+        versionName '1.8.4'
         signingConfig signingConfigs.Quattroid
         multiDexEnabled true
     }
@@ -84,4 +84,5 @@ dependencies {
     implementation 'com.itextpdf:kernel:7.0.2'
     implementation 'com.itextpdf:io:7.0.2'
     implementation 'com.itextpdf:layout:7.0.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

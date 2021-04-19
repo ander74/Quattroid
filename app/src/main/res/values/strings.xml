@@ -23,12 +23,12 @@
 
 
     <!-- ACTIVITY PRINCIPAL -->
-    <string name="nombreAplicacion">Quattroid 1.8</string>
+    <string name="nombreAplicacion">Quattroid 1.8.4</string>
     <string name="creditoPrincipal">A. Herrero</string>
     <string name="bt_quattrox">Quattro X</string>
     <string name="bt_calendario">Calendario</string>
     <string name="bt_relevos">Compañeros/as</string>
-    <string name="bt_servicios">Servicios</string>
+    <string name="bt_servicios">Líneas y Servicios</string>
     <string name="bt_ajenas">Horas Ajenas</string>
     <string name="bt_herramientas">Herramientas</string>
     <string name="bt_copiaSeguridad">Copia de Seguridad</string>

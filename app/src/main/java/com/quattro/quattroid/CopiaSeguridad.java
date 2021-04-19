@@ -79,6 +79,7 @@ public class CopiaSeguridad extends Activity {
         String estadoSD = Environment.getExternalStorageState();
         if(Environment.MEDIA_MOUNTED.equals(estadoSD)) {
             File archivoCopia = new File(Environment.getExternalStorageDirectory().getPath() + "/Quattroid/backup.db");
+            //File archivoCopia = new File(getApplicationContext().getExternalFilesDir("CopiaSeg").getPath() + "/opciones.bak");
             if (archivoCopia.exists()){
                 // Extraer la fecha del archivo
                 Date f = new Date(archivoCopia.lastModified());
@@ -166,6 +167,8 @@ public class CopiaSeguridad extends Activity {
         // Definimos el path de destino y lo creamos si no existe.
         String destino = Environment.getExternalStorageDirectory().getPath();
         destino = destino + "/Quattroid";
+        //String destino = getApplicationContext().getExternalFilesDir("CopiaSeg").getPath();
+
         File d = new File(destino);
         if (!d.exists()){
             d.mkdir();
@@ -209,6 +212,8 @@ public class CopiaSeguridad extends Activity {
         // Definimos el path de destino y lo creamos si no existe.
         String destino = Environment.getExternalStorageDirectory().getPath();
         destino = destino + "/Quattroid/opciones.bak";
+        //String destino = getApplicationContext().getExternalFilesDir("CopiaSeg").getPath();
+        //destino = destino + "/opciones.bak";
         File d = new File(destino);
         if (!d.exists()){
             return false;

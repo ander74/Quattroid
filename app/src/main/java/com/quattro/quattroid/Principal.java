@@ -17,12 +17,17 @@ package com.quattro.quattroid;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -35,9 +40,15 @@ import android.widget.Toast;
 import com.quattro.dropbox.SincronizarTask;
 import com.quattro.dropbox.Soporte;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import BaseDatos.BaseDatos;
 import Objetos.Hora;
 import Objetos.Utils;
+
+import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 
 
 public class Principal extends Activity implements View.OnLongClickListener {
@@ -79,20 +90,35 @@ public class Principal extends Activity implements View.OnLongClickListener {
         // Flag para actualizar
         ACTUALIZAR = true;
 
-        // Evaluamos si es la primera vez que se ejecuta la aplicación.
+        // Inicializamos las opciones
         opciones = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // Evaluamos si es la primera vez que se ejecuta la aplicación.
         if (opciones.getBoolean("PrimerInicio", true)){
             Intent intent = new Intent(this, Licencia.class);
             startActivityForResult(intent, ACCION_LICENCIA);
         }
 
-        // Evaluamos el permiso de escritura para Android 6 y superior.
+        // Evaluamos el permiso de escritura para Android 6 y superior y de almacenamiento externo para Android 11 y superior.
         TienePermisoEscritura = (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) ;
         if (!TienePermisoEscritura){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PEDIR_PERMISO_ESCRITURA);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PEDIR_PERMISO_ESCRITURA);
         }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()){
+//            // Preguntar si se quiere activar el permiso.
+//            AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+//            dialogo.setTitle("PERMISO MANUAL REQUERIDO");
+//            dialogo.setMessage("Se necesita activar manualmente el permiso para guardar archivos.\n\n¿Quieres ir a la página del permiso?");
+//            dialogo.setPositiveButton("SI", (d, w) -> {
+//                // Llevar al usuario a la configuración de los permisos de la aplicación
+//                Intent intent = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                startActivity(intent);
+//            });
+//            dialogo.setNegativeButton("NO", (d, w) -> {});
+//            dialogo.show();
+//        }
+
 
         if (!opciones.contains("JorMedia")) {
             // Creamos las nuevas preferencias de jornada media y minima.
@@ -103,6 +129,18 @@ public class Principal extends Activity implements View.OnLongClickListener {
             opciones.edit().putLong("JorMinima", jorMinima).apply();
         }
 
+        // Nuevo sistema de autorización de Dropbox.
+        // Si no tenemos las credenciales de Dropox, revocar los tokens anteriores para forzar a tenerlas.
+        String dropboxCredential = opciones.getString("DropboxCredential", null);
+        if (dropboxCredential == null || dropboxCredential == ""){
+            opciones.edit()
+                    .putString("DropboxCredential", null)
+                    .putBoolean("Logueado", false)
+                    .putBoolean("PrimerAccesoDropBox", true)
+                    .putBoolean("SincronizarDropBox", false)
+                    .putBoolean("SincronizarSoloWifi", false)
+                    .putString("EmailDropbox", null).apply();
+        }
 
         if (opciones.getBoolean("IniciarCalendario", false)){
             Intent intent = new Intent(this, Calendario.class);
@@ -120,10 +158,15 @@ public class Principal extends Activity implements View.OnLongClickListener {
         switch (requestCode){
             case PEDIR_PERMISO_ESCRITURA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Recargar la activity
-                } else {
-                    Toast.makeText(Principal.this, "La aplicación no tiene permiso para acceder al almacenamiento." +
-                            "\nSu funcionamiento estará limitado.", Toast.LENGTH_LONG).show();
+                    for (int m = 0; m < grantResults.length; m++){
+                        if (grantResults[m] == PackageManager.PERMISSION_DENIED){
+                            Toast.makeText(
+                                    Principal.this,
+                                    "La aplicación no tiene permiso para acceder completamente al almacenamiento.\nSu funcionamiento estará limitado.",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    }
                 }
         }
     }
@@ -179,12 +222,12 @@ public class Principal extends Activity implements View.OnLongClickListener {
         if (opciones.getBoolean("SincronizarSoloWifi", false)) {
             // Si hay wifi
             if (Utils.hayWifi(this)) {
-                tvActualizando.setText("Actualizando...");
+                tvActualizando.setText("Sincronizando...");
                 SincronizarDropBox();
             }
         // Si no sólo conectamos con wifi...
         } else {
-            tvActualizando.setText("Actualizando...");
+            tvActualizando.setText("Sincronizando...");
             SincronizarDropBox();
         }
     }
@@ -255,14 +298,14 @@ public class Principal extends Activity implements View.OnLongClickListener {
             new SincronizarTask(new SincronizarTask.Callback() {
                 @Override
                 public void onComplete() {
-                    tvActualizando.setText("Actualizado");
+                    tvActualizando.setText("Sincronizado");
                     BaseDatos.hayCambios = false;
                     ACTUALIZAR = false;
                 }
 
                 @Override
                 public void onError(Soporte.Resultado resultado) {
-                    tvActualizando.setText("Error al actualizar");
+                    tvActualizando.setText("Error al sincronizar");
                 }
             }, this).execute();
 

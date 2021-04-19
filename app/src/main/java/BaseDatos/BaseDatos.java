@@ -23,6 +23,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 
+import com.quattro.models.LineaModel;
+import com.quattro.models.ServicioAuxiliarModel;
+import com.quattro.models.ServicioModel;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -1512,7 +1516,80 @@ public class BaseDatos {
         String[] args = new String[]{linea};
         String where = "Linea=?";
 	    baseDatos.delete(TABLA_LINEAS, where, args);
+	    borrarServicios(linea);
     }
+
+    //endregion
+
+
+    //region MÉTODOS ALL LÍNEAS
+
+
+    //TODO: Comprobar que devolvemos todas las líneas con sus servicios.
+    public ArrayList<LineaModel> getAllLineas(){
+        Cursor cursorLineas = cursorLineas();
+        ArrayList<LineaModel> lineas = new ArrayList<>();
+        if (cursorLineas.moveToFirst()){
+            do{
+                LineaModel linea = new LineaModel(cursorLineas);
+                Cursor cursorServicios = cursorServiciosLinea(linea.getLinea());
+                if (cursorServicios.moveToFirst()){
+                    ArrayList<ServicioModel> servicios = new ArrayList<>();
+                    do{
+                        ServicioModel servicio = new ServicioModel(cursorServicios);
+                        Cursor cursorAuxiliares = cursorServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+                        if (cursorAuxiliares.moveToFirst()){
+                            ArrayList<ServicioAuxiliarModel> auxiliares = new ArrayList<>();
+                            do{
+                                ServicioAuxiliarModel auxiliar = new ServicioAuxiliarModel(cursorAuxiliares);
+                                auxiliares.add(auxiliar);
+                            } while(cursorAuxiliares.moveToNext());
+                            cursorAuxiliares.close();
+                            servicio.setServiciosAuxiliares(auxiliares);
+                            servicio.Modificado = false;
+                        }
+                        servicios.add(servicio);
+                    } while (cursorServicios.moveToNext());
+                    cursorServicios.close();
+                    linea.setServicios(servicios);
+                    linea.Modificado = false;
+                }
+                lineas.add(linea);
+            } while (cursorLineas.moveToNext());
+            cursorLineas.close();
+        }
+        return lineas;
+    }
+
+
+    //TODO: Comprobar que reemplaza y/o añade todo correctamente.
+    public void guardarAllLineas(ArrayList<LineaModel> lineas){
+        for (LineaModel linea: lineas) {
+            // Si la línea es nueva o ha sido modificada, la guardamos.
+            if (linea.Nuevo || linea.Modificado) setLinea(linea.ToLinea());
+            // Comprobamos los servicios.
+            if (linea.getServicios() != null){
+                for (ServicioModel servicio: linea.getServicios()) {
+                    // Si el servicio es nuevo o ha sido modificado, lo guardamos.
+                    if (servicio.Nuevo || servicio.Modificado){
+                        // Si es nuevo, le ponemos -1 al id, sino 0.
+                        if (servicio.Nuevo){
+                            setServicio( -1, servicio.ToServicio());
+                        } else {
+                            setServicio( 0, servicio.ToServicio());
+                        }
+                    }
+                    if (servicio.getServiciosAuxiliares() != null) {
+                        for (ServicioAuxiliarModel auxiliar : servicio.getServiciosAuxiliares()) {
+                            // Si el servicio auxiliar es nuevo o ha sido modificado lo guardamos.
+                            if (auxiliar.Nuevo || auxiliar.Modificado) setServicioAuxiliar(auxiliar.ToServicioAuxiliar());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     //endregion
 
@@ -1570,7 +1647,7 @@ public class BaseDatos {
     public void setServicio(int id, Servicio servicio){
         if (servicio == null) return;
         hayCambios = true;
-        if (id != -1) borrarServicio(id);
+        if (id != -1) borrarServicio(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
         ContentValues valores = new ContentValues();
         valores.put("Linea", servicio.getLinea());
         valores.put("Servicio", servicio.getServicio());
@@ -1586,9 +1663,36 @@ public class BaseDatos {
 
     public void borrarServicio(int id){
         hayCambios = true;
+        Servicio servicio = getServicio(id);
         String[] args = new String[]{String.valueOf(id)};
         String where = "_id=?";
 	    baseDatos.delete(TABLA_SERVICIOS, where, args);
+	    vaciarServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+    }
+
+    public void borrarServicio(String linea, String servicio, int turno){
+        String[] args = new String[]{linea, servicio, String.valueOf(turno)};
+        String where = "Linea=? AND Servicio=? AND Turno=?";
+        baseDatos.delete(TABLA_SERVICIOS, where, args);
+    }
+
+    public void borrarServicios(String linea){
+        hayCambios = true;
+        ArrayList<Servicio> lista = new ArrayList<>();
+        Cursor cursor = cursorServiciosLinea(linea);
+        if (cursor.moveToFirst()){
+            do {
+                Servicio s = new Servicio();
+                s.setLinea(cursor.getString(cursor.getColumnIndex("Linea")));
+                s.setServicio(cursor.getString(cursor.getColumnIndex("Servicio")));
+                s.setTurno(cursor.getInt(cursor.getColumnIndex("Turno")));
+                lista.add(s);
+            } while (cursor.moveToNext());
+        }
+        String[] args = new String[]{linea};
+        String where = "Linea=?";
+        baseDatos.delete(TABLA_SERVICIOS, where, args);
+        for(Servicio s : lista) vaciarServiciosAuxiliares(s.getLinea(), s.getServicio(), s.getTurno());
     }
 
     //endregion
