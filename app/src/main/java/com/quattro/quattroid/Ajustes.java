@@ -22,14 +22,20 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
+
+
+import org.joda.time.LocalDate;
 
 import BaseDatos.BaseDatos;
 import Objetos.Hora;
 
-public class Ajustes extends Activity implements View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener{
+public class Ajustes extends Activity implements View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
 
     // CONSTANTES
 
@@ -38,7 +44,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
     SharedPreferences opciones = null;
 
     String pMes, pAño, hAnteriores, rFijo, jMedia, jMinima, lServicios, jAnual,iNocturnas, fNocturnas, dDesayuno, dComida1,
-    dComida2, dCena;
+    dComida2, dCena, dTurnos, mTurnos, aTurnos;
 
     // ELEMENTOS DEL VIEW
     EditText primerMes = null;
@@ -67,6 +73,10 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
     Switch sumarTomaDeje = null;
     Switch iniciarCalendario = null;
     Switch activarTecladoNumerico = null;
+    Switch swInferirTurnos = null;
+    EditText diaBaseTurnos = null;
+    EditText mesBaseTurnos = null;
+    EditText añoBaseTurnos = null;
 
 
     @Override
@@ -106,6 +116,10 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         sumarTomaDeje = (Switch) findViewById(R.id.sw_sumarTomaDeje);
         iniciarCalendario = (Switch) findViewById(R.id.sw_iniarCalendario);
         activarTecladoNumerico = (Switch) findViewById(R.id.sw_TecladoNumerico);
+        swInferirTurnos = (Switch) findViewById(R.id.sw_inferirTurnos);
+        diaBaseTurnos = (EditText) findViewById(R.id.et_diaBaseTurnos);
+        mesBaseTurnos = (EditText) findViewById(R.id.et_mesBaseTurnos);
+        añoBaseTurnos = (EditText) findViewById(R.id.et_añoBaseTurnos);
 
         // Registrar los listeners
         primerMes.setOnFocusChangeListener(this);
@@ -122,6 +136,9 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         comida1.setOnFocusChangeListener(this);
         comida2.setOnFocusChangeListener(this);
         cena.setOnFocusChangeListener(this);
+        diaBaseTurnos.setOnFocusChangeListener(this);
+        mesBaseTurnos.setOnFocusChangeListener(this);
+        añoBaseTurnos.setOnFocusChangeListener(this);
 
         rellenarSemana.setOnCheckedChangeListener(this);
 	    modoBasico.setOnCheckedChangeListener(this);
@@ -135,6 +152,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         pdfIncluirServicios.setOnCheckedChangeListener(this);
         pdfIncluirNotas.setOnCheckedChangeListener(this);
         pdfAgruparNotas.setOnCheckedChangeListener(this);
+        swInferirTurnos.setOnCheckedChangeListener(this);
 
         // Inicializamos las opciones
         opciones = PreferenceManager.getDefaultSharedPreferences(this);
@@ -181,6 +199,11 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         iniciarCalendario.setChecked(opciones.getBoolean("IniciarCalendario", false));
         activarTecladoNumerico.setChecked(opciones.getBoolean("ActivarTecladoNumerico", false));
 
+        swInferirTurnos.setChecked(opciones.getBoolean("InferirTurnos", false));
+        diaBaseTurnos.setText(String.valueOf(opciones.getInt("DiaBaseTurnos", 3)));
+        mesBaseTurnos.setText(String.valueOf(opciones.getInt("MesBaseTurnos", 1)));
+        añoBaseTurnos.setText(String.valueOf(opciones.getInt("AñoBaseTurnos", 2021)));
+
     }
 
     // AL PULSAR UNA TECLA
@@ -188,6 +211,11 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            if (primerMes.hasFocus()) {
+                primerAño.requestFocus();
+            } else {
+                primerMes.requestFocus();
+            }
             finish();
             return true;
         }
@@ -244,6 +272,15 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     break;
                 case R.id.et_cena:
                     dCena = cena.getText().toString();
+                    break;
+                case R.id.et_diaBaseTurnos:
+                    dTurnos = diaBaseTurnos.getText().toString();
+                    break;
+                case R.id.et_mesBaseTurnos:
+                    mTurnos = mesBaseTurnos.getText().toString();
+                    break;
+                case R.id.et_añoBaseTurnos:
+                    aTurnos = añoBaseTurnos.getText().toString();
                     break;
             }
         } else {
@@ -369,6 +406,66 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     cena.setText(Hora.horaToString(cena.getText().toString()));
                     opciones.edit().putInt("LimiteCena", Hora.horaToInt(cena.getText().toString())).apply();
                     break;
+                case R.id.et_diaBaseTurnos:
+                    i = entero(diaBaseTurnos.getText().toString());
+                    if (i == null){
+                        diaBaseTurnos.setText(dTurnos);
+                        i = Integer.valueOf(dTurnos);
+                    } else {
+                        if (i < 1 || i > 31){
+                            diaBaseTurnos.setText(dTurnos);
+                            i = Integer.valueOf(dTurnos);
+                        } else {
+                            Integer mes = entero(mesBaseTurnos.getText().toString());
+                            Integer año = entero(añoBaseTurnos.getText().toString());
+                            if (mes != null && año != null){
+                                LocalDate fecha = new LocalDate(año, mes, 1);
+                                int diasMes = fecha.dayOfMonth().getMaximumValue();
+                                if (i > diasMes){
+                                    i = diasMes;
+                                    diaBaseTurnos.setText(i.toString());
+                                }
+                            }
+                        }
+                    }
+                    opciones.edit().putInt("DiaBaseTurnos", i).apply();
+                    break;
+                case R.id.et_mesBaseTurnos:
+                    i = entero(mesBaseTurnos.getText().toString());
+                    if (i == null){
+                        mesBaseTurnos.setText(mTurnos);
+                        i = Integer.valueOf(mTurnos);
+                    } else {
+                        if (i < 1 || i > 12){
+                            mesBaseTurnos.setText(mTurnos);
+                            i = Integer.valueOf(mTurnos);
+                        } else {
+                            Integer dia = entero(diaBaseTurnos.getText().toString());
+                            Integer año = entero(añoBaseTurnos.getText().toString());
+                            if (dia != null && año != null){
+                                LocalDate fecha = new LocalDate(año, i, 1);
+                                int diasMes = fecha.dayOfMonth().getMaximumValue();
+                                if (dia > diasMes){
+                                    diaBaseTurnos.setText(String.valueOf(diasMes));
+                                }
+                            }
+                        }
+                    }
+                    opciones.edit().putInt("MesBaseTurnos", i).apply();
+                    break;
+                case R.id.et_añoBaseTurnos:
+                    i = entero(añoBaseTurnos.getText().toString());
+                    if (i == null){
+                        añoBaseTurnos.setText(aTurnos);
+                        i = Integer.valueOf(aTurnos);
+                    } else {
+                        if (i < 2000 || i > 2050){
+                            añoBaseTurnos.setText(aTurnos);
+                            i = Integer.valueOf(aTurnos);
+                        }
+                    }
+                    opciones.edit().putInt("AñoBaseTurnos", i).apply();
+                    break;
             }
         }
     }
@@ -432,7 +529,11 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
             case R.id.sw_pdfAgruparNotas:
                 opciones.edit().putBoolean("PdfAgruparNotas", pdfAgruparNotas.isChecked()).apply();
                 break;
+            case R.id.sw_inferirTurnos:
+                opciones.edit().putBoolean("InferirTurnos", swInferirTurnos.isChecked()).apply();
+                break;
         }
 
     }
+
 }

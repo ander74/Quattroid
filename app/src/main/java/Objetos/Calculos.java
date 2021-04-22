@@ -25,6 +25,10 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
+
 public class Calculos {
 
     /**
@@ -284,6 +288,30 @@ public class Calculos {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+
+
+    /**
+     * Dada una fecha de referencia y un turno de referencia, infiere el turno que le corresponde a una fecha determinada.
+     * La fecha de referencia debe pertenecer al día de la semana en que cambia el turno. Si cambia en domingo, la fecha debe
+     * ser un domingo.
+     * @param fecha fecha de la que se quiere inferir el turno.
+     * @param fechaReferencia fecha de referencia. Debe ser el mísmo día de semana en el que cambia el turno.
+     * @param turnoReferencia turno de referencia. Sólo puede ser 1 o 2.
+     * @return el turno que le corresponde a la fecha de la que se quiere inferir el turno. Sólo será 1 o 2.
+     */
+    public static int InferirTurno(LocalDate fecha, LocalDate fechaReferencia, int turnoReferencia){
+        if (turnoReferencia < 1 || turnoReferencia > 2) return 0;
+        int dias = Days.daysBetween(fecha, fechaReferencia).getDays();
+        int semanas = 0;
+        if (fecha.isBefore(fechaReferencia)){
+            dias -= 1;
+            semanas = 1;
+        }
+        semanas += Math.abs(dias / 7);
+        if (semanas % 2 != 0) return turnoReferencia == 1 ? 2 : 1;
+        return turnoReferencia;
+    }
+
 
 
 }

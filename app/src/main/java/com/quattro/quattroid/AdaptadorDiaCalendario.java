@@ -143,6 +143,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         int tipo = dia.getTipoIncidencia();
         String ini = dia.getInicio();
         String fin = dia.getFinal();
+        i = dia.getTurno();
         switch (tipo) {
             case 1:case 2:case 5:
                 String ser = dia.getServicio();
@@ -151,15 +152,15 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
                 if (ser == null) ser = "";
                 if (lin == null) lin = "";
                 if (tex == null) tex = "";
-                i = dia.getTurno();
                 if (!ser.trim().equals("") && !lin.trim().equals("") && !tex.trim().equals("") && i != 0) {
-                    s = ser + "/" + String.valueOf(i) + "-" + lin + ": " + tex;
+                    s = ser + "/" + i + "-" + lin + ": " + tex;
                 } else {
                     if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
                         s = dia.getTextoIncidencia() +
-                                " " + String.valueOf(i);
+                                " " + i;
                     } else {
                         s = "";
+                        if (i != 0) s = "Turno " + i;
                     }
                 }
 
@@ -167,8 +168,12 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
                 break;
             case 3:case 4:case 6:
                 String inc = dia.getTextoIncidencia();
-                holder.Servicio.setText(inc);
+                holder.Servicio.setText(inc + " " + i);
                 break;
+            default:
+                if (i != 0) holder.Servicio.setText("Turno " + i);
+                break;
+
         }
 
         // Rellenamos el relevo

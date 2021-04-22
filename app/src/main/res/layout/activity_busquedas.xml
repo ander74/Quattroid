@@ -60,6 +60,14 @@
             android:onClick="botonPulsado"
             android:background="@drawable/bt_calendario"
             android:text="Lista por autobus"/>
+        <Button
+            android:id="@+id/bt_notas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="botonPulsado"
+            android:background="@drawable/bt_busquedas"
+            android:text="Búsqueda en notas"/>
         <LinearLayout
             style="@style/horizontal"
             android:gravity="center">
@@ -209,6 +217,33 @@
                 android:id="@+id/et_bus"
                 style="@style/edit_text"
                 android:inputType="number"
+                android:layout_width="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- BÚSQUEDA EN NOTAS -->
+    <LinearLayout
+        android:id="@+id/ly_porNotas"
+        android:baselineAligned="false"
+        android:weightSum="3"
+        style="@style/horizontal">
+        <!-- NUMERO BUS -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="3">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:textSize="16sp"
+                android:text="Texto a buscar en las notas"/>
+            <EditText
+                android:id="@+id/et_notas"
+                style="@style/edit_text"
+                android:inputType="textAutoCorrect"
                 android:layout_width="match_parent"/>
         </LinearLayout>
     </LinearLayout>

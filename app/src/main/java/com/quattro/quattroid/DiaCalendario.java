@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,7 +62,8 @@ import Objetos.HorasServicio;
 
 public class DiaCalendario extends Activity implements View.OnFocusChangeListener,
                                                        AdapterView.OnItemClickListener,
-                                                       View.OnLongClickListener{
+                                                       View.OnLongClickListener,
+                                                       View.OnClickListener {
 
 	//region DECLARACIONES INICIALES
 	
@@ -142,6 +144,10 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
     ListView listaServiciosDia = null;
 
+    ImageView iconoDesayuno = null;
+    ImageView iconoComida = null;
+    ImageView iconoCena = null;
+
     //endregion
 
     // AL CREARSE LA ACTIVITY
@@ -204,14 +210,20 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         listaServiciosDia.setOnItemClickListener(this);
         registerForContextMenu(listaServiciosDia);
         inputIncidencia.setOnLongClickListener(this);
-        textoTrabajadas.setOnLongClickListener(this);
-        textoAcumuladas.setOnLongClickListener(this);
-        textoNocturnas.setOnLongClickListener(this);
+//        textoTrabajadas.setOnLongClickListener(this);
+//        textoAcumuladas.setOnLongClickListener(this);
+//        textoNocturnas.setOnLongClickListener(this);
+        textoTrabajadas.setOnClickListener(this);
+        textoAcumuladas.setOnClickListener(this);
+        textoNocturnas.setOnClickListener(this);
         inputMatriculaRelevo.setOnLongClickListener(this);
         inputMatriculaSusti.setOnLongClickListener(this);
         inputServicio.setOnLongClickListener(this);
         inputLinea.setOnLongClickListener(this);
         inputBus.setOnLongClickListener(this);
+        iconoDesayuno.setOnClickListener(this);
+        iconoComida.setOnClickListener(this);
+        iconoCena.setOnClickListener(this);
 
         // Activamos el teclado numérico en los campos habituales.
         if (opciones.getBoolean("ActivarTecladoNumerico", false)){
@@ -679,6 +691,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         Intent intent;
 
+/*
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         input.setBackgroundResource(R.drawable.fondo_dialogo);
@@ -710,8 +723,10 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 dialog.cancel();
             }
         });
+*/
 
         switch (v.getId()){
+/*
             case R.id.tv_trabajadas:
                 vibrador.vibrate(50);
                 input.setText(Hora.textoDecimal(datosDia.getTrabajadas()));
@@ -739,6 +754,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 horaSeleccionada = NOCTURNAS;
                 dialogo.show();
                 break;
+*/
             case R.id.et_matricula_relevo:
                 // Creamos el intent.
                 intent = new Intent(context, Relevos.class);
@@ -770,6 +786,86 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         }
         return false;
     }
+
+    @Override
+    public void onClick(View v) {
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        input.setBackgroundResource(R.drawable.fondo_dialogo);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        dialogo.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String td = Hora.validaHoraDecimal(input.getText().toString());
+                if (!td.equals("")){
+                    switch (horaSeleccionada){
+                        case TRABAJADAS:
+                            datosDia.setTrabajadas(Double.valueOf(td.replace(",", ".")));
+                            break;
+                        case ACUMULADAS:
+                            datosDia.setAcumuladas(Double.valueOf(td.replace(",", ".")));
+                            break;
+                        case NOCTURNAS:
+                            datosDia.setNocturnas(Double.valueOf(td.replace(",", ".")));
+                            break;
+                    }
+                    escribirHoras();
+                }
+            }
+        });
+        dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        switch (v.getId()){
+            case R.id.tv_trabajadas:
+                vibrador.vibrate(50);
+                input.setText(Hora.textoDecimal(datosDia.getTrabajadas()));
+                input.selectAll();
+                dialogo.setView(input);
+                dialogo.setTitle("Horas Trabajadas");
+                horaSeleccionada = TRABAJADAS;
+                dialogo.show();
+                break;
+            case R.id.tv_acumuladas:
+                vibrador.vibrate(50);
+                input.setText(Hora.textoDecimal(datosDia.getAcumuladas()));
+                input.selectAll();
+                dialogo.setView(input);
+                dialogo.setTitle("Horas Acumuladas");
+                horaSeleccionada = ACUMULADAS;
+                dialogo.show();
+                break;
+            case R.id.tv_nocturnas:
+                vibrador.vibrate(50);
+                input.setText(Hora.textoDecimal(datosDia.getNocturnas()));
+                input.selectAll();
+                dialogo.setView(input);
+                dialogo.setTitle("Horas Nocturnas");
+                horaSeleccionada = NOCTURNAS;
+                dialogo.show();
+                break;
+            case R.id.desayuno:
+                vibrador.vibrate(50);
+                datosDia.setDesayuno(!datosDia.isDesayuno());
+                rellenarDia();
+                break;
+            case R.id.comida:
+                vibrador.vibrate(50);
+                datosDia.setComida(!datosDia.isComida());
+                rellenarDia();
+                break;
+            case R.id.cena:
+                vibrador.vibrate(50);
+                datosDia.setCena(!datosDia.isCena());
+                rellenarDia();
+                break;
+        }
+
+    }
+
 
     // AL PULSAR EL BOTON INCIDENCIA
     public void botonPulsado(View view){
@@ -816,6 +912,10 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         listaServiciosDia = (ListView) findViewById(R.id.listaAuxiliares);
 
+        iconoDesayuno = (ImageView) findViewById(R.id.desayuno);
+        iconoComida = (ImageView) findViewById(R.id.comida);
+        iconoCena = (ImageView) findViewById(R.id.cena);
+
         inputMatriculaSusti.setOnFocusChangeListener(this);
         inputApellidosSusti.setOnFocusChangeListener(this);
         inputLinea.setOnFocusChangeListener(this);
@@ -847,6 +947,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         } else if (datosDia.getFinal().trim().equals("")){
             return true;
         } else
+            //TODO: En la inferencia de turnos, comprobar que esto no nos borra la incidencia.
         	return datosDia.getTurno() == 0;
     }
 
@@ -1042,6 +1143,24 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         // Rellenar el bloque Horas
         escribirHoras();
+
+        // Rellenar las dietas.
+        if (datosDia.isDesayuno()){
+            iconoDesayuno.clearColorFilter();
+        } else {
+            iconoDesayuno.setColorFilter(Colores.GRIS_OSCURO);
+        }
+        if (datosDia.isComida()){
+            iconoComida.clearColorFilter();
+        } else {
+            iconoComida.setColorFilter(Colores.GRIS_OSCURO);
+        }
+        if (datosDia.isCena()){
+            iconoCena.clearColorFilter();
+        } else {
+            iconoCena.setColorFilter(Colores.GRIS_OSCURO);
+        }
+
     }
 
     // VALIDAR LOS CAMPOS DEL VIEW
@@ -1511,7 +1630,15 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         // Validamos los campos
         validarCampos();
         // Si algun inicio, final o turno estan vacíos se sale.
-        if (isHorasVacio()) return;
+        if (isHorasVacio()) {
+            datosDia.setTrabajadas(0);
+            datosDia.setAcumuladas(0);
+            datosDia.setNocturnas(0);
+            datosDia.setDesayuno(false);
+            datosDia.setComida(false);
+            datosDia.setCena(false);
+            return;
+        }
         // Si el tipo de incidencia es de calcular horas, se calculan y se escriben.
         if (datosDia.getTipoIncidencia() == 1 || datosDia.getTipoIncidencia() == 2) {
             calcularHoras();
@@ -1523,7 +1650,15 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         // Validamos los campos
         validarCampos();
         // Si algun inicio, final o turno estan vacíos se sale.
-        if (isHorasVacio()) return;
+        if (isHorasVacio()) {
+            datosDia.setTrabajadas(0);
+            datosDia.setAcumuladas(0);
+            datosDia.setNocturnas(0);
+            datosDia.setDesayuno(false);
+            datosDia.setComida(false);
+            datosDia.setCena(false);
+            return;
+        }
         // Si el tipo de incidencia es de calcular horas, se calculan y se escriben.
         if (datosDia.getTipoIncidencia() == 1 || datosDia.getTipoIncidencia() == 2) {
             calcularHoras();
@@ -1708,6 +1843,6 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
             }
         }
     }
-    
-    
+
+
 }

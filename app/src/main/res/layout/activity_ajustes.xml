@@ -29,6 +29,7 @@
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
+
         <!-- GENERAL -->
         <LinearLayout style="@style/op_ly">
             <TextView
@@ -434,6 +435,116 @@
                 style="@style/op_descripcion"
                 android:text="Hora límite para cobrar la dieta de cena."
                 android:layout_below="@+id/et_cena"/>
+        </RelativeLayout>
+        <View style="@style/op_sep_verde"/>
+
+
+        <!-- INFERIR TURNOS -->
+        <LinearLayout style="@style/op_ly">
+            <TextView
+                style="@style/op_encabezado"
+                android:text="Inferir turnos"/>
+            <View style="@style/op_sep_verde"/>
+        </LinearLayout>
+
+        <!-- ACTIVAR INFERIR TURNOS -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:textOn="ON"
+                android:textOff="OFF"
+                android:padding="5dp"
+                android:id="@+id/sw_inferirTurnos"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Inferir turnos"
+                android:layout_alignBaseline="@+id/sw_inferirTurnos"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Si está activado, se pondrá el turno\nautomáticamente en los días vacíos."
+                android:layout_below="@+id/sw_inferirTurnos"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+        <!-- FECHA BASE -->
+        <RelativeLayout style="@style/op_rl">
+
+            <LinearLayout
+                android:id="@+id/ly_diaTurnos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="6dp"
+                    android:text="Día"/>
+                <EditText
+                    android:id="@+id/et_diaBaseTurnos"
+                    style="@style/op_edit"
+                    android:minWidth="100dp"
+                    android:inputType="numberDecimal|numberSigned"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ly_mesTurnos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignRight="@id/ly_diaTurnos"
+                android:layout_below="@id/ly_diaTurnos">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="6dp"
+                    android:text="Mes"/>
+                <EditText
+                    android:id="@+id/et_mesBaseTurnos"
+                    style="@style/op_edit"
+                    android:minWidth="100dp"
+                    android:inputType="numberDecimal|numberSigned"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ly_añoTurnos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignRight="@id/ly_diaTurnos"
+                android:layout_below="@id/ly_mesTurnos">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginRight="6dp"
+                    android:text="Año"/>
+                <EditText
+                    android:id="@+id/et_añoBaseTurnos"
+                    style="@style/op_edit"
+                    android:minWidth="100dp"
+                    android:inputType="numberDecimal|numberSigned"/>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/op_titulo"
+                android:text="Fecha con turno 1"
+                android:layout_alignBaseline="@+id/ly_diaTurnos"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Fecha del primer día con\nturno 1 de cualquier ciclo.\n\nEjemplo:\n\nSi cambias turno en\ndomingo, fecha de un domingo\ncon turno 1."
+                android:layout_below="@+id/ly_diaTurnos"/>
         </RelativeLayout>
         <View style="@style/op_sep_verde"/>
 

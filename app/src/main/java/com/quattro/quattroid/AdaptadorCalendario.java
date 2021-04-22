@@ -134,6 +134,7 @@ public class AdaptadorCalendario extends CursorAdapter {
         int tipo = cursor.getInt(cursor.getColumnIndex("TipoIncidencia"));
         String ini = cursor.getString(cursor.getColumnIndex("Inicio"));
         String fin = cursor.getString(cursor.getColumnIndex("Final"));
+        i = cursor.getInt(cursor.getColumnIndex("Turno"));
         switch (tipo) {
             case 1:case 2:case 5:
                 String ser = cursor.getString(cursor.getColumnIndex("Servicio"));
@@ -142,15 +143,15 @@ public class AdaptadorCalendario extends CursorAdapter {
                 if (ser == null) ser = "";
                 if (lin == null) lin = "";
                 if (tex == null) tex = "";
-                i = cursor.getInt(cursor.getColumnIndex("Turno"));
                 if (!ser.trim().equals("") && !lin.trim().equals("") && !tex.trim().equals("") && i != 0) {
-                    s = ser + "/" + String.valueOf(i) + "-" + lin + ": " + tex;
+                    s = ser + "/" + i + "-" + lin + ": " + tex;
                 } else {
                     if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
                         s = cursor.getString(cursor.getColumnIndex("TextoIncidencia")) +
-                                " " + String.valueOf(i);
+                                " " + i;
                     } else {
                         s = "";
+                        if (i != 0) s = "Turno " + i;
                     }
                 }
 
@@ -158,7 +159,10 @@ public class AdaptadorCalendario extends CursorAdapter {
                 break;
             case 3:case 4:case 6:
                 String inc = cursor.getString(cursor.getColumnIndex("TextoIncidencia"));
-                Servicio.setText(inc);
+                Servicio.setText(inc + " " + i);
+                break;
+            default:
+                Servicio.setText("Turno " + i);
                 break;
         }
 

@@ -28,6 +28,7 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -50,6 +51,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
     private final int POR_MATRICULA = 2;
     private final int POR_INCIDENCIA = 3;
     private final int POR_BUS = 4;
+    private final int POR_NOTAS = 5;
 
     private final int ACCION_INCIDENCIA = 1;
     private final int ACCION_DIA_CALENDARIO = 2;
@@ -76,11 +78,13 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
     CheckBox deuda = null;
     EditText año = null;
     EditText bus = null;
+    EditText notas = null;
     CheckBox limitarAño = null;
     LinearLayout grupoBotones = null;
     LinearLayout grupoServicio = null;
     LinearLayout grupoMatrícula = null;
     LinearLayout grupoBus = null;
+    LinearLayout grupoNotas = null;
     LinearLayout grupoVerListado = null;
     Button verListado = null;
     ListView listaBusquedas = null;
@@ -104,11 +108,13 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
         deuda = (CheckBox) findViewById(R.id.ch_deuda);
         año = (EditText) findViewById(R.id.et_año);
         bus = (EditText) findViewById(R.id.et_bus);
+        notas = (EditText) findViewById(R.id.et_notas);
         limitarAño = (CheckBox) findViewById(R.id.ch_limitarAño);
         grupoBotones = (LinearLayout) findViewById(R.id.ly_botones);
         grupoServicio = (LinearLayout) findViewById(R.id.ly_porServicio);
         grupoMatrícula = (LinearLayout) findViewById(R.id.ly_porMatricula);
         grupoBus = (LinearLayout) findViewById(R.id.ly_porBus);
+        grupoNotas = (LinearLayout) findViewById(R.id.ly_porNotas);
         grupoVerListado = (LinearLayout) findViewById(R.id.ly_verListado);
         verListado = (Button) findViewById(R.id.bt_verlistado);
         listaBusquedas = (ListView) findViewById(R.id.lw_listaBusquedas);
@@ -118,6 +124,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
         grupoMatrícula.setVisibility(View.GONE);
         grupoVerListado.setVisibility(View.GONE);
         grupoBus.setVisibility(View.GONE);
+        grupoNotas.setVisibility(View.GONE);
         listaBusquedas.setVisibility(View.GONE);
 
         // Registrar los listeners
@@ -164,6 +171,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 grupoMatrícula.setVisibility(View.GONE);
                 grupoVerListado.setVisibility(View.GONE);
                 grupoBus.setVisibility(View.GONE);
+                grupoNotas.setVisibility(View.GONE);
                 listaBusquedas.setVisibility(View.GONE);
                 grupoBotones.setVisibility(View.VISIBLE);
                 grupoActivo = BOTONES;
@@ -204,6 +212,16 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 grupoServicio.setVisibility(View.GONE);
                 grupoMatrícula.setVisibility(View.GONE);
                 grupoBus.setVisibility(View.VISIBLE);
+                grupoVerListado.setVisibility(View.VISIBLE);
+                listaBusquedas.setVisibility(View.VISIBLE);
+                grupoBotones.setVisibility(View.GONE);
+                break;
+            case R.id.bt_notas:
+                grupoActivo = POR_NOTAS;
+                grupoServicio.setVisibility(View.GONE);
+                grupoMatrícula.setVisibility(View.GONE);
+                grupoBus.setVisibility(View.GONE);
+                grupoNotas.setVisibility(View.VISIBLE);
                 grupoVerListado.setVisibility(View.VISIBLE);
                 listaBusquedas.setVisibility(View.VISIBLE);
                 grupoBotones.setVisibility(View.GONE);
@@ -288,14 +306,14 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 boolean y = false;
                 where = "";
                 if (!linea.getText().toString().trim().equals("")){
-                    where = "Linea='" + linea.getText().toString().trim() + "' ";
+                    where = "Linea LIKE '" + linea.getText().toString().trim() + "' ";
                     y = true;
                 }
                 if (!servicio.getText().toString().trim().equals("")){
                     if (y){
                         where += "AND ";
                     }
-                    where += "Servicio='" + servicio.getText().toString().trim() + "' ";
+                    where += "Servicio LIKE '" + servicio.getText().toString().trim() + "' ";
                     y = true;
                 }
                 if (!turno.getText().toString().trim().equals("")){
@@ -305,7 +323,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                     where += "Turno=" + turno.getText().toString().trim();
                 }
                 if (where.equals("")) where = "Dia=0";
-                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + String.valueOf(añoLimite);
+                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + añoLimite;
                 cursor = datos.cursorBusqueda(where);
                 adaptador.changeCursor(cursor);
                 adaptador.notifyDataSetChanged();
@@ -327,7 +345,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                         where = "Matricula=" + matricula.getText().toString().trim();
                     }
                 }
-                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + String.valueOf(añoLimite);
+                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + añoLimite;
                 cursor = datos.cursorBusqueda(where);
                 adaptador.changeCursor(cursor);
                 adaptador.notifyDataSetChanged();
@@ -335,12 +353,21 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
             case POR_BUS:
                 if (bus.getText().toString().trim().equals("")) break;
                 where = "Bus='" + bus.getText().toString().trim() + "' ";
-                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + String.valueOf(añoLimite);
+                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + añoLimite;
+                cursor = datos.cursorBusqueda(where);
+                adaptador.changeCursor(cursor);
+                adaptador.notifyDataSetChanged();
+                break;
+            case POR_NOTAS:
+                if (notas.getText().toString().trim().equals("")) break;
+                where = "Notas LIKE '%" + notas.getText().toString().trim() + "%' ";
+                if (limitarAño.isChecked() && añoLimite != 0) where += " AND Año=" + añoLimite;
                 cursor = datos.cursorBusqueda(where);
                 adaptador.changeCursor(cursor);
                 adaptador.notifyDataSetChanged();
                 break;
         }
+        ocultarTeclado(this);
     }
 
     // AL VOLVER DE UNA SUBACTIVITY
@@ -357,6 +384,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                     grupoServicio.setVisibility(View.GONE);
                     grupoMatrícula.setVisibility(View.GONE);
                     grupoVerListado.setVisibility(View.GONE);
+                    grupoNotas.setVisibility(View.GONE);
                     listaBusquedas.setVisibility(View.VISIBLE);
                     grupoBotones.setVisibility(View.GONE);
                     int cod = data.getIntExtra("Codigo", -1);
@@ -425,5 +453,16 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
     }
 
 
+    // OCULTAR TECLADO
+    public static void ocultarTeclado(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
 }

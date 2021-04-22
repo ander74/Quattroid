@@ -27,6 +27,8 @@ import com.quattro.models.LineaModel;
 import com.quattro.models.ServicioAuxiliarModel;
 import com.quattro.models.ServicioModel;
 
+import org.joda.time.LocalDate;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import Objetos.Calculos;
 import Objetos.Hora;
 
 public class BaseDatos {

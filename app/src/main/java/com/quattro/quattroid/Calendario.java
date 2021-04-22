@@ -55,6 +55,8 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 
+import org.joda.time.LocalDate;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,6 +71,7 @@ import BaseDatos.Servicio;
 import BaseDatos.ServicioAuxiliar;
 import BaseDatos.Linea;
 import BaseDatos.Incidencia;
+import Objetos.Calculos;
 import Objetos.Colores;
 import Objetos.Hora;
 
@@ -183,6 +186,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         listaCalendario.setMultiChoiceModeListener(this);
 
         listaDias = datos.datosMes(mesActual, añoActual);
+        if(listaDias.isEmpty()) {
+            datos.crearMes(mesActual, añoActual);
+            listaDias = datos.datosMes(mesActual, añoActual);
+        }
+        inferirTurnos();
         adaptador = new AdaptadorDiaCalendario(this, listaDias);
 
         listaCalendario.setAdapter(adaptador);
@@ -371,14 +379,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             //listaSeleccionados.add(listaDias.get(position));
             listaIds.add(position);
             listaDias.get(position).setSeleccionado(true);
-            adaptador.notifyDataSetChanged();
         } else {
             //listaSeleccionados.remove(listaDias.get(position));
             Integer pos = position;
             listaIds.remove(pos);
             listaDias.get(position).setSeleccionado(false);
-            adaptador.notifyDataSetChanged();
         }
+        adaptador.notifyDataSetChanged();
 
 
     }
@@ -503,10 +510,16 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //for (DatosDia d : listaSeleccionados) {
+                        Boolean vaciado = false;
                         for (int id : listaIds) {
 	                    //for (DatosDia d : listaDias){
-                            vaciarDia(listaDias.get(id));
-		                    //if (d.isSeleccionado()) vaciarDia(d);
+                            vaciado = vaciarDia(listaDias.get(id));
+
+                        }
+                        if (vaciado) {
+                            Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
                         }
                         actualizaLista();
 	                    //mode.finish();
@@ -737,6 +750,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             datos.crearMes(mesActual, añoActual);
             listaDias = datos.datosMes(mesActual, añoActual);
         }
+        inferirTurnos();
         adaptador = new AdaptadorDiaCalendario(this, listaDias);
         adaptador.notifyDataSetChanged();
         listaCalendario.setAdapter(adaptador);
@@ -762,6 +776,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             datos.crearMes(mesActual, añoActual);
             listaDias = datos.datosMes(mesActual, añoActual);
         }
+        inferirTurnos();
         adaptador = new AdaptadorDiaCalendario(this, listaDias);
         adaptador.notifyDataSetChanged();
         listaCalendario.setAdapter(adaptador);
@@ -873,7 +888,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // VACIAR DIA
-    public void vaciarDia(DatosDia dia){
+    public Boolean vaciarDia(DatosDia dia){
         dia.setCodigoIncidencia(0);
         dia.setTextoIncidencia("");
         dia.setTipoIncidencia(0);
@@ -894,6 +909,9 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         dia.setAcumuladas(0d);
         dia.setNocturnas(0d);
         dia.setTrabajadas(0d);
+        dia.setDesayuno(false);
+        dia.setComida(false);
+        dia.setCena(false);
         dia.setMatricula(0);
         dia.setApellidos("");
         dia.setMatriculaSusti(0);
@@ -902,12 +920,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         dia.setNotas("");
         if (datos.guardaDia(dia)){
             datos.vaciarServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());
-            Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
             setResult(RESULT_OK, null);
             escribeHoras();
-        } else {
-            Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
+            return true;
         }
+        return false;
     }
 
     // COPIAR EN EL PORTAPAPELES
@@ -1502,5 +1519,22 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         if (horas < 0 && horas > -0.01) return "0,00";
         return String.format("%.2f", horas);
     }
+
+    private void inferirTurnos () {
+        if (opciones.getBoolean("InferirTurnos", false)){
+            int dia = opciones.getInt("DiaBaseTurnos", 3);
+            int mes = opciones.getInt("MesBaseTurnos", 1);
+            int año = opciones.getInt("AñoBaseTurnos", 2021);
+            LocalDate fechaReferencia = new LocalDate(año, mes, dia);
+            String texto = fechaReferencia.toString("yyyy-MM-dd");
+            listaDias.stream().filter(d -> d.getTurno() == 0).forEach(d -> {
+                LocalDate fechaDia = new LocalDate(d.getAño(), d.getMes(), d.getDia());
+                d.setTurno(Calculos.InferirTurno(fechaDia, fechaReferencia, 1));
+                datos.guardaDia(d);
+            });
+        }
+    }
+
+
 
 }
