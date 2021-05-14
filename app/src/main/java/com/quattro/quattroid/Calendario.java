@@ -228,9 +228,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 crearPDF();
                 return true;
             case android.R.id.home:
+                setResult(RESULT_CANCELED); // Añadido
                 Intent intent = new Intent(this, Principal.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
+                finish(); // Añadido
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -241,11 +243,17 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // AL PULSAR UNA TECLA
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
+//        //Al pulsar la tecla retroceso
+//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+//            Intent intent = new Intent(this, Principal.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//            startActivity(intent);
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            Intent intent = new Intent(this, Principal.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(intent);
+            finish();
             return true;
         }
         return super.onKeyDown(keyCode, event);
