@@ -26,6 +26,8 @@ import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import Objetos.Colores;
+
 public class AdaptadorIncidencia extends CursorAdapter {
 
     LayoutInflater inflater = null;
@@ -61,6 +63,13 @@ public class AdaptadorIncidencia extends CursorAdapter {
             item.setBackground(context.getResources().getDrawable(R.drawable.fondo_incidencias_p));
         } else {
             item.setBackground(context.getResources().getDrawable(R.drawable.fondo_incidencias_i));
+        }
+
+        // Si la incidencia es protegida, se pone el código en rojo.
+        if (cod > 16) {
+            codigo.setTextColor(Colores.NEGRO);
+        } else {
+            codigo.setTextColor(Colores.ROJO_OSCURO);
         }
 
         // Escribimos los datos.

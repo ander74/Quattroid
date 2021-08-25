@@ -61,6 +61,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
     // VARIABLES
     Context context;
     SharedPreferences opciones = null;
+    BaseDatos datos = null;
     Boolean TienePermisoEscritura = false;
 
     // ELEMENTOS
@@ -90,8 +91,9 @@ public class Principal extends Activity implements View.OnLongClickListener {
         // Flag para actualizar
         ACTUALIZAR = true;
 
-        // Inicializamos las opciones
+        // Inicializamos las opciones y la base de datos.
         opciones = PreferenceManager.getDefaultSharedPreferences(context);
+        datos = new BaseDatos(this);
 
         // Evaluamos si es la primera vez que se ejecuta la aplicación.
         if (opciones.getBoolean("PrimerInicio", true)){
@@ -120,14 +122,14 @@ public class Principal extends Activity implements View.OnLongClickListener {
 //        }
 
 
-        if (!opciones.contains("JorMedia")) {
-            // Creamos las nuevas preferencias de jornada media y minima.
-            long jorMedia = Double.doubleToLongBits(Hora.horaToDecimal(opciones.getInt("JornadaMedia", 465)));
-            opciones.edit().putLong("JorMedia", jorMedia).apply();
-
-            long jorMinima = Double.doubleToLongBits(Hora.horaToDecimal(opciones.getInt("JornadaMinima", 420)));
-            opciones.edit().putLong("JorMinima", jorMinima).apply();
-        }
+//        if (!opciones.contains("JorMedia")) {
+//            // Creamos las nuevas preferencias de jornada media y minima.
+//            long jorMedia = Double.doubleToLongBits(Hora.horaToDecimal(opciones.getInt("JornadaMedia", 465)));
+//            opciones.edit().putLong("JorMedia", jorMedia).apply();
+//
+//            long jorMinima = Double.doubleToLongBits(Hora.horaToDecimal(opciones.getInt("JornadaMinima", 420)));
+//            opciones.edit().putLong("JorMinima", jorMinima).apply();
+//        }
 
         // Nuevo sistema de autorización de Dropbox.
         // Si no tenemos las credenciales de Dropox, revocar los tokens anteriores para forzar a tenerlas.
@@ -142,7 +144,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
                     .putString("EmailDropbox", null).apply();
         }
 
-        if (opciones.getBoolean("IniciarCalendario", false)){
+        if (datos.opciones.isIniciarCalendario()){ //opciones.getBoolean("IniciarCalendario", false)){
             Intent intent = new Intent(this, Calendario.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);

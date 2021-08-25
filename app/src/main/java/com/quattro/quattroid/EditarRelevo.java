@@ -137,46 +137,10 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent = null;
         int id = item.getItemId();
         switch (id){
             case R.id.bt_guardar:
-                Relevo relevo = new Relevo();
-                try {
-                    relevo.setMatricula(Integer.valueOf(matricula.getText().toString()));
-                } catch (NumberFormatException e){
-                    relevo.setMatricula(0);
-                }
-                relevo.setNombre(nombre.getText().toString());
-                relevo.setApellidos(apellidos.getText().toString());
-                relevo.setTelefono(telefono.getText().toString());
-                relevo.setNotas(notas.getText().toString());
-                try {
-                    relevo.setDeuda(Integer.valueOf(deuda.getText().toString()));
-                } catch (NumberFormatException e){
-                    relevo.setDeuda(0);
-                }
-                switch (grupo.getCheckedRadioButtonId()){
-                    case R.id.rb_bueno:
-                        relevo.setCalificacion(1);
-                        break;
-                    case R.id.rb_malo:
-                        relevo.setCalificacion(2);
-                        break;
-                    default:
-                        relevo.setCalificacion(0);
-                }
-                if (datos.setRelevo(relevo)){
-                    Toast.makeText(context, R.string.mensaje_nuevoRelevo, Toast.LENGTH_SHORT).show();
-                    datos.actualizarCalificacion(relevo.getMatricula(), relevo.getCalificacion());
-                    datos.actualizarRelevos(relevo.getMatricula(), relevo.getApellidos());
-                    intent = new Intent();
-                    intent.putExtra("Matricula", relevo.getMatricula());
-                    intent.putExtra("Apellidos", relevo.getApellidos());
-                    setResult(RESULT_OK, intent);
-                } else {
-                    Toast.makeText(context, R.string.error_nuevoRelevo, Toast.LENGTH_SHORT).show();
-                }
+                Guardar();
                 finish();
                 return true;
             default:
@@ -215,7 +179,11 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            setResult(RESULT_CANCELED);
+            if (datos.opciones.isGuardarSiempre()){
+                Guardar();
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
             return true;
         }
@@ -259,5 +227,46 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
         deudaTotal.setText(s);
         deudaTotal.setVisibility(View.VISIBLE);
     }
+
+
+    private void Guardar(){
+        Relevo relevo = new Relevo();
+        try {
+            relevo.setMatricula(Integer.valueOf(matricula.getText().toString()));
+        } catch (NumberFormatException e){
+            relevo.setMatricula(0);
+        }
+        relevo.setNombre(nombre.getText().toString());
+        relevo.setApellidos(apellidos.getText().toString());
+        relevo.setTelefono(telefono.getText().toString());
+        relevo.setNotas(notas.getText().toString());
+        try {
+            relevo.setDeuda(Integer.valueOf(deuda.getText().toString()));
+        } catch (NumberFormatException e){
+            relevo.setDeuda(0);
+        }
+        switch (grupo.getCheckedRadioButtonId()){
+            case R.id.rb_bueno:
+                relevo.setCalificacion(1);
+                break;
+            case R.id.rb_malo:
+                relevo.setCalificacion(2);
+                break;
+            default:
+                relevo.setCalificacion(0);
+        }
+        if (datos.setRelevo(relevo)){
+            Toast.makeText(context, R.string.mensaje_nuevoRelevo, Toast.LENGTH_SHORT).show();
+            datos.actualizarCalificacion(relevo.getMatricula(), relevo.getCalificacion());
+            datos.actualizarRelevos(relevo.getMatricula(), relevo.getApellidos());
+            Intent intent = new Intent();
+            intent.putExtra("Matricula", relevo.getMatricula());
+            intent.putExtra("Apellidos", relevo.getApellidos());
+            setResult(RESULT_OK, intent);
+        } else {
+            Toast.makeText(context, R.string.error_nuevoRelevo, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

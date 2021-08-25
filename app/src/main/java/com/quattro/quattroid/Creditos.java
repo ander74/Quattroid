@@ -83,6 +83,10 @@ public class Creditos extends Activity {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
             if (creditos) {
                 finish();
+            } else {
+                grupoCreditos.setVisibility(View.VISIBLE);
+                grupoLicencia.setVisibility(View.GONE);
+                creditos = true;
             }
             return true;
         }

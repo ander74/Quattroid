@@ -137,6 +137,10 @@ public class Utils {
             for (Map.Entry<String, ?> entry : entries.entrySet()) {
                 Object v = entry.getValue();
                 String key = entry.getKey();
+                //if (key.equals("RefreshToken")) continue;
+                //if (key.equals("ValidezToken")) continue;
+                //if (key.equals("DropboxCredential")) continue;
+                //if (key.equals("PrimerAccesoDropbox")) continue;
 
                 if (v instanceof Boolean)
                     prefEdit.putBoolean(key, (Boolean) v);

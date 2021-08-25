@@ -92,9 +92,6 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
                 return true;
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
-                intent = new Intent(this, Principal.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
                 finish();
                 return true;
         }

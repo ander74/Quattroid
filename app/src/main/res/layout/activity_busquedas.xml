@@ -77,11 +77,21 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:text="Limitar al año "/>
-            <EditText
-                android:id="@+id/et_año"
-                style="@style/edit_text"
-                android:inputType="number"
-                android:minWidth="70dp"/>
+<!--            <EditText-->
+<!--                android:id="@+id/et_año"-->
+<!--                style="@style/edit_text"-->
+<!--                android:inputType="number"-->
+<!--                android:minWidth="70dp"/>-->
+            <NumberPicker
+                android:id="@+id/np_año"
+                android:descendantFocusability="blocksDescendants"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -228,7 +238,7 @@
         android:baselineAligned="false"
         android:weightSum="3"
         style="@style/horizontal">
-        <!-- NUMERO BUS -->
+        <!-- TEXTO -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -243,7 +253,10 @@
             <EditText
                 android:id="@+id/et_notas"
                 style="@style/edit_text"
+                android:minLines="5"
+                android:minHeight="150dp"
                 android:inputType="textAutoCorrect"
+                android:gravity="left|top"
                 android:layout_width="match_parent"/>
         </LinearLayout>
     </LinearLayout>

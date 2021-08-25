@@ -46,9 +46,9 @@ public class DescargarTask extends AsyncTask<Void, Void, Soporte.Resultado> {
         // Se sustituye por la versión nueva
         resultado = Soporte.DescargarBaseDatos(context);
 
-        if (resultado == Soporte.Resultado.OK) {
-            resultado = Soporte.DescargarOpciones(context);
-        }
+//        if (resultado == Soporte.Resultado.OK) {
+//            resultado = Soporte.DescargarOpciones(context);
+//        }
 
         return resultado;
     }

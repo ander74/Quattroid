@@ -40,7 +40,6 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
 
     // VARIABLES
     Context context = null;
-    SharedPreferences opciones = null;
     Cursor cursor = null;
     BaseDatos datos = null;
     AdaptadorIncidencia adaptador = null;
@@ -99,6 +98,10 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
             case R.id.bt_nuevo:
                 Intent intent = new Intent(context, EditarIncidencia.class);
                 startActivityForResult(intent, ACCION_EDITA_INCIDENCIA);
+                return true;
+            case R.id.home:
+                setResult(RESULT_CANCELED);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);

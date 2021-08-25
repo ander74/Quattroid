@@ -74,21 +74,21 @@ public class SincronizarTask extends AsyncTask<Void, Void, Soporte.Resultado>{
 
         } else if (FechaLocal.before(FechaRemoto)) {
             resultado = Soporte.DescargarBaseDatos(context);
-            if (resultado == Soporte.Resultado.OK) {
-                resultado = Soporte.DescargarOpciones(context);
-            } else {
-                return Soporte.Resultado.NULL;
-            }
+//            if (resultado == Soporte.Resultado.OK) {
+//                resultado = Soporte.DescargarOpciones(context);
+//            } else {
+//                return Soporte.Resultado.NULL;
+//            }
             return resultado;
 
         } else if (FechaLocal.after(FechaRemoto)) {
             resultado = Soporte.SubirBaseDatos(context);
-            if (resultado == Soporte.Resultado.OK) {
-                resultado = Soporte.SubirOpciones(context);
-            } else {
-                return Soporte.Resultado.NULL;
-            }
-            return Soporte.Resultado.OK;
+//            if (resultado == Soporte.Resultado.OK) {
+//                resultado = Soporte.SubirOpciones(context);
+//            } else {
+//                return Soporte.Resultado.NULL;
+//            }
+            return resultado;
         }
         return Soporte.Resultado.NULL;
     }

@@ -41,6 +41,7 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
     Bundle data = null;
     boolean editar = false;
     boolean nuevaConDia = false;
+    BaseDatos datos = null;
 
     // ELEMENTOS
     TextView titulo = null;
@@ -71,6 +72,9 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
         // Recuperar los datos del intent
         data = getIntent().getExtras();
 
+        // Inicializar la base de datos
+        datos = new BaseDatos(this);
+
         // Poner la fecha de la hora ajena
         if (data.getInt("Dia", 0) != 0) {
             String fecha = (data.getInt("Dia", 0) > 9) ? String.valueOf(data.getInt("Dia", 0)) :
@@ -89,7 +93,7 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
         if (data.getBoolean("Nuevo", true)){
             // CREAMOS UNA NUEVA
             editar = false;
-            horas.setText("");
+            horas.setText("0");
             motivo.setText("");
         } else {
             // EDITAMOS UNA INCIDENCIA
@@ -110,27 +114,10 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
     // AL PULSAR UNA OPCION DEL MENÚ SUPERIOR.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
         int id = item.getItemId();
         switch (id){
             case R.id.bt_guardar:
-                intent = new Intent(this, EditarHorasAjenas.class);
-                intent.putExtra("Horas", Hora.redondeaDecimal(
-                        Double.valueOf(horas.getText().toString().replace(",", "."))));
-                intent.putExtra("Motivo", motivo.getText().toString());
-                if (nuevaConDia) {
-                    intent.putExtra("Id", data.getInt("Id"));
-                    intent.putExtra("Dia", data.getInt("Dia"));
-                    intent.putExtra("Mes", data.getInt("Mes"));
-                    intent.putExtra("Año", data.getInt("Año"));
-                } else {
-                    intent.putExtra("Id", data.getInt("Id"));
-                    intent.putExtra("Dia", selectorFecha.getDayOfMonth());
-                    intent.putExtra("Mes", selectorFecha.getMonth() + 1);
-                    intent.putExtra("Año", selectorFecha.getYear());
-                }
-                if (editar) intent.putExtra("Editar", true);
-                setResult(RESULT_OK, intent);
+                Guardar();
                 finish();
                 return true;
             default:
@@ -149,7 +136,7 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
                     if (s.equals("")){
                         horas.setText("0");
                     } else {
-                        horas.setText(Hora.textoDecimal(Double.valueOf(s.replace(",", "."))));
+                        horas.setText(Hora.textoDecimal(Double.parseDouble(s.replace(",", "."))));
                     }
                     break;
             }
@@ -161,6 +148,11 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+            if (datos.opciones.isGuardarSiempre()){
+                Guardar();
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
             return true;
         }
@@ -168,6 +160,31 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
     }
 
 
+    private void Guardar(){
+        Intent intent = new Intent(this, EditarHorasAjenas.class);
+        double horasD = 0;
+        String s = Hora.validaHoraDecimal(horas.getText().toString());
+        if (s.equals("")){
+            horasD = 0;
+        } else {
+            horasD = Double.parseDouble(s.replace(",", "."));
+        }
+        intent.putExtra("Horas", Hora.redondeaDecimal(horasD));
+        intent.putExtra("Motivo", motivo.getText().toString());
+        if (nuevaConDia) {
+            intent.putExtra("Id", data.getInt("Id"));
+            intent.putExtra("Dia", data.getInt("Dia"));
+            intent.putExtra("Mes", data.getInt("Mes"));
+            intent.putExtra("Año", data.getInt("Año"));
+        } else {
+            intent.putExtra("Id", data.getInt("Id"));
+            intent.putExtra("Dia", selectorFecha.getDayOfMonth());
+            intent.putExtra("Mes", selectorFecha.getMonth() + 1);
+            intent.putExtra("Año", selectorFecha.getYear());
+        }
+        if (editar) intent.putExtra("Editar", true);
+        setResult(RESULT_OK, intent);
+    }
 
 
 

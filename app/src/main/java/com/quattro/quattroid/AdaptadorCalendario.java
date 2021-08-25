@@ -159,10 +159,18 @@ public class AdaptadorCalendario extends CursorAdapter {
                 break;
             case 3:case 4:case 6:
                 String inc = cursor.getString(cursor.getColumnIndex("TextoIncidencia"));
-                Servicio.setText(inc + " " + i);
+                if (i > 0){
+                    Servicio.setText(inc + " " + i);
+                } else{
+                    Servicio.setText(inc + " ");
+                }
                 break;
             default:
-                Servicio.setText("Turno " + i);
+                if (i > 0){
+                    Servicio.setText("Turno " + i);
+                } else {
+                    Servicio.setText("Sin turno");
+                }
                 break;
         }
 

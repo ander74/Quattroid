@@ -23,7 +23,7 @@
 
 
     <!-- ACTIVITY PRINCIPAL -->
-    <string name="nombreAplicacion">Quattroid 1.8.6</string>
+    <string name="nombreAplicacion">Quattroid 1.8.7</string>
     <string name="creditoPrincipal">A. Herrero</string>
     <string name="bt_quattrox">Quattro X</string>
     <string name="bt_calendario">Calendario</string>
@@ -47,6 +47,7 @@
     <string name="mensaje_tomaDeje">Toma y deje total de este mes</string>
     <string name="mensaje_euros">Euros por servicio de este mes</string>
     <string name="error_fechaLimite">No se puede retroceder más</string>
+    <string name="error_fechaInvalida">No se puede ir a ese mes</string>
     <string name="mensaje_primerDia">Este es el primer día mostrado</string>
     <string name="mensaje_mesNoExiste">Mes anterior aún no existe</string>
     <string name="mensaje_diaCopiado">Se ha copiado el día</string>

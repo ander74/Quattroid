@@ -86,6 +86,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     AdaptadorServiciosDia adaptador = null;
     Vibrator vibrador = null;
     int horaSeleccionada = 0;
+    boolean hayCambios = false;
 
     boolean noCambiar = false;
 
@@ -155,9 +156,11 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setLogo(R.drawable.calendario);
-	    // Instanciar las opciones
-	    opciones = PreferenceManager.getDefaultSharedPreferences(this);
-	    if (opciones.getBoolean("ModoBasico", false)) {
+        // Instanciar las opciones y la base de datos.
+        opciones = PreferenceManager.getDefaultSharedPreferences(this);
+        datos = new BaseDatos(this);
+
+	    if (datos.opciones.isModoBasico()){ //opciones.getBoolean("ModoBasico", false)) {
 		    setContentView(R.layout.activity_diacalendario_basico);
 	    } else {
 		    setContentView(R.layout.activity_diacalendario);
@@ -169,10 +172,6 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         // Instanciar los elementos del view
         instanciarElementos();
-
-        // Instanciar las opciones y la base de datos.
-        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
-        datos = new BaseDatos(this);
 
         // Definimos el vibrador.
         vibrador = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -226,7 +225,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         iconoCena.setOnClickListener(this);
 
         // Activamos el teclado numérico en los campos habituales.
-        if (opciones.getBoolean("ActivarTecladoNumerico", false)){
+        if (datos.opciones.isActivarTecladoNumerico()){ //opciones.getBoolean("ActivarTecladoNumerico", false)){
             inputLinea.setInputType(InputType.TYPE_CLASS_PHONE);
             inputServicio.setInputType(InputType.TYPE_CLASS_PHONE);
             inputBus.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -273,25 +272,10 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         int id = item.getItemId();
         switch (id){
             case R.id.bt_guardar:
-                validarCampos();
-                if (datosDia.getMatricula() != 0){
-                    datosDia.setCalificacion(datos.calificacionRelevo(datosDia.getMatricula()));
-                }
-                if (datos.guardaDia(datosDia)){
-                    if (opciones.getBoolean("RellenarSemana", false) && datosDia.getDiaSemana() == 2){
-                        rellenarSemana();
-                    }
-                    regularAño();
-                    Toast.makeText(this, R.string.mensaje_diaGuardado, Toast.LENGTH_SHORT).show();
-                    intent = new Intent();
-                    intent.putExtra("Posicion", posicion);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                } else {
-                    Toast.makeText(this, R.string.error_diaGuardado, Toast.LENGTH_SHORT).show();
-                }
+                GuardarDia();
                 return true;
             case R.id.bt_nuevo:
+                hayCambios = true;
                 intent = new Intent(context, EditarServiciosDia.class);
                 startActivityForResult(intent, ACCION_SERVICIOS_DIA);
                 return true;
@@ -321,6 +305,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         // Determinar la opción pulsada
         switch (item.getItemId()){
             case R.id.bt_borrar:
+                hayCambios = true;
                 ServicioDia servicioDia = new ServicioDia();
                 servicioDia.setDia(diaActual);
                 servicioDia.setMes(mesActual);
@@ -334,6 +319,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 escribirHoras();
                 return true;
             case R.id.bt_vaciar:
+                hayCambios = true;
                 // Si no hay servicios auxiliares, salimos.
                 if (cursor.getCount() == 0) return true;
                 // Creamos el dialogo que preguntará si estamos seguros.
@@ -371,8 +357,12 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            setResult(RESULT_CANCELED);
-            finish();
+            if (datos.opciones.isGuardarSiempre() && hayCambios){
+                GuardarDia();
+            } else {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -387,6 +377,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         switch (requestCode){
             case ACCION_LISTA_INCIDENCIA:
                 if (resultCode == RESULT_OK){
+                    hayCambios = true;
                     // Extraemos los datos
                     int cod = data.getIntExtra("Codigo", -1);
                     int tip = data.getIntExtra("Tipo", 0);
@@ -401,6 +392,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 break;
             case ACCION_SERVICIOS_DIA:
                 if (resultCode == RESULT_OK) {
+                    hayCambios = true;
                     // Extraemos los datos del intent
                     String l = data.getStringExtra("Linea");
                     String s = data.getStringExtra("Servicio");
@@ -439,6 +431,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 break;
             case ACCION_LISTA_RELEVOS:
                 if (resultCode == RESULT_OK){
+                    hayCambios = true;
                     // Extraemos los datos
                     int matr = data.getIntExtra("Matricula", 0);
                     String apell = data.getStringExtra("Apellidos");
@@ -451,6 +444,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 break;
             case ACCION_LISTA_SUSTI:
                 if (resultCode == RESULT_OK){
+                    hayCambios = true;
                     // Extraemos los datos
                     int matr = data.getIntExtra("Matricula", 0);
                     String apell = data.getStringExtra("Apellidos");
@@ -535,6 +529,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_matricula_susti:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaMatriculaSusti)){
+                        hayCambios = true;
                         cambiaMatriculaSusti();
                         cadenaMatriculaSusti = "";
                         rellenarDia();
@@ -543,6 +538,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_apellidos_susti:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaApellidosSusti)){
+                        hayCambios = true;
                         cambiaApellidosSusti();
                         cadenaApellidosSusti = "";
                         rellenarDia();
@@ -551,6 +547,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_linea:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaLinea)){
+                        hayCambios = true;
                         cambiaLinea();
                         cadenaLinea = "";
                         rellenarDia();
@@ -559,6 +556,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_servicio:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaServicio)){
+                        hayCambios = true;
                         cambiaServicio();
                         cadenaServicio = "";
                         rellenarDia();
@@ -567,6 +565,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_turno:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaTurno)){
+                        hayCambios = true;
                         cambiaTurno();
                         cadenaTurno = "";
                         rellenarDia();
@@ -575,6 +574,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_texto_linea:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaTextoLinea)){
+                        hayCambios = true;
                         cambiaTextoLinea();
                         cadenaTextoLinea = "";
                         rellenarDia();
@@ -583,6 +583,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_inicio:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaInicio)){
+                        hayCambios = true;
                         cambiaInicio();
                         cadenaInicio = "";
                         rellenarDia();
@@ -591,6 +592,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_final:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaFinal)){
+                        hayCambios = true;
                         cambiaFinal();
                         cadenaFinal = "";
                         rellenarDia();
@@ -599,6 +601,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_matricula_relevo:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaMatriculaRelevo)){
+                        hayCambios = true;
                         cambiaMatriculaRelevo();
                         cadenaMatriculaRelevo = "";
                         rellenarDia();
@@ -607,6 +610,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_apellidos_relevo:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaApellidosRelevo)){
+                        hayCambios = true;
                         cambiaApellidosRelevo();
                         cadenaApellidosRelevo = "";
                         rellenarDia();
@@ -615,6 +619,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_tomaDeje:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaTomaDeje)){
+                        hayCambios = true;
                         String td = Hora.horaToString(inputTomaDeje.getText().toString().trim());
                         if (td.equals("")){
                             datosDia.setTomaDeje("");
@@ -630,6 +635,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_euros:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaEuros)){
+                        hayCambios = true;
                         String e = Hora.validaHoraDecimal(inputEuros.getText().toString().trim());
                         if (e.equals("")){
                             datosDia.setEuros(0d);
@@ -643,6 +649,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 case R.id.et_huelga:
                     texto = (EditText) v;
                     if (!texto.getText().toString().equals(cadenaHorasHuelga)){
+                        hayCambios = true;
                         String e = Hora.validaHoraDecimal(inputHuelga.getText().toString().trim());
                         if (e.equals("")){
                             datosDia.setHorasHuelga(0d);
@@ -662,6 +669,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
     // AL HACER CLIC EN UN SERVICIO COMPLEMENTARIO
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        hayCambios = true;
 
         // Extraemos los datos del cursor
         Cursor c = adaptador.getCursor();
@@ -778,8 +786,10 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 }
                 break;
 	        case R.id.tv_incidencia:
-	        	boolean modoBasico = opciones.getBoolean("ModoBasico", false);
-	        	opciones.edit().putBoolean("ModoBasico", !modoBasico).apply();
+	        	//boolean modoBasico = opciones.getBoolean("ModoBasico", false);
+	        	//opciones.edit().putBoolean("ModoBasico", !modoBasico).apply();
+                datos.opciones.setModoBasico(!datos.opciones.isModoBasico());
+                datos.guardarOpciones();
 	        	finish();
 	        	startActivity(getIntent());
 	        	break;
@@ -789,6 +799,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
     @Override
     public void onClick(View v) {
+        hayCambios = true;
         AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
         input.setBackgroundResource(R.drawable.fondo_dialogo);
@@ -869,6 +880,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
     // AL PULSAR EL BOTON INCIDENCIA
     public void botonPulsado(View view){
+        hayCambios = true;
 
         // Creamos el intent.
         Intent intent = new Intent(context, Incidencias.class);
@@ -947,7 +959,6 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         } else if (datosDia.getFinal().trim().equals("")){
             return true;
         } else
-            //TODO: En la inferencia de turnos, comprobar que esto no nos borra la incidencia.
         	return datosDia.getTurno() == 0;
     }
 
@@ -975,7 +986,9 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         datosDia.setLinea("");
         datosDia.setTextoLinea("");
         datosDia.setServicio("");
-        datosDia.setTurno(0);
+        // Si no se infieren los turnos, el turno desaparece.
+        //if (!opciones.getBoolean("InferirTurnos", false)) datosDia.setTurno(0);
+        if (!datos.opciones.isInferirTurnos()) datosDia.setTurno(0);
         datosDia.setInicio("");
         datosDia.setFinal("");
         datosDia.setBus("");
@@ -1035,7 +1048,8 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
             servs[m].Inicio = Hora.horaToInt(cursor.getString(cursor.getColumnIndex("Inicio")));
             servs[m].Final = Hora.horaToInt(cursor.getString(cursor.getColumnIndex("Final")));
         }
-        EstadoDia resultado = Calculos.TiempoTrabajado(servs, context, datosDia.getTurno(), datosDia.getTipoIncidencia());
+        //EstadoDia resultado = Calculos.TiempoTrabajado(servs, context, datosDia.getTurno(), datosDia.getTipoIncidencia());
+        EstadoDia resultado = Calculos.TiempoTrabajado(servs, datos.opciones, datosDia.getTurno(), datosDia.getTipoIncidencia());
         if (resultado == null){
             datosDia.setTrabajadas(0d);
             datosDia.setAcumuladas(0d);
@@ -1056,10 +1070,10 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         if (datosDia.getCodigoIncidencia() == 15){
 
             // Recuperamos los datos del convenio que necesitamos.
-            long jMedia = opciones.getLong("JorMedia", Double.doubleToRawLongBits(7.75d));
-            double Jornada = Double.longBitsToDouble(jMedia);
-            long jMinima = opciones.getLong("JorMinima", Double.doubleToRawLongBits(7d));
-            double JornadaMinima = Double.longBitsToDouble(jMinima);
+            //long jMedia = opciones.getLong("JorMedia", Double.doubleToRawLongBits(7.75d));
+            double Jornada = datos.opciones.getJornadaMedia(); //Double.longBitsToDouble(jMedia);
+            //long jMinima = opciones.getLong("JorMinima", Double.doubleToRawLongBits(7d));
+            double JornadaMinima = datos.opciones.getJornadaMinima(); //Double.longBitsToDouble(jMinima);
             // Si la huelga es parcial...
             if (datosDia.isHuelgaParcial()){
                 datosDia.setTrabajadas(Jornada);
@@ -1249,12 +1263,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         // Declaramos las variables.
         MathContext mathContext = new MathContext(4, RoundingMode.HALF_UP);
-        double jAnual = (double) opciones.getInt("JornadaAnual", 1592);
-        long jorMedia = opciones.getLong("JorMedia", 0);
-        double jMedia = Double.longBitsToDouble(jorMedia);
+        double jAnual = (double) datos.opciones.getJornadaAnual(); //opciones.getInt("JornadaAnual", 1592);
+        //long jorMedia = opciones.getLong("JorMedia", 0);
+        double jMedia = datos.opciones.getJornadaMedia(); //Double.longBitsToDouble(jorMedia);
 
         // Si es el día 31 de diciembre...
-        if (datosDia.getDia() == 31 && datosDia.getMes() == 12 && opciones.getBoolean("RegularJornadaAnual", true)) {
+        //if (datosDia.getDia() == 31 && datosDia.getMes() == 12 && opciones.getBoolean("RegularJornadaAnual", true)) {
+        if (datosDia.getDia() == 31 && datosDia.getMes() == 12 && datos.opciones.isRegularJornadaAnual()) {
             double trabajadas = datos.diasTrabajadosConvenio(datosDia.getAño()) * jMedia;
             trabajadas += datos.diasEnfermoComputables(datosDia.getAño()) * jMedia;
             double diff = trabajadas - jAnual;
@@ -1262,7 +1277,8 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         }
 
         // Si es el día 29 de febrero
-        if (datosDia.getDia() == 29 && datosDia.getMes() == 2 && opciones.getBoolean("RegularBisiestos", false)) {
+        //if (datosDia.getDia() == 29 && datosDia.getMes() == 2 && opciones.getBoolean("RegularBisiestos", false)) {
+        if (datosDia.getDia() == 29 && datosDia.getMes() == 2 && datos.opciones.isRegularBisiestos()) {
             double jBisiestos = jAnual / 365 * 366;
             double diff = Hora.redondeaDecimal4(jAnual - jBisiestos);
             datos.setAjenaBisiestos(diff, datosDia.getAño());
@@ -1282,8 +1298,8 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
         // Si el código de la incidencia es cero, repetimos el día anterior.
         if (datosDia.getCodigoIncidencia() == 0){
             // Evaluamos que el día no sea el primer día que se muestra.
-            int primerMes = opciones.getInt("PrimerMes", 10);
-            int primerAño = opciones.getInt("PrimerAño", 2014);
+            int primerMes = datos.opciones.getPrimerMes(); //opciones.getInt("PrimerMes", 10);
+            int primerAño = datos.opciones.getPrimerAño(); //opciones.getInt("PrimerAño", 2014);
             int dia = datosDia.getDia();
             int mes = datosDia.getMes();
             int año = datosDia.getAño();
@@ -1369,9 +1385,8 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
             case 3:
                 borrarCamposServicio();
                 datosDia.setTrabajadas(0);
-                long jorMedia = opciones.getLong("JorMedia", 0);
-                datosDia.setAcumuladas(-Double.longBitsToDouble(jorMedia));
-                //datosDia.setAcumuladas(-Hora.horaToDecimal(opciones.getInt("JornadaMedia", 465)));
+                //long jorMedia = opciones.getLong("JorMedia", 0);
+                datosDia.setAcumuladas(-datos.opciones.getJornadaMedia()); //Double.longBitsToDouble(jorMedia));
                 datosDia.setNocturnas(0);
                 inputBus.setText("");
                 rellenarDia();
@@ -1399,8 +1414,8 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
             case 6:
                 //borrarCamposServicio();
                 datosDia.setTrabajadas(0);
-                long jorMed = opciones.getLong("JorMedia", 0);
-                datosDia.setTrabajadas(Double.longBitsToDouble(jorMed));
+                //long jorMed = opciones.getLong("JorMedia", 0);
+                datosDia.setTrabajadas(datos.opciones.getJornadaMedia()); //Double.longBitsToDouble(jorMed));
                 datosDia.setAcumuladas(0);
                 datosDia.setNocturnas(0);
                 inputBus.setText("");
@@ -1456,9 +1471,11 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 actualizarCursor();
             }
             // Añadimos el relevo, si no está metido.
-            if (datosDia.getMatricula() == 0 && opciones.getInt("RelevoFijo", 0) != 0) {
+            //if (datosDia.getMatricula() == 0 && opciones.getInt("RelevoFijo", 0) != 0) {
+            if (datosDia.getMatricula() == 0 && datos.opciones.getRelevoFijo() != 0) {
                 // Introducimos la matrícula
-                datosDia.setMatricula(opciones.getInt(("RelevoFijo"), 0));
+                //datosDia.setMatricula(opciones.getInt(("RelevoFijo"), 0));
+                datosDia.setMatricula(datos.opciones.getRelevoFijo());
                 // Si no existe el relevo se sale.
                 Relevo r = datos.getRelevo(datosDia.getMatricula());
                 if (r == null) return;
@@ -1518,9 +1535,11 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 actualizarCursor();
             }
             // Añadimos el relevo, si no está metido.
-            if (datosDia.getMatricula() == 0 && opciones.getInt("RelevoFijo", 0) != 0){
+            //if (datosDia.getMatricula() == 0 && opciones.getInt("RelevoFijo", 0) != 0){
+            if (datosDia.getMatricula() == 0 && datos.opciones.getRelevoFijo() != 0){
                 // Introducimos la matrícula
-                datosDia.setMatricula(opciones.getInt(("RelevoFijo"), 0));
+                //datosDia.setMatricula(opciones.getInt(("RelevoFijo"), 0));
+                datosDia.setMatricula(datos.opciones.getRelevoFijo());
                 // Si no existe el relevo se sale.
                 Relevo r = datos.getRelevo(datosDia.getMatricula());
                 if (r == null) return;
@@ -1580,9 +1599,11 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 actualizarCursor();
             }
             // Añadimos el relevo, si no está metido.
-            if (datosDia.getMatricula() == 0 && opciones.getInt("RelevoFijo", 0) != 0){
+            //if (datosDia.getMatricula() == 0 && opciones.getInt("RelevoFijo", 0) != 0){
+            if (datosDia.getMatricula() == 0 && datos.opciones.getRelevoFijo() != 0){
                 // Introducimos la matrícula
-                datosDia.setMatricula(opciones.getInt(("RelevoFijo"), 0));
+                //datosDia.setMatricula(opciones.getInt(("RelevoFijo"), 0));
+                datosDia.setMatricula(datos.opciones.getRelevoFijo());
                 // Si no existe el relevo se sale.
                 Relevo r = datos.getRelevo(datosDia.getMatricula());
                 if (r == null) return;
@@ -1842,6 +1863,29 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 }
             }
         }
+    }
+
+
+    private void GuardarDia(){
+        validarCampos();
+        if (datosDia.getMatricula() != 0){
+            datosDia.setCalificacion(datos.calificacionRelevo(datosDia.getMatricula()));
+        }
+        if (datos.guardaDia(datosDia)){
+            //if (opciones.getBoolean("RellenarSemana", false) && datosDia.getDiaSemana() == 2){
+            if (datos.opciones.isRellenarSemana() && datosDia.getDiaSemana() == 2){
+                rellenarSemana();
+            }
+            regularAño();
+            Toast.makeText(this, R.string.mensaje_diaGuardado, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.putExtra("Posicion", posicion);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Toast.makeText(this, R.string.error_diaGuardado, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

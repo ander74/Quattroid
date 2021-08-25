@@ -29,4 +29,7 @@
     <item
         android:id="@+id/bt_borrar"
         android:title="Borrar relevo"/>
+    <item
+        android:id="@+id/bt_relevoFijo"
+        android:title="Establecer como fijo"/>
 </menu>

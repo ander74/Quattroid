@@ -44,9 +44,9 @@ public class SubirTask extends AsyncTask<Void, Void, Soporte.Resultado> {
 
         resultado = Soporte.SubirBaseDatos(context);
 
-        if (resultado == Soporte.Resultado.OK){
-            resultado = Soporte.SubirOpciones(context);
-        }
+//        if (resultado == Soporte.Resultado.OK){
+//            resultado = Soporte.SubirOpciones(context);
+//        }
 
         return resultado;
     }

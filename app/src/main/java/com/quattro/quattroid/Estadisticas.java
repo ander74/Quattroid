@@ -87,11 +87,10 @@ public class Estadisticas extends Activity{
         // Inicializamos base de datos y opciones
         datos = new BaseDatos(context);
         opciones = PreferenceManager.getDefaultSharedPreferences(context);
-        mesLimite = opciones.getInt("PrimerMes", 10);
-        añoLimite = opciones.getInt("PrimerAño", 2014);
-        jMedia = opciones.getFloat("", 0);
-        long jorMedia = opciones.getLong("JorMedia", 0);
-        jMedia = Double.longBitsToDouble(jorMedia);
+        mesLimite = datos.opciones.getPrimerMes(); //opciones.getInt("PrimerMes", 10);
+        añoLimite = datos.opciones.getPrimerAño(); //opciones.getInt("PrimerAño", 2014);
+        //long jorMedia = opciones.getLong("JorMedia", 0);
+        jMedia = datos.opciones.getJornadaMedia(); //Double.longBitsToDouble(jorMedia);
         fecha = Calendar.getInstance();
         mesActual = fecha.get(Calendar.MONTH) + 1;
         añoActual = fecha.get(Calendar.YEAR);
@@ -99,10 +98,20 @@ public class Estadisticas extends Activity{
         // Llenamos los selectores
         selectorMes.setMinValue(1);
         selectorMes.setMaxValue(12);
+        selectorMes.setDisplayedValues(new String[]{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",});
         selectorAño.setMinValue(2000);
         selectorAño.setMaxValue(2050);
+        selectorAño.setWrapSelectorWheel(false);
         selectorMes.setValue(mesActual);
         selectorAño.setValue(añoActual);
+        // Hacemos que el año se incremente si el mes cambia...
+        selectorMes.setOnValueChangedListener((picker, oldValue, newValue) -> {
+            if (oldValue == 12 && newValue == 1 && selectorAño.getValue() < selectorAño.getMaxValue())
+                selectorAño.setValue(selectorAño.getValue() + 1);
+            if (oldValue == 1 && newValue == 12 && selectorAño.getValue() > selectorAño.getMinValue())
+                selectorAño.setValue(selectorAño.getValue() - 1);
+        });
+
 
         // Iniciamos el adaptador
         datosEstadisticas = datos.Estadisticas("Año=" + String.valueOf(añoActual), jMedia);
@@ -134,6 +143,10 @@ public class Estadisticas extends Activity{
             case R.id.bt_siguiente:
                 if (modo == MODO_MES) avanzaMes();
                 if (modo == MODO_AÑO) avanzaAño();
+                return true;
+            case android.R.id.home:
+                setResult(RESULT_CANCELED);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -202,8 +215,8 @@ public class Estadisticas extends Activity{
                 // Comprobamos que la fecha no es anterior a los límites
                 int mesInicio = selectorMes.getValue();
                 int añoInicio = selectorAño.getValue();
-                int primerMes = opciones.getInt("PrimerMes", 10);
-                int primerAño = opciones.getInt("PrimerAño", 2014);
+                int primerMes = datos.opciones.getPrimerMes(); //opciones.getInt("PrimerMes", 10);
+                int primerAño = datos.opciones.getPrimerAño(); //opciones.getInt("PrimerAño", 2014);
                 if ((añoInicio < primerAño) || (añoInicio == primerAño && mesInicio < primerMes)){
                     Toast.makeText(this, R.string.error_fueraLimite, Toast.LENGTH_SHORT).show();
                     break;
@@ -223,8 +236,8 @@ public class Estadisticas extends Activity{
         datosEstadisticas = datos.Estadisticas(where, jMedia);
         // Variables generales
         Estadistica e;
-        long jorMedia = opciones.getLong("JorMedia", 0);
-        double jornadaMedia = Hora.redondeaDecimal(Double.longBitsToDouble(jorMedia));
+        //long jorMedia = opciones.getLong("JorMedia", 0);
+        double jornadaMedia = Hora.redondeaDecimal(datos.opciones.getJornadaMedia());//Double.longBitsToDouble(jorMedia));
         double horas;
         double dias;
         double acumuladas;
@@ -232,10 +245,10 @@ public class Estadisticas extends Activity{
         // Contador inicializado en la posicion necesaria.
         int contador = 2;
         // Añadimos las acumuladas
-        long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
-        acumuladas = datos.acumuladasHastaMes(mesActual, añoActual) + Double.longBitsToDouble(acumAnteriores);
+        //long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
+        acumuladas = datos.acumuladasHastaMes(mesActual, añoActual) + datos.opciones.getAcumuladasAnteriores();//Double.longBitsToDouble(acumAnteriores);
         acumuladas += datos.ajenasHastaMes(mesActual, añoActual);
-        if (opciones.getBoolean("SumarTomaDeje", false)){
+        if (datos.opciones.isSumarTomaDeje()){ //opciones.getBoolean("SumarTomaDeje", false)){
             acumuladas = acumuladas + datos.tomaDejeHastaMes(12, añoActual);
         }
         e = new Estadistica();
@@ -306,8 +319,8 @@ public class Estadisticas extends Activity{
         datosEstadisticas = datos.Estadisticas(where, jMedia);
         Estadistica e;
         // Variables que se usarán
-        long jorMedia = opciones.getLong("JorMedia", 0);
-        double jornadaMedia = Hora.redondeaDecimal(Double.longBitsToDouble(jorMedia));
+        //long jorMedia = opciones.getLong("JorMedia", 0);
+        double jornadaMedia = Hora.redondeaDecimal(datos.opciones.getJornadaMedia()); //Double.longBitsToDouble(jorMedia));
         double horas;
         double dias;
         double acumuladas;
@@ -315,10 +328,10 @@ public class Estadisticas extends Activity{
         // Contador inicializado en la posicion necesaria.
         int contador = 2;
         // Añadimos las acumuladas
-        long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
-        acumuladas = datos.acumuladasHastaMes(12, añoActual) + Double.longBitsToDouble(acumAnteriores);;
+        //long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
+        acumuladas = datos.acumuladasHastaMes(12, añoActual) + datos.opciones.getAcumuladasAnteriores(); //Double.longBitsToDouble(acumAnteriores);;
         acumuladas += datos.ajenasHastaMes(12, añoActual);
-        if (opciones.getBoolean("SumarTomaDeje", false)){
+        if (datos.opciones.isSumarTomaDeje()){ //opciones.getBoolean("SumarTomaDeje", false)){
             acumuladas = acumuladas + datos.tomaDejeHastaMes(12, añoActual);
         }
         e = new Estadistica();
@@ -403,8 +416,8 @@ public class Estadisticas extends Activity{
         datosEstadisticas = datos.Estadisticas(where, jMedia);
         // Variables generales
         Estadistica e;
-        long jorMedia = opciones.getLong("JorMedia", 0);
-        double jornadaMedia = Hora.redondeaDecimal(Double.longBitsToDouble(jorMedia));
+        //long jorMedia = opciones.getLong("JorMedia", 0);
+        double jornadaMedia = Hora.redondeaDecimal(datos.opciones.getJornadaMedia()); //Double.longBitsToDouble(jorMedia));
         double trabajadas = datos.trabajadasAño(añoActual);
         double horas;
         double dias;
@@ -413,10 +426,10 @@ public class Estadisticas extends Activity{
         // Contador inicializado en la posicion necesaria.
         int contador = 2;
         // Añadimos las acumuladas
-        long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
-        acumuladas = datos.acumuladasHastaMes(mesFinal, añoFinal) + Double.longBitsToDouble(acumAnteriores);;
+        //long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
+        acumuladas = datos.acumuladasHastaMes(mesFinal, añoFinal) + datos.opciones.getAcumuladasAnteriores(); //Double.longBitsToDouble(acumAnteriores);;
         acumuladas += datos.ajenasHastaMes(mesFinal, añoFinal);
-        if (opciones.getBoolean("SumarTomaDeje", false)){
+        if (datos.opciones.isSumarTomaDeje()){ //opciones.getBoolean("SumarTomaDeje", false)){
             acumuladas = acumuladas + datos.tomaDejeHastaMes(mesFinal, añoFinal);
         }
         e = new Estadistica();

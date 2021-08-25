@@ -18,16 +18,17 @@ package BaseDatos;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.quattro.models.LineaModel;
 import com.quattro.models.ServicioAuxiliarModel;
 import com.quattro.models.ServicioModel;
-
-import org.joda.time.LocalDate;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,12 +38,12 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import Objetos.Calculos;
 import Objetos.Hora;
 
 public class BaseDatos {
-	
+
 
     //region CONSTANTES
 
@@ -69,6 +70,7 @@ public class BaseDatos {
     private static final String TABLA_LINEAS = "Lineas";
     private static final String TABLA_SERVICIOS = "Servicios";
     private static final String TABLA_SERVICIOS_AUXILIARES = "ServiciosAuxiliares";
+    private static final String TABLA_OPCIONES = "Opciones";
 
     // COMANDOS DE CREACION DE LAS TABLAS
 
@@ -178,6 +180,42 @@ public class BaseDatos {
             "Final TEXT DEFAULT '', " +
             "LugarFinal TEXT DEFAULT '')";
 
+
+    private static final String CREAR_TABLA_OPCIONES = "CREATE TABLE Opciones " +
+            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "PrimerMes INTEGER DEFAULT 1, " + // Primer mes mostrado
+            "PrimerAño INTEGER DEFAULT 2016, " + // Primer año mostrado
+            "AcumuladasAnteriores REAL DEFAULT 0, " + // Horas anteriores
+            "RelevoFijo INTEGER DEFAULT 0, " + // Relevo fijo
+            "ModoBasico INTEGER DEFAULT 0, " + // Mostrar día básico
+            "RellenarSemana INTEGER DEFAULT 0, " + // Autorellenar semana
+            "JorMedia REAL DEFAULT 0, " + // Jornada media
+            "JorMinima REAL DEFAULT 0, " + // Jornada mínima
+            "LimiteEntreServicios INTEGER DEFAULT 0, " + // Límite entre servicios
+            "JornadaAnual INTEGER DEFAULT 0, " + // Jornada anual
+            "RegularJornadaAnual INTEGER DEFAULT 0, " + // Regular Jornada anual
+            "RegularBisiestos INTEGER DEFAULT 0, " + // Regular años bisiestos
+            "InicioNocturnas INTEGER DEFAULT 0, " + // Inicio nocturnas
+            "FinalNocturnas INTEGER DEFAULT 0, " + // Final nocturnas
+            "LimiteDesayuno INTEGER DEFAULT 0, " + // Limite dieta desayuno
+            "LimiteComida1 INTEGER DEFAULT 0, " + // Límite dieta comida turno 1
+            "LimiteComida2 INTEGER DEFAULT 0, " + // Límite dieta comida turno 2
+            "LimiteCena INTEGER DEFAULT 0, " + // Límite dieta cena
+            "InferirTurnos INTEGER DEFAULT 0, " + // Inferir turnos
+            "DiaBaseTurnos INTEGER DEFAULT 0, " + // Dia Inferir turnos
+            "MesBaseTurnos INTEGER DEFAULT 0, " + // Mes inferir turnos
+            "AñoBaseTurnos INTEGER DEFAULT 0, " + // Año inferir turnos
+            "PdfHorizontal INTEGER DEFAULT 0, " + // PDF en horizontal
+            "PdfIncluirServicios INTEGER DEFAULT 0, " + // Incluir servicios
+            "PdfIncluirNotas INTEGER DEFAULT 0, " + // Incluir notas
+            "PdfAgruparNotas INTEGER DEFAULT 0, " + // Agrupar notas
+            "VerMesActual INTEGER DEFAULT 0, " + // Iniciar mes actual
+            "IniciarCalendario INTEGER DEFAULT 0, " + // Iniciar en el calendario
+            "SumarTomaDeje INTEGER DEFAULT 0, " + // Acumular toma y deje
+            "ActivarTecladoNumerico INTEGER DEFAULT 0, " + // Activar teclado numérico
+            "GuardarSiempre INTEGER DEFAULT 0)"; // Guardar siempre, aunque le demos al boton atras.
+
+
     //endregion
 
 
@@ -218,7 +256,7 @@ public class BaseDatos {
 
 
     // INSERTAR REGISTROS EN SERVICIOS PARA LA VERSION 3
-   private static final String COPIAR_TABLA_CALENDARIO_V3 = "INSERT INTO Calendario " +
+    private static final String COPIAR_TABLA_CALENDARIO_V3 = "INSERT INTO Calendario " +
             "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
             "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, LugarInicio, Final, LugarFinal, " +
             "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
@@ -265,16 +303,22 @@ public class BaseDatos {
     // VARIABLES DE LA CLASE
     private BaseHelper baseHelper = null;
     private static SQLiteDatabase baseDatos = null;
+    public Opciones opciones;
 
 
     // CONSTRUCTOR DE LA CLASE
-    public BaseDatos(Context context){
+    public BaseDatos(Context context) {
         baseHelper = new BaseHelper(context);
         baseDatos = baseHelper.getWritableDatabase();
+        opciones = getOpciones();
+        if (opciones == null) {
+            opciones = new Opciones();
+            guardarOpciones();
+        }
     }
 
     // CERRAR BASE DATOS
-    public void close(){
+    public void close() {
         baseHelper.close();
     }
 
@@ -284,26 +328,25 @@ public class BaseDatos {
     //region METODOS DEL CALENDARIO
 
     /**
-     *
      * @param mes Mes a mostrar.
      * @param año Año a mostrar.
      * @return Cursor con los días del mes indicado.
      */
-    public Cursor cursorMes(int mes, int año){
+    public Cursor cursorMes(int mes, int año) {
         String[] args = {String.valueOf(mes), String.valueOf(año)};
         String where = "Mes=? AND Año=?";
         String orderby = "Dia ASC";
         return baseDatos.query(TABLA_CALENDARIO, null, where, args, null, null, orderby);
     }
 
-    public ArrayList<DatosDia> datosMes(int mes, int año){
+    public ArrayList<DatosDia> datosMes(int mes, int año) {
         String[] args = {String.valueOf(mes), String.valueOf(año)};
         String where = "Mes=? AND Año=?";
         String orderby = "Dia ASC";
         Cursor cursor = baseDatos.query(TABLA_CALENDARIO, null, where, args, null, null, orderby);
         ArrayList<DatosDia> lista = new ArrayList<>();
-        if (cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 DatosDia dia = new DatosDia(cursor);
                 lista.add(dia);
             } while (cursor.moveToNext());
@@ -312,13 +355,12 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param dia Dia a devolver.
      * @param mes Mes del día a devolver.
      * @param año Año del día a devolver.
      * @return Devuelve un objeto ServicioDia con los datos del día indicado.
      */
-    public DatosDia servicioDia(int dia, int mes, int año){
+    public DatosDia servicioDia(int dia, int mes, int año) {
         String[] args = {String.valueOf(dia), String.valueOf(mes), String.valueOf(año)};
         String where = "Dia=? AND Mes=? AND Año=?";
         String orderby = "Dia ASC";
@@ -368,7 +410,6 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param datosDia Objeto ServicioDia con los datos del día a guardar.
      * @return true si se ha guardado correctamente.
      */
@@ -423,18 +464,17 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param mes Mes a crear.
      * @param año Año del mes a crear.
      */
-    public void crearMes(int mes, int año){
+    public void crearMes(int mes, int año) {
         hayCambios = true;
         Calendar fecha = Calendar.getInstance();
-        fecha.set(año, mes-1, 1); // Enero = 0; Febrero = 2...
+        fecha.set(año, mes - 1, 1); // Enero = 0; Febrero = 2...
         int DSemana;
         int diasMes = fecha.getActualMaximum(Calendar.DAY_OF_MONTH);
-        for (int m=1; m <= diasMes; m++){
-            fecha.set(año, mes-1, m);
+        for (int m = 1; m <= diasMes; m++) {
+            fecha.set(año, mes - 1, m);
             DSemana = fecha.get(Calendar.DAY_OF_WEEK);
             ContentValues valores = new ContentValues();
             valores.put("Dia", m);
@@ -445,26 +485,26 @@ public class BaseDatos {
         }
     }
 
-    public void actualizarCalificacion(int matricula, int calificacion){
+    public void actualizarCalificacion(int matricula, int calificacion) {
         hayCambios = true;
         if (matricula < 1) return;
         if (calificacion < 0 || calificacion > 2) calificacion = 0;
         ContentValues valores = new ContentValues();
         valores.put("Calificacion", calificacion);
         String where = "Matricula=" + String.valueOf(matricula);
-	    baseDatos.update(TABLA_CALENDARIO, valores, where, null);
+        baseDatos.update(TABLA_CALENDARIO, valores, where, null);
     }
 
-    public void actualizarRelevos(int matricula, String apellidos){
+    public void actualizarRelevos(int matricula, String apellidos) {
         hayCambios = true;
         if (matricula < 1) return;
         ContentValues valores = new ContentValues();
         valores.put("Apellidos", apellidos);
         String where = "Matricula=" + String.valueOf(matricula);
-	    baseDatos.update(TABLA_CALENDARIO, valores, where, null);
+        baseDatos.update(TABLA_CALENDARIO, valores, where, null);
     }
 
-    public Cursor cursorBusqueda(String where){
+    public Cursor cursorBusqueda(String where) {
         String orderby = "Año ASC, Mes ASC, Dia ASC";
         return baseDatos.query(TABLA_CALENDARIO, null, where, null, null, null, orderby);
     }
@@ -475,20 +515,18 @@ public class BaseDatos {
     //region  METODOS DE INCIDENCIAS
 
     /**
-     *
      * @return Cursor con todas las incidencias ordenadas por código.
      */
-    public Cursor cursorIncidencias (){
+    public Cursor cursorIncidencias() {
         String orderby = "Codigo ASC";
         return baseDatos.query(TABLA_INCIDENCIAS, null, null, null, null, null, orderby);
     }
 
     /**
-     *
      * @param codigo Codigo de la incidencia a devolver.
      * @return Incidencia que representa el código
      */
-    public Incidencia getIncidencia(int codigo){
+    public Incidencia getIncidencia(int codigo) {
         String where = "Codigo=" + String.valueOf(codigo);
         Cursor c = baseDatos.query(TABLA_INCIDENCIAS, null, where, null, null, null, null);
         Incidencia i = new Incidencia();
@@ -503,29 +541,26 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @return Cursor con todas las incidencias insertadas por el usuario.
      */
-    public Cursor cursorIncidenciasEditables(){
+    public Cursor cursorIncidenciasEditables() {
         String where = "Codigo > 16";
         String orderby = "Codigo ASC";
         return baseDatos.query(TABLA_INCIDENCIAS, null, where, null, null, null, orderby);
     }
 
     /**
-     *
      * @return Devuelve el código de la siguiente nueva incidencia disponible.
      */
-    public int codigoNuevaIncidencia(){
+    public int codigoNuevaIncidencia() {
         Cursor c = cursorIncidencias();
         c.moveToLast();
         int ultima = c.getInt(c.getColumnIndex("Codigo"));
-        
+
         return ultima + 1;
     }
 
     /**
-     *
      * @param i Incidencia que se va a guardar o actualizar.
      */
     public void setIncidencia(Incidencia i) {
@@ -538,16 +573,15 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param codigo Codigo de la incidencia que va a ser borrada.
      */
-    public void borraIncidencia(int codigo){
+    public void borraIncidencia(int codigo) {
         hayCambios = true;
         String where = "Codigo=" + String.valueOf(codigo);
         baseDatos.delete(TABLA_INCIDENCIAS, where, null);
     }
 
-    public void modificarIncidencias(int codigo, String texto){
+    public void modificarIncidencias(int codigo, String texto) {
         if (codigo < 1 || codigo > 16) return;
         hayCambios = true;
         ContentValues valores = new ContentValues();
@@ -556,7 +590,7 @@ public class BaseDatos {
         baseDatos.update(TABLA_CALENDARIO, valores, where, null);
     }
 
-    public void actualizarTiposIncidencias(){
+    public void actualizarTiposIncidencias() {
         Incidencia i = getIncidencia(8);
         if (i.getTipo() != 6) {
             i.setTipo(6);
@@ -568,12 +602,12 @@ public class BaseDatos {
             setIncidencia(i);
         }
         i = getIncidencia(6);
-        if (i.getTexto().equals("Enfermo")){
+        if (i.getTexto().equals("Enfermo")) {
             i.setTexto("Enfermo/a");
             setIncidencia(i);
         }
         i = getIncidencia(7);
-        if (i.getTexto().equals("Accidentado")){
+        if (i.getTexto().equals("Accidentado")) {
             i.setTexto("Accidentado/a");
             setIncidencia(i);
         }
@@ -585,12 +619,11 @@ public class BaseDatos {
     //region METODOS ESTADISTICAS
 
     /**
-     *
      * @param mes Ultimo mes que se sumará a las acumuladas.
      * @param año Año del último mes que se sumará a las acumuladas.
      * @return Devuelve las horas acumuladas hasta el final del mes indicado.
      */
-    public double acumuladasHastaMes(int mes, int año){
+    public double acumuladasHastaMes(int mes, int año) {
         double acum = 0d;
         String consulta = "SELECT SUM(Acumuladas)" +
                 " AS sumaAcumuladas FROM Calendario WHERE Año<" + String.valueOf(año);
@@ -605,12 +638,11 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param mes Mes del que se quieren tener las acumuladas.
      * @param año Año del mes del que se quieren tener las acumuladas.
      * @return Devuelve las horas acumuladas del mes indicado.
      */
-    public double acumuladasMes(int mes, int año){
+    public double acumuladasMes(int mes, int año) {
         double acum = 0d;
         String consulta = "SELECT SUM(Acumuladas)" +
                 " AS sumaAcumuladas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -621,7 +653,7 @@ public class BaseDatos {
         return acum;
     }
 
-    public double acumuladasAño(int año){
+    public double acumuladasAño(int año) {
         double acum = 0d;
         String consulta = "SELECT SUM(Acumuladas)" +
                 " AS sumaAcumuladas FROM Calendario WHERE Año=" + String.valueOf(año);
@@ -631,7 +663,7 @@ public class BaseDatos {
         return acum;
     }
 
-    public double acumuladasFecha(String where){
+    public double acumuladasFecha(String where) {
         double acum = 0d;
         String consulta = "SELECT SUM(Acumuladas) AS Suma FROM Calendario WHERE ";
         consulta = consulta + where;
@@ -642,12 +674,11 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param mes Mes del que se quieren tener las nocturnas.
      * @param año Año del mes del que se quieren tener las nocturnas.
      * @return Devuelve las horas nocturnas del mes indicado.
      */
-    public double nocturnasMes(int mes, int año){
+    public double nocturnasMes(int mes, int año) {
         double noct = 0d;
         String consulta = "SELECT SUM(Nocturnas)" +
                 " AS sumaNocturnas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -659,12 +690,11 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param mes Mes del que se quieren tener las horas trabajadas.
      * @param año Año del mes del que se quieren tener las horas trabajadas.
      * @return Devuelve las horas trabajadas del mes indicado.
      */
-    public double trabajadasMes(int mes, int año){
+    public double trabajadasMes(int mes, int año) {
         double trab = 0d;
         String consulta = "SELECT SUM(Trabajadas)" +
                 " AS sumaTrabajadas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -675,7 +705,7 @@ public class BaseDatos {
         return trab;
     }
 
-    public double trabajadasAño(int año){
+    public double trabajadasAño(int año) {
         double trab = 0d;
         String consulta = "SELECT SUM(Trabajadas)" +
                 " AS sumaTrabajadas FROM Calendario WHERE Año=" + String.valueOf(año);
@@ -685,7 +715,7 @@ public class BaseDatos {
         return trab;
     }
 
-    public double trabajadasFecha(String where){
+    public double trabajadasFecha(String where) {
         double trab = 0d;
         String consulta = "SELECT SUM(Trabajadas) AS Suma FROM Calendario WHERE ";
         consulta = consulta + where;
@@ -696,25 +726,23 @@ public class BaseDatos {
     }
 
     /**
-     *
      * NUEVO VERSIÓN 1.5
-     *
+     * <p>
      * DIAS TRABAJADOS A EFECTOS DE CONVENIO.
-     *
+     * <p>
      * Días con tipo incidencia 1-Trabajo, 3-FOD, 6-Jornada Media.
-     *
      */
-    public int diasTrabajadosConvenio(int mes, int año){
+    public int diasTrabajadosConvenio(int mes, int año) {
         int trab = 0;
         String consulta = "SELECT * FROM Calendario WHERE Mes=" + mes + " AND año=" + año +
-        " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
+                " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) trab = c.getCount();
         c.close();
         return trab;
     }
 
-    public int diasTrabajadosConvenio(int año){
+    public int diasTrabajadosConvenio(int año) {
         int trab = 0;
         String consulta = "SELECT * FROM Calendario WHERE Año=" + año +
                 " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
@@ -724,7 +752,7 @@ public class BaseDatos {
         return trab;
     }
 
-    public int diasEnfermoComputables(int año){
+    public int diasEnfermoComputables(int año) {
         int diasEnfermo = 0;
         String consulta = "SELECT * FROM Calendario WHERE Año=" + año +
                 " AND (CodigoIncidencia=6 OR CodigoIncidencia=7) AND EsFranqueo=0";
@@ -735,7 +763,7 @@ public class BaseDatos {
     }
 
     // DIETAS DEPRECATED
-    public int DesayunosMes(int mes, int año){
+    public int DesayunosMes(int mes, int año) {
         int trab = 0;
         String consulta = "SELECT SUM(Desayuno)" +
                 " AS sumaDesayuno FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -746,7 +774,7 @@ public class BaseDatos {
         return trab;
     }
 
-    public int ComidasMes(int mes, int año){
+    public int ComidasMes(int mes, int año) {
         int trab = 0;
         String consulta = "SELECT SUM(Comida)" +
                 " AS sumaComida FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -757,7 +785,7 @@ public class BaseDatos {
         return trab;
     }
 
-    public int CenasMes(int mes, int año){
+    public int CenasMes(int mes, int año) {
         int trab = 0;
         String consulta = "SELECT SUM(Cena)" +
                 " AS sumaCena FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -769,7 +797,7 @@ public class BaseDatos {
     }
 
     // TOMA Y DEJE Y EUROS
-    public double tomaDejeHastaMes(int mes, int año){
+    public double tomaDejeHastaMes(int mes, int año) {
         double tomadeje = 0d;
         String consulta = "SELECT SUM(TomaDejeDecimal)" +
                 " AS sumaTomaDeje FROM Calendario WHERE Año<" + String.valueOf(año);
@@ -784,7 +812,7 @@ public class BaseDatos {
         return tomadeje;
     }
 
-    public double tomaDejeMes(int mes, int año){
+    public double tomaDejeMes(int mes, int año) {
         double tomadeje = 0d;
         String consulta = "SELECT SUM(TomaDejeDecimal)" +
                 " AS sumaTomaDeje FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -795,7 +823,7 @@ public class BaseDatos {
         return tomadeje;
     }
 
-    public double eurosMes(int mes, int año){
+    public double eurosMes(int mes, int año) {
         double euros = 0d;
         String consulta = "SELECT SUM(Euros)" +
                 " AS sumaEuros FROM Calendario WHERE Mes=" + String.valueOf(mes) +
@@ -805,8 +833,8 @@ public class BaseDatos {
         c.close();
         return euros;
     }
-	
-    public ArrayList<Estadistica> Estadisticas(String whereFecha, double JMedia){
+
+    public ArrayList<Estadistica> Estadisticas(String whereFecha, double JMedia) {
         // ArrayList que se va a devolver.
         ArrayList<Estadistica> lista = new ArrayList<>();
         //Objeto que se va a almacenar.
@@ -1225,14 +1253,14 @@ public class BaseDatos {
         int sinIncidencia = 0;
         Cursor i = cursorIncidencias();
 
-        while (i.moveToNext()){
+        while (i.moveToNext()) {
             select = "SELECT * FROM Calendario ";
             whereFiltro = " AND CodigoIncidencia=" + String.valueOf(i.getInt(i.getColumnIndex("Codigo")));
             consulta = select + whereFecha + whereFiltro;
             c = baseDatos.rawQuery(consulta, null);
-            if (c.getCount() > 0){
+            if (c.getCount() > 0) {
                 String textoIncidencia = i.getString(i.getColumnIndex("Incidencia"));
-                if (textoIncidencia.equals("Repetir Día Anterior")){
+                if (textoIncidencia.equals("Repetir Día Anterior")) {
                     sinIncidencia = c.getCount();
                 } else {
                     e = new Estadistica();
@@ -1248,7 +1276,7 @@ public class BaseDatos {
         }
         e = new Estadistica();
         e.Texto = "Total días con incidencia";
-        e.Valor = String.valueOf(cont-sinIncidencia);
+        e.Valor = String.valueOf(cont - sinIncidencia);
         e.Contador = contador;
         lista.add(e);
         contador++;
@@ -1303,13 +1331,12 @@ public class BaseDatos {
     //region  METODOS SERVICIOS DIA
 
     /**
-     *
      * @param dia Dia del que se quieren extraer los servicios.
      * @param mes Mes del día del que se quieren extraer los servicios.
      * @param año Año del día del que se quieren extraer los servicios.
      * @return Devuelve un cursor con los servicios del día indicado.
      */
-    public Cursor cursorServiciosDia(int dia, int mes, int año){
+    public Cursor cursorServiciosDia(int dia, int mes, int año) {
         String[] args = {String.valueOf(dia), String.valueOf(mes), String.valueOf(año)};
         String where = "Dia=? AND Mes=? AND Año=?";
         String orderby = "_id ASC";
@@ -1317,23 +1344,21 @@ public class BaseDatos {
     }
 
     /**
-     *
      * @param dia Dia del que se quieren vaciar los servicios.
      * @param mes Mes del día del que se quieren vaciar los servicios.
      * @param año Año del día del que se quieren vaciar los servicios.
      */
-    public void vaciarServiciosDia(int dia, int mes, int año){
+    public void vaciarServiciosDia(int dia, int mes, int año) {
         hayCambios = true;
         String[] args = {String.valueOf(dia), String.valueOf(mes), String.valueOf(año)};
         String where = "Dia=? AND Mes=? AND Año=?";
-	    baseDatos.delete(TABLA_SERVICIOS_DIA, where, args);
+        baseDatos.delete(TABLA_SERVICIOS_DIA, where, args);
     }
 
     /**
-     *
      * @param servicioDia ServicioCalendario que se guardará.
      */
-    public void guardaServicioDia(ServicioDia servicioDia){
+    public void guardaServicioDia(ServicioDia servicioDia) {
         hayCambios = true;
         ContentValues valores = new ContentValues();
         valores.put("Dia", servicioDia.getDia());
@@ -1346,15 +1371,14 @@ public class BaseDatos {
         valores.put("LugarInicio", servicioDia.getLugarInicio());
         valores.put("Final", servicioDia.getFinal());
         valores.put("LugarFinal", servicioDia.getLugarFinal());
-	    baseDatos.insert(TABLA_SERVICIOS_DIA, null, valores);
-	
+        baseDatos.insert(TABLA_SERVICIOS_DIA, null, valores);
+
     }
 
     /**
-     *
      * @param servicioDia ServicioCalendario que se borrará.
      */
-    public void borraServicioDia(ServicioDia servicioDia){
+    public void borraServicioDia(ServicioDia servicioDia) {
         hayCambios = true;
         String where = "Dia=? AND Mes=? AND Año=? AND Servicio=? AND Turno=? AND Linea=?";
         String[] args = new String[]{String.valueOf(servicioDia.getDia()),
@@ -1363,7 +1387,7 @@ public class BaseDatos {
                 servicioDia.getServicio(),
                 String.valueOf(servicioDia.getTurno()),
                 servicioDia.getLinea()};
-	    baseDatos.delete(TABLA_SERVICIOS_DIA, where, args);
+        baseDatos.delete(TABLA_SERVICIOS_DIA, where, args);
     }
 
     //endregion
@@ -1371,18 +1395,17 @@ public class BaseDatos {
 
     //region  METODOS HORAS AJENAS
 
-    public Cursor cursorAjenas(){
+    public Cursor cursorAjenas() {
         String orderBy = "Año ASC, Mes ASC, Dia ASC";
         return baseDatos.query(TABLA_HORAS_AJENAS, null, null, null, null, null, orderBy);
     }
 
     /**
-     *
      * @param mes Mes hasta donde se devolverán las horas ajenas.
      * @param año Año del mes donde se devolverán las horas ajenas.
      * @return Horas ajenas hasta el mes indicado.
      */
-    public double ajenasHastaMes(int mes, int año){
+    public double ajenasHastaMes(int mes, int año) {
         double ajenas = 0d;
         String consulta = "SELECT SUM(Horas)" +
                 " AS sumaAjenas FROM HorasAjenas WHERE Año<" + String.valueOf(año);
@@ -1397,7 +1420,7 @@ public class BaseDatos {
         return ajenas;
     }
 
-    public void setAjena(HoraAjena horaAjena){
+    public void setAjena(HoraAjena horaAjena) {
         hayCambios = true;
         if (horaAjena.getDia() == 0 || horaAjena.getMes() == 0 || horaAjena.getAño() == 0) return;
         ContentValues valores = new ContentValues();
@@ -1406,17 +1429,17 @@ public class BaseDatos {
         valores.put("Año", horaAjena.getAño());
         valores.put("Horas", horaAjena.getHoras());
         valores.put("Motivo", horaAjena.getMotivo());
-	    baseDatos.insert(TABLA_HORAS_AJENAS, null, valores);
+        baseDatos.insert(TABLA_HORAS_AJENAS, null, valores);
     }
 
-    public boolean borrarAjena(int id){
+    public boolean borrarAjena(int id) {
         if (id == -1) return false;
         hayCambios = true;
         String where = "_id=" + String.valueOf(id);
         return (baseDatos.delete(TABLA_HORAS_AJENAS, where, null) > 0);
     }
 
-    public void setAjenaBisiestos(double horas, int año){
+    public void setAjenaBisiestos(double horas, int año) {
 
         HoraAjena hora = new HoraAjena();
         hora.setAño(año);
@@ -1429,21 +1452,20 @@ public class BaseDatos {
                 " AND Motivo='Regulación año bisiesto.'";
 
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.getCount() > 0){
+        if (c.getCount() > 0) {
             String[] args = {String.valueOf(año), "Regulación año bisiesto."};
             String where = "Año=? AND Motivo=?";
             baseDatos.delete(TABLA_HORAS_AJENAS, where, args);
         }
         c.close();
 
-        if (horas != 0)
-        {
-	        setAjena(hora);
+        if (horas != 0) {
+            setAjena(hora);
         }
-	
+
     }
 
-    public void setAjenaFinAño(double horas, int año){
+    public void setAjenaFinAño(double horas, int año) {
 
         HoraAjena hora = new HoraAjena();
         hora.setAño(año);
@@ -1456,7 +1478,7 @@ public class BaseDatos {
                 " AND Motivo='Regulación fin de año.'";
 
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.getCount() > 0){
+        if (c.getCount() > 0) {
             String[] args = {String.valueOf(año), "Regulación fin de año."};
             String where = "Año=? AND Motivo=?";
             baseDatos.delete(TABLA_HORAS_AJENAS, where, args);
@@ -1471,12 +1493,12 @@ public class BaseDatos {
 
     //region  METODOS LINEAS
 
-    public Cursor cursorLineas(){
+    public Cursor cursorLineas() {
         String orderBy = "Linea ASC";
         return baseDatos.query(TABLA_LINEAS, null, null, null, null, null, orderBy);
     }
 
-    public Linea getLinea(String linea){
+    public Linea getLinea(String linea) {
         Linea l = new Linea();
         String where = "Linea='" + linea.trim() + "'";
         Cursor c = baseDatos.query(TABLA_LINEAS, null, where, null, null, null, null);
@@ -1489,7 +1511,7 @@ public class BaseDatos {
         return l;
     }
 
-    public Linea getLinea(int id){
+    public Linea getLinea(int id) {
         Linea l = new Linea();
         String where = "_id=" + String.valueOf(id);
         Cursor c = baseDatos.query(TABLA_LINEAS, null, where, null, null, null, null);
@@ -1502,24 +1524,41 @@ public class BaseDatos {
         return l;
     }
 
-    public boolean setLinea(Linea linea){
+    public boolean setLinea(Linea linea) {
         if (linea == null) return false;
         hayCambios = true;
         Linea l = getLinea(linea.getLinea());
-        if (l != null) borrarLinea(l.getLinea());
+        if (l != null) {
+            //Recuperamos los servicios de la linea.
+            ArrayList<ServicioModel> servicios = getServicios(linea.getLinea());
+            if (servicios != null){
+                for (ServicioModel s : servicios){
+                    s.Nuevo = true;
+                    if (s.getServiciosAuxiliares() != null) {
+                        for (ServicioAuxiliarModel sa : s.getServiciosAuxiliares()){
+                            sa.Nuevo = true;
+                        }
+                    }
+                }
+                borrarLinea(l.getLinea());
+                guardarServicios(servicios);
+            } else{
+                borrarLinea(l.getLinea());
+            }
+        }
         ContentValues valores = new ContentValues();
         valores.put("Linea", linea.getLinea());
         valores.put("Texto", linea.getTexto());
         return (baseDatos.insert(TABLA_LINEAS, null, valores) > -1);
     }
 
-    public void borrarLinea(String linea){
+    public void borrarLinea(String linea) {
         if (linea == null) return;
         hayCambios = true;
         String[] args = new String[]{linea};
         String where = "Linea=?";
-	    baseDatos.delete(TABLA_LINEAS, where, args);
-	    borrarServicios(linea);
+        baseDatos.delete(TABLA_LINEAS, where, args);
+        borrarServicios(linea);
     }
 
     //endregion
@@ -1528,25 +1567,24 @@ public class BaseDatos {
     //region MÉTODOS ALL LÍNEAS
 
 
-    //TODO: Comprobar que devolvemos todas las líneas con sus servicios.
-    public ArrayList<LineaModel> getAllLineas(){
+    public ArrayList<LineaModel> getAllLineas() {
         Cursor cursorLineas = cursorLineas();
         ArrayList<LineaModel> lineas = new ArrayList<>();
-        if (cursorLineas.moveToFirst()){
-            do{
+        if (cursorLineas.moveToFirst()) {
+            do {
                 LineaModel linea = new LineaModel(cursorLineas);
                 Cursor cursorServicios = cursorServiciosLinea(linea.getLinea());
-                if (cursorServicios.moveToFirst()){
+                if (cursorServicios.moveToFirst()) {
                     ArrayList<ServicioModel> servicios = new ArrayList<>();
-                    do{
+                    do {
                         ServicioModel servicio = new ServicioModel(cursorServicios);
                         Cursor cursorAuxiliares = cursorServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
-                        if (cursorAuxiliares.moveToFirst()){
+                        if (cursorAuxiliares.moveToFirst()) {
                             ArrayList<ServicioAuxiliarModel> auxiliares = new ArrayList<>();
-                            do{
+                            do {
                                 ServicioAuxiliarModel auxiliar = new ServicioAuxiliarModel(cursorAuxiliares);
                                 auxiliares.add(auxiliar);
-                            } while(cursorAuxiliares.moveToNext());
+                            } while (cursorAuxiliares.moveToNext());
                             cursorAuxiliares.close();
                             servicio.setServiciosAuxiliares(auxiliares);
                             servicio.Modificado = false;
@@ -1565,27 +1603,27 @@ public class BaseDatos {
     }
 
 
-    //TODO: Comprobar que reemplaza y/o añade todo correctamente.
-    public void guardarAllLineas(ArrayList<LineaModel> lineas){
-        for (LineaModel linea: lineas) {
+    public void guardarAllLineas(ArrayList<LineaModel> lineas) {
+        for (LineaModel linea : lineas) {
             // Si la línea es nueva o ha sido modificada, la guardamos.
             if (linea.Nuevo || linea.Modificado) setLinea(linea.ToLinea());
             // Comprobamos los servicios.
-            if (linea.getServicios() != null){
-                for (ServicioModel servicio: linea.getServicios()) {
+            if (linea.getServicios() != null) {
+                for (ServicioModel servicio : linea.getServicios()) {
                     // Si el servicio es nuevo o ha sido modificado, lo guardamos.
-                    if (servicio.Nuevo || servicio.Modificado){
+                    if (servicio.Nuevo || servicio.Modificado) {
                         // Si es nuevo, le ponemos -1 al id, sino 0.
-                        if (servicio.Nuevo){
-                            setServicio( -1, servicio.ToServicio());
+                        if (servicio.Nuevo) {
+                            setServicio(-1, servicio.ToServicio());
                         } else {
-                            setServicio( 0, servicio.ToServicio());
+                            setServicio(0, servicio.ToServicio());
                         }
                     }
                     if (servicio.getServiciosAuxiliares() != null) {
                         for (ServicioAuxiliarModel auxiliar : servicio.getServiciosAuxiliares()) {
                             // Si el servicio auxiliar es nuevo o ha sido modificado lo guardamos.
-                            if (auxiliar.Nuevo || auxiliar.Modificado) setServicioAuxiliar(auxiliar.ToServicioAuxiliar());
+                            if (auxiliar.Nuevo || auxiliar.Modificado)
+                                setServicioAuxiliar(auxiliar.ToServicioAuxiliar());
                         }
                     }
                 }
@@ -1599,13 +1637,13 @@ public class BaseDatos {
 
     //region  METODOS SERVICIOS
 
-    public Cursor cursorServiciosLinea(String linea){
+    public Cursor cursorServiciosLinea(String linea) {
         String where = "Linea='" + linea + "'";
         String orderBy = "Servicio ASC, Turno ASC";
         return baseDatos.query(TABLA_SERVICIOS, null, where, null, null, null, orderBy);
     }
 
-    public Servicio getServicio(int id ){
+    public Servicio getServicio(int id) {
         String[] args = new String[]{String.valueOf(id)};
         String where = "_id=?";
         Cursor c = baseDatos.query(TABLA_SERVICIOS, null, where, args, null, null, null);
@@ -1626,7 +1664,7 @@ public class BaseDatos {
         return s;
     }
 
-    public Servicio getServicio(String linea, String servicio, int turno){
+    public Servicio getServicio(String linea, String servicio, int turno) {
         String[] args = new String[]{linea, servicio, String.valueOf(turno)};
         String where = "Linea=? AND Servicio=? AND Turno=?";
         Cursor c = baseDatos.query(TABLA_SERVICIOS, null, where, args, null, null, null);
@@ -1647,10 +1685,63 @@ public class BaseDatos {
         return s;
     }
 
-    public void setServicio(int id, Servicio servicio){
+    public ArrayList<ServicioModel> getServicios(String linea) {
+        String[] args = new String[]{linea};
+        String where = "Linea=?";
+        Cursor cursorServicios = baseDatos.query(TABLA_SERVICIOS, null, where, args, null, null, null);
+        if (cursorServicios.getCount() == 0) return null;
+        if (cursorServicios.moveToFirst()) {
+            ArrayList<ServicioModel> servicios = new ArrayList<>();
+            do {
+                ServicioModel servicio = new ServicioModel(cursorServicios);
+                Cursor cursorAuxiliares = cursorServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+                if (cursorAuxiliares.moveToFirst()) {
+                    ArrayList<ServicioAuxiliarModel> auxiliares = new ArrayList<>();
+                    do {
+                        ServicioAuxiliarModel auxiliar = new ServicioAuxiliarModel(cursorAuxiliares);
+                        auxiliares.add(auxiliar);
+                    } while (cursorAuxiliares.moveToNext());
+                    cursorAuxiliares.close();
+                    servicio.setServiciosAuxiliares(auxiliares);
+                    servicio.Modificado = false;
+                }
+                servicios.add(servicio);
+            } while (cursorServicios.moveToNext());
+            cursorServicios.close();
+            return servicios;
+        }
+        return null;
+    }
+
+    public void guardarServicios(ArrayList<ServicioModel> servicios){
+        for (ServicioModel servicio : servicios) {
+            // Si el servicio es nuevo o ha sido modificado, lo guardamos.
+            if (servicio.Nuevo || servicio.Modificado) {
+                // Si es nuevo, le ponemos -1 al id, sino 0.
+                if (servicio.Nuevo) {
+                    setServicio(-1, servicio.ToServicio());
+                } else {
+                    setServicio(0, servicio.ToServicio());
+                }
+            }
+            if (servicio.getServiciosAuxiliares() != null) {
+                for (ServicioAuxiliarModel auxiliar : servicio.getServiciosAuxiliares()) {
+                    // Si el servicio auxiliar es nuevo o ha sido modificado lo guardamos.
+                    if (auxiliar.Nuevo || auxiliar.Modificado)
+                        setServicioAuxiliar(auxiliar.ToServicioAuxiliar());
+                }
+            }
+        }
+
+    }
+
+
+
+    public void setServicio(int id, Servicio servicio) {
         if (servicio == null) return;
         hayCambios = true;
-        if (id != -1) borrarServicio(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+        if (id != -1)
+            borrarServicio(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
         ContentValues valores = new ContentValues();
         valores.put("Linea", servicio.getLinea());
         valores.put("Servicio", servicio.getServicio());
@@ -1661,29 +1752,29 @@ public class BaseDatos {
         valores.put("LugarInicio", servicio.getLugarInicio());
         valores.put("Final", servicio.getFinal());
         valores.put("LugarFinal", servicio.getLugarFinal());
-	    baseDatos.insert(TABLA_SERVICIOS, null, valores);
+        baseDatos.insert(TABLA_SERVICIOS, null, valores);
     }
 
-    public void borrarServicio(int id){
+    public void borrarServicio(int id) {
         hayCambios = true;
         Servicio servicio = getServicio(id);
         String[] args = new String[]{String.valueOf(id)};
         String where = "_id=?";
-	    baseDatos.delete(TABLA_SERVICIOS, where, args);
-	    vaciarServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+        baseDatos.delete(TABLA_SERVICIOS, where, args);
+        vaciarServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
     }
 
-    public void borrarServicio(String linea, String servicio, int turno){
+    public void borrarServicio(String linea, String servicio, int turno) {
         String[] args = new String[]{linea, servicio, String.valueOf(turno)};
         String where = "Linea=? AND Servicio=? AND Turno=?";
         baseDatos.delete(TABLA_SERVICIOS, where, args);
     }
 
-    public void borrarServicios(String linea){
+    public void borrarServicios(String linea) {
         hayCambios = true;
         ArrayList<Servicio> lista = new ArrayList<>();
         Cursor cursor = cursorServiciosLinea(linea);
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 Servicio s = new Servicio();
                 s.setLinea(cursor.getString(cursor.getColumnIndex("Linea")));
@@ -1695,7 +1786,8 @@ public class BaseDatos {
         String[] args = new String[]{linea};
         String where = "Linea=?";
         baseDatos.delete(TABLA_SERVICIOS, where, args);
-        for(Servicio s : lista) vaciarServiciosAuxiliares(s.getLinea(), s.getServicio(), s.getTurno());
+        for (Servicio s : lista)
+            vaciarServiciosAuxiliares(s.getLinea(), s.getServicio(), s.getTurno());
     }
 
     //endregion
@@ -1703,10 +1795,10 @@ public class BaseDatos {
 
     //region  METODOS RELEVOS
 
-    public Cursor cursorRelevos(int orden){
+    public Cursor cursorRelevos(int orden) {
 
         String orderBy;
-        switch (orden){
+        switch (orden) {
             case RELEVOS_POR_MATRICULA:
                 orderBy = "Matricula ASC";
                 break;
@@ -1722,7 +1814,7 @@ public class BaseDatos {
         return baseDatos.query(TABLA_RELEVOS, null, null, null, null, null, orderBy);
     }
 
-    public Relevo getRelevo(int matricula){
+    public Relevo getRelevo(int matricula) {
         if (matricula == 0) return null;
         Relevo r = new Relevo();
         String where = "Matricula=" + String.valueOf(matricula);
@@ -1741,7 +1833,7 @@ public class BaseDatos {
         return r;
     }
 
-    public boolean setRelevo(Relevo relevo){
+    public boolean setRelevo(Relevo relevo) {
         if (relevo == null) return false;
         if (relevo.getMatricula() == 0) return false;
         hayCambios = true;
@@ -1754,24 +1846,24 @@ public class BaseDatos {
         valores.put("Deuda", relevo.getDeuda());
         valores.put("Notas", relevo.getNotas());
         return (baseDatos.insertWithOnConflict(TABLA_RELEVOS, null,
-                                               valores, SQLiteDatabase.CONFLICT_REPLACE) > -1);
+                valores, SQLiteDatabase.CONFLICT_REPLACE) > -1);
     }
 
-    public void borrarRelevo(int matricula){
+    public void borrarRelevo(int matricula) {
         if (matricula < 1) return;
         hayCambios = true;
         String where = "Matricula=" + String.valueOf(matricula);
-	    baseDatos.delete(TABLA_RELEVOS, where, null);
+        baseDatos.delete(TABLA_RELEVOS, where, null);
     }
 
-    public int calificacionRelevo(int matricula){
+    public int calificacionRelevo(int matricula) {
         if (matricula == 0) return 0;
         Relevo r = getRelevo(matricula);
         if (r == null) return 0;
         return r.getCalificacion();
     }
 
-    public int deudaRelevo(int matricula){
+    public int deudaRelevo(int matricula) {
         if (matricula == 0) return 0;
         Relevo r = getRelevo(matricula);
         if (r == null) return 0;
@@ -1791,14 +1883,14 @@ public class BaseDatos {
 
     //region METODOS SERVICIOS AUXILIARES
 
-    public Cursor cursorServiciosAuxiliares(String linea, String servicio, int turno){
+    public Cursor cursorServiciosAuxiliares(String linea, String servicio, int turno) {
         String[] args = new String[]{linea, servicio, String.valueOf(turno)};
         String where = "Linea=? AND Servicio=? AND Turno=?";
         String orderBy = "ServicioAuxiliar ASC, TurnoAuxiliar ASC";
         return baseDatos.query(TABLA_SERVICIOS_AUXILIARES, null, where, args, null, null, orderBy);
     }
 
-    public void setServicioAuxiliar(ServicioAuxiliar servicioAuxiliar){
+    public void setServicioAuxiliar(ServicioAuxiliar servicioAuxiliar) {
         hayCambios = true;
         ContentValues valores = new ContentValues();
         valores.put("Linea", servicioAuxiliar.getLinea());
@@ -1811,35 +1903,97 @@ public class BaseDatos {
         valores.put("LugarInicio", servicioAuxiliar.getLugarInicio());
         valores.put("Final", servicioAuxiliar.getFinal());
         valores.put("LugarFinal", servicioAuxiliar.getLugarFinal());
-	    baseDatos.insert(TABLA_SERVICIOS_AUXILIARES, null, valores);
-	
+        baseDatos.insert(TABLA_SERVICIOS_AUXILIARES, null, valores);
+
     }
 
-    public void borraServicioAuxiliar(int id){
+    public void borraServicioAuxiliar(int id) {
         hayCambios = true;
         String where = "_id=?";
         String[] args = new String[]{String.valueOf(id)};
-	    baseDatos.delete(TABLA_SERVICIOS_AUXILIARES, where, args);
+        baseDatos.delete(TABLA_SERVICIOS_AUXILIARES, where, args);
     }
 
-    public void vaciarServiciosAuxiliares(String linea, String servicio, int turno){
+    public void vaciarServiciosAuxiliares(String linea, String servicio, int turno) {
         hayCambios = true;
         String[] args = new String[]{linea, servicio, String.valueOf(turno)};
         String where = "Linea=? AND Servicio=? AND Turno=?";
-	    baseDatos.delete(TABLA_SERVICIOS_AUXILIARES, where, args);
-	
+        baseDatos.delete(TABLA_SERVICIOS_AUXILIARES, where, args);
+
     }
+
+    //endregion
+
+
+    //region MÉTODOS OPCIONES
+
+    public Opciones getOpciones() {
+        Cursor c = baseDatos.query(TABLA_OPCIONES, null, null, null, null, null, null);
+        if (c.getCount() == 0) return null;
+        c.moveToFirst();
+        Opciones o = new Opciones(c);
+        c.close();
+        return o;
+    }
+
+    public boolean guardarOpciones() {
+        if (opciones == null) return false;
+        hayCambios = true;
+        Opciones o = getOpciones();
+        if (o != null) borrarOpciones(o.getId());
+        ContentValues valores = new ContentValues();
+        valores.put("PrimerMes", opciones.getPrimerMes());
+        valores.put("PrimerAño", opciones.getPrimerAño());
+        valores.put("AcumuladasAnteriores", opciones.getAcumuladasAnteriores());
+        valores.put("RelevoFijo", opciones.getRelevoFijo());
+        valores.put("ModoBasico", opciones.isModoBasico());
+        valores.put("RellenarSemana", opciones.isRellenarSemana());
+        valores.put("JorMedia", opciones.getJornadaMedia());
+        valores.put("JorMinima", opciones.getJornadaMinima());
+        valores.put("LimiteEntreServicios", opciones.getLimiteEntreServicios());
+        valores.put("JornadaAnual", opciones.getJornadaAnual());
+        valores.put("RegularJornadaAnual", opciones.isRegularJornadaAnual());
+        valores.put("RegularBisiestos", opciones.isRegularBisiestos());
+        valores.put("InicioNocturnas", opciones.getInicioNocturnas());
+        valores.put("FinalNocturnas", opciones.getFinalNocturnas());
+        valores.put("LimiteDesayuno", opciones.getLimiteDesayuno());
+        valores.put("LimiteComida1", opciones.getLimiteComida1());
+        valores.put("LimiteComida2", opciones.getLimiteComida2());
+        valores.put("LimiteCena", opciones.getLimiteCena());
+        valores.put("InferirTurnos", opciones.isInferirTurnos());
+        valores.put("DiaBaseTurnos", opciones.getDiaBaseTurnos());
+        valores.put("MesBaseTurnos", opciones.getMesBaseTurnos());
+        valores.put("AñoBaseTurnos", opciones.getAñoBaseTurnos());
+        valores.put("PdfHorizontal", opciones.isPdfHorizontal());
+        valores.put("PdfIncluirServicios", opciones.isPdfIncluirServicios());
+        valores.put("PdfIncluirNotas", opciones.isPdfIncluirNotas());
+        valores.put("PdfAgruparNotas", opciones.isPdfAgruparNotas());
+        valores.put("VerMesActual", opciones.isVerMesActual());
+        valores.put("IniciarCalendario", opciones.isIniciarCalendario());
+        valores.put("SumarTomaDeje", opciones.isSumarTomaDeje());
+        valores.put("ActivarTecladoNumerico", opciones.isActivarTecladoNumerico());
+        valores.put("GuardarSiempre", opciones.isGuardarSiempre());
+        return (baseDatos.insert(TABLA_OPCIONES, null, valores) > -1);
+    }
+
+    public void borrarOpciones(int id) {
+        hayCambios = true;
+        String[] args = new String[]{String.valueOf(id)};
+        String where = "_id=?";
+        baseDatos.delete(TABLA_OPCIONES, where, args);
+    }
+
 
     //endregion
 
 
     //region  METODOS DE COPIA DE SEGURIDAD
 
-    public boolean hacerCopiaSeguridad(){
+    public boolean hacerCopiaSeguridad() {
         return baseHelper.hacerCopia();
     }
 
-    public boolean restaurarCopiaSeguridad(){
+    public boolean restaurarCopiaSeguridad() {
         hayCambios = true;
         return baseHelper.restaurarCopia();
     }
@@ -1847,16 +2001,18 @@ public class BaseDatos {
     //endregion
 
 
-    //region   CLASE HELPER PARA LAS BASES DE DATOS. VERSION = 3
+    //region   CLASE HELPER PARA LAS BASES DE DATOS. VERSION = 5
 
     private static class BaseHelper extends SQLiteOpenHelper {
 
         Context context = null;
+        SharedPreferences opc = null;
 
-        // Versión de la Base de Datos = 4
-        BaseHelper(Context context){
-            super(context, BASE_NAME, null, 4);
+        // Versión de la Base de Datos = 5
+        BaseHelper(Context context) {
+            super(context, BASE_NAME, null, 5);
             this.context = context;
+            opc = PreferenceManager.getDefaultSharedPreferences(context);
         }
 
         @Override
@@ -1871,6 +2027,7 @@ public class BaseDatos {
             db.execSQL(CREAR_TABLA_LINEAS);
             db.execSQL(CREAR_TABLA_SERVICIOS);
             db.execSQL(CREAR_TABLA_SERVICIOS_AUXILIARES);
+            db.execSQL(CREAR_TABLA_OPCIONES);
             crearIncidencias(db);
         }
 
@@ -1881,7 +2038,7 @@ public class BaseDatos {
             int nuevaVersion = oldVersion + 1;
             // Ejecutamos la actualización, partiendo de la versión siguiente a la que tenemos.
             // Omitiendo los Breaks, pasamos de una versión 1, por ejemplo, a una 4, incrementalmente.
-            switch (nuevaVersion){
+            switch (nuevaVersion) {
                 case 2:
                     // Cambiamos el nombre de las tablas afectadas
                     db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
@@ -1903,7 +2060,7 @@ public class BaseDatos {
                     db.execSQL("DROP TABLE ServiciosCalendarioOld");
                     db.execSQL("DROP TABLE ServiciosOld");
                     db.execSQL("DROP TABLE ServiciosAuxiliaresOld");
-                    break;
+                    //break;
                 case 3:
                     // Cambiamos el nombre de las tablas afectadas
                     db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
@@ -1917,7 +2074,7 @@ public class BaseDatos {
                     // Borramos las tablas antiguas
                     db.execSQL("DROP TABLE CalendarioOld");
                     db.execSQL("DROP TABLE ServiciosOld");
-                    break;
+                    //break;
                 case 4:
                     // Cambiamos el nombre de las tablas afectadas
                     db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
@@ -1927,12 +2084,49 @@ public class BaseDatos {
                     db.execSQL(COPIAR_TABLA_CALENDARIO_V4);
                     // Borramos las tablas antiguas
                     db.execSQL("DROP TABLE CalendarioOld");
-                    break;
+                    //break;
+                case 5:
+                    // Creamos la tabla de las opciones.
+                    db.execSQL(CREAR_TABLA_OPCIONES);
+                    // Copiamos las opciones de las preferencias a la nueva tabla.
+                    ContentValues valores = new ContentValues();
+                    valores.put("PrimerMes", (opc.getInt("PrimerMes", 10)));
+                    valores.put("PrimerAño", (opc.getInt("PrimerAño", 2014)));
+                    valores.put("AcumuladasAnteriores", (Double.longBitsToDouble(opc.getLong("AcumuladasAnteriores", 0))));
+                    valores.put("RelevoFijo", (opc.getInt("RelevoFijo", 0)));
+                    valores.put("ModoBasico", (opc.getBoolean("ModoBasico", false)));
+                    valores.put("RellenarSemana", (opc.getBoolean("RellenarSemana", false)));
+                    valores.put("JorMedia", (Double.longBitsToDouble(opc.getLong("JorMedia", 0))));
+                    valores.put("JorMinima", (Double.longBitsToDouble(opc.getLong("JorMinima", 0))));
+                    valores.put("LimiteEntreServicios", (opc.getInt("LimiteEntreServicios", 60)));
+                    valores.put("JornadaAnual", (opc.getInt("JornadaAnual", 1592)));
+                    valores.put("RegularJornadaAnual", (opc.getBoolean("RegularJornadaAnual", true)));
+                    valores.put("RegularBisiestos", (opc.getBoolean("RegularBisiestos", true)));
+                    valores.put("InicioNocturnas", (opc.getInt("InicioNocturnas", 1320)));
+                    valores.put("FinalNocturnas", (opc.getInt("FinalNocturnas", 390)));
+                    valores.put("LimiteDesayuno", (opc.getInt("LimiteDesayuno", 270)));
+                    valores.put("LimiteComida1", (opc.getInt("LimiteComida1", 930)));
+                    valores.put("LimiteComida2", (opc.getInt("LimiteComida2", 810)));
+                    valores.put("LimiteCena", (opc.getInt("LimiteCena", 30)));
+                    valores.put("InferirTurnos", (opc.getBoolean("InferirTurnos", false)));
+                    valores.put("DiaBaseTurnos", (opc.getInt("DiaBaseTurnos", 3)));
+                    valores.put("MesBaseTurnos", (opc.getInt("MesBaseTurnos", 1)));
+                    valores.put("AñoBaseTurnos", (opc.getInt("AñoBaseTurnos", 2021)));
+                    valores.put("PdfHorizontal", (opc.getBoolean("PdfHorizontal", false)));
+                    valores.put("PdfIncluirServicios", (opc.getBoolean("PdfIncluirServicios", false)));
+                    valores.put("PdfIncluirNotas", (opc.getBoolean("PdfIncluirNotas", false)));
+                    valores.put("PdfAgruparNotas", (opc.getBoolean("PdfAgruparNotas", false)));
+                    valores.put("VerMesActual", (opc.getBoolean("VerMesActual", true)));
+                    valores.put("IniciarCalendario", (opc.getBoolean("IniciarCalendario", false)));
+                    valores.put("SumarTomaDeje", (opc.getBoolean("SumarTomaDeje", false)));
+                    valores.put("ActivarTecladoNumerico", (opc.getBoolean("ActivarTecladoNumerico", false)));
+                    db.insert(TABLA_OPCIONES, null, valores);
+                    //break;
             }
         }
 
         // CREAR INCIDENCIAS PROTEGIDAS (0 AL 16)
-        private void crearIncidencias(SQLiteDatabase db){
+        private void crearIncidencias(SQLiteDatabase db) {
             hayCambios = true;
             db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
                     "VALUES (0, 'Repetir Día Anterior', 0)");
@@ -1971,7 +2165,7 @@ public class BaseDatos {
         }
 
         // HACER COPIA DE SEGURIDAD
-        boolean hacerCopia(){
+        boolean hacerCopia() {
 
             // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
             String estadoMemoria = Environment.getExternalStorageState();
@@ -1986,8 +2180,8 @@ public class BaseDatos {
             String destino = Environment.getExternalStorageDirectory().getPath();
             destino = destino + "/Quattroid";
             File d = new File(destino);
-            if (!d.exists()){
-	            //noinspection ResultOfMethodCallIgnored
+            if (!d.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 d.mkdir();
             }
 
@@ -1998,18 +2192,18 @@ public class BaseDatos {
             close();
 
             // Copiamos el archivo de base de datos en el archivo de destino.
-            try{
+            try {
                 FileInputStream archivoDatos = new FileInputStream(origen);
                 FileOutputStream archivoDestino = new FileOutputStream(destino);
                 copiarArchivo(archivoDatos, archivoDestino);
-            } catch (IOException e){
+            } catch (IOException e) {
                 return false;
             }
             return true;
         }
 
         // RESTAURAR COPIA DE SEGURIDAD
-        boolean restaurarCopia(){
+        boolean restaurarCopia() {
 
             // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
             String estadoMemoria = Environment.getExternalStorageState();
@@ -2028,20 +2222,38 @@ public class BaseDatos {
             // Definimos el path de la base de datos.
             String destino = context.getDatabasePath(BASE_NAME).getPath();
 
+            // Renombramos el archivo de base de datos, por si acaso. TODO: Comprobar
+//            File file1 = new File(destino);
+//            File file2 = new File(destino + ".OLD");
+//            file1.renameTo(file2);
+
             // Cerramos la base de datos para que este liberado el archivo
             close();
 
             // Copiamos los archivos
-            try{
+            try {
                 FileInputStream archivoOrigen = new FileInputStream(origen);
                 FileOutputStream archivoDestino = new FileOutputStream(destino);
                 copiarArchivo(archivoOrigen, archivoDestino);
-	            //noinspection ResultOfMethodCallIgnored
+                //noinspection ResultOfMethodCallIgnored
                 new File(destino).setLastModified(new Date().getTime());
-            } catch (IOException e){
+            } catch (IOException e) {
                 return false;
             }
 
+            //getWritableDatabase().close();
+
+            // Evaluamos si existe la tabla Opciones TODO: Comprobar
+//            Cursor c = getReadableDatabase().rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='Opciones';", null);
+//            int n = c.getCount();
+//            if (c.getCount() < 1){
+//                file1.delete();
+//                file2.renameTo(file1);
+//                Toast.makeText(context, "No se puede restaurar.\nCopia de seguridad no compatible.", Toast.LENGTH_LONG).show();
+//                getWritableDatabase().close();
+//                return false;
+//            }
+//
             // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
             getWritableDatabase().close();
 

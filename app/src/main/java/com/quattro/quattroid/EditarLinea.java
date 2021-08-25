@@ -49,7 +49,7 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
     Bundle datosIntent = null;
     Linea lin = null;
     Vibrator vibrador = null;
-    SharedPreferences opciones = null;
+    //SharedPreferences opciones = null;
 
 
 
@@ -78,14 +78,14 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
         linea.setOnLongClickListener(this);
 
         // Inicialización de la base de datos
-        opciones = PreferenceManager.getDefaultSharedPreferences(this);
+        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
         datos = new BaseDatos(this);
 
         // Definimos el vibrador.
         vibrador = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
 
         // Activamos el teclado numérico en los campos habituales.
-        if (opciones.getBoolean("ActivarTecladoNumerico", false)){
+        if (datos.opciones.isActivarTecladoNumerico()){ //opciones.getBoolean("ActivarTecladoNumerico", false)){
             linea.setInputType(InputType.TYPE_CLASS_PHONE);
         }
 
@@ -122,16 +122,10 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent = null;
         int id = item.getItemId();
         switch (id){
             case R.id.bt_guardar:
-                if (linea.getText().toString().trim() != ""){
-                    lin.setLinea(linea.getText().toString());
-                    lin.setTexto(texto.getText().toString());
-                    datos.setLinea(lin);
-                }
-                setResult(RESULT_OK);
+                Guardar();
                 finish();
                 return true;
             default:
@@ -144,7 +138,11 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            setResult(RESULT_CANCELED);
+            if (datos.opciones.isGuardarSiempre()){
+                Guardar();
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
             return true;
         }
@@ -187,5 +185,14 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
         super.onDestroy();
     }
 
+
+    private void Guardar(){
+        if (linea.getText().toString().trim() != ""){
+            lin.setLinea(linea.getText().toString());
+            lin.setTexto(texto.getText().toString());
+            datos.setLinea(lin);
+        }
+        setResult(RESULT_OK);
+    }
 
 }

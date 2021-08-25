@@ -656,6 +656,29 @@
         </LinearLayout>
 
 
+        <!-- GUARDAR SIEMPRE -->
+        <RelativeLayout style="@style/op_rl">
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:textOn="ON"
+                android:textOff="OFF"
+                android:id="@+id/sw_guardarSiempre"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                style="@style/op_titulo"
+                android:text="Guardar siempre"
+                android:layout_alignBaseline="@+id/sw_guardarSiempre"/>
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Guardar los datos siempre, aunque pulsemos el botón atrás."
+                android:layout_below="@+id/sw_guardarSiempre"/>
+        </RelativeLayout>
+        <View style="@style/op_separador"/>
+
+
         <!-- MOSTRAR ULTIMO MES -->
         <RelativeLayout style="@style/op_rl">
             <Switch

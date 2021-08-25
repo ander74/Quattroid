@@ -35,8 +35,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import java.time.LocalDate;
+import java.util.Calendar;
 
 import BaseDatos.BaseDatos;
 import BaseDatos.DatosDia;
@@ -67,7 +71,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
     int grupoActivo = 0;
     String where = "";
     Vibrator vibrador = null;
-    SharedPreferences opciones = null;
+    //SharedPreferences opciones = null;
 
 
     // ELEMENTOS DEL VIEW
@@ -76,10 +80,11 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
     EditText turno = null;
     EditText matricula = null;
     CheckBox deuda = null;
-    EditText año = null;
+    //EditText año = null;
     EditText bus = null;
     EditText notas = null;
     CheckBox limitarAño = null;
+    NumberPicker selectorAño = null;
     LinearLayout grupoBotones = null;
     LinearLayout grupoServicio = null;
     LinearLayout grupoMatrícula = null;
@@ -106,9 +111,10 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
         turno = (EditText) findViewById(R.id.et_turno);
         matricula = (EditText) findViewById(R.id.et_matricula);
         deuda = (CheckBox) findViewById(R.id.ch_deuda);
-        año = (EditText) findViewById(R.id.et_año);
+        //año = (EditText) findViewById(R.id.et_año);
         bus = (EditText) findViewById(R.id.et_bus);
         notas = (EditText) findViewById(R.id.et_notas);
+        selectorAño = (NumberPicker) findViewById(R.id.np_año);
         limitarAño = (CheckBox) findViewById(R.id.ch_limitarAño);
         grupoBotones = (LinearLayout) findViewById(R.id.ly_botones);
         grupoServicio = (LinearLayout) findViewById(R.id.ly_porServicio);
@@ -138,16 +144,28 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
 
         // Iniciar la base de datos
         datos = new BaseDatos(this);
-        opciones = PreferenceManager.getDefaultSharedPreferences(this);
+        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Definimos el vibrador.
         vibrador = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
 
         // Activamos el teclado numérico en los campos habituales.
-        if (opciones.getBoolean("ActivarTecladoNumerico", false)){
+//        if (opciones.getBoolean("ActivarTecladoNumerico", false)){
+//            linea.setInputType(InputType.TYPE_CLASS_PHONE);
+//            servicio.setInputType(InputType.TYPE_CLASS_PHONE);
+//        }
+        if (datos.opciones.isActivarTecladoNumerico()){
             linea.setInputType(InputType.TYPE_CLASS_PHONE);
             servicio.setInputType(InputType.TYPE_CLASS_PHONE);
         }
+
+        // Definir el picker del año
+        selectorAño.setMinValue(2000);
+        selectorAño.setMaxValue(2050);
+        selectorAño.setWrapSelectorWheel(false);
+        Calendar ahora = Calendar.getInstance();
+        selectorAño.setValue(ahora.get(Calendar.YEAR));
+        selectorAño.setOnValueChangedListener((picker, oldValue, newValue) -> limitarAño.setChecked(true));
 
 
         // Iniciar el adaptador y el cursor
@@ -296,7 +314,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
     public void verLista(){
         int añoLimite = 0;
         try{
-            añoLimite = Integer.valueOf(año.getText().toString().trim());
+            añoLimite = selectorAño.getValue();
             if (añoLimite < 2000 || añoLimite > 2050) añoLimite = 0;
         } catch (NumberFormatException e){
             añoLimite = 0;
@@ -390,7 +408,7 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                     int cod = data.getIntExtra("Codigo", -1);
                     int añoLimite = 0;
                     try{
-                        añoLimite = Integer.valueOf(año.getText().toString().trim());
+                        añoLimite = selectorAño.getValue();
                         if (añoLimite < 2000 || añoLimite > 2050) añoLimite = 0;
                     } catch (NumberFormatException e){
                         añoLimite = 0;

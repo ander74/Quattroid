@@ -145,34 +145,7 @@ public class EditarIncidencia extends Activity {
         int id = item.getItemId();
         switch (id){
             case R.id.bt_guardar:
-                incidencia.setTexto(textoIncidencia.getText().toString());
-                int tip;
-                switch (Grupo.getCheckedRadioButtonId()){
-                    case R.id.tipo1:
-                        tip = 1;
-                        break;
-                    case R.id.tipo2:
-                        tip = 2;
-                        break;
-                    case R.id.tipo3:
-                        tip = 3;
-                        break;
-                    case R.id.tipo4:
-                        tip = 4;
-                        break;
-                    case R.id.tipo5:
-                        tip = 5;
-                        break;
-                    case R.id.tipo6:
-                        tip = 6;
-                        break;
-                    default:
-                        tip = 0;
-                }
-                incidencia.setTipo(tip);
-                datos.setIncidencia(incidencia);
-                if (incidencia.getCodigo() < 17) ModificarIncidencias();
-                setResult(RESULT_OK, null);
+                Guardar();
                 finish();
                 return true;
             default:
@@ -185,7 +158,11 @@ public class EditarIncidencia extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            setResult(RESULT_CANCELED);
+            if (datos.opciones.isGuardarSiempre()){
+                Guardar();
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
             return true;
         }
@@ -202,5 +179,37 @@ public class EditarIncidencia extends Activity {
         datos.modificarIncidencias(incidencia.getCodigo(), incidencia.getTexto());
     }
 
+
+    private void Guardar(){
+        incidencia.setTexto(textoIncidencia.getText().toString());
+        int tip;
+        switch (Grupo.getCheckedRadioButtonId()){
+            case R.id.tipo1:
+                tip = 1;
+                break;
+            case R.id.tipo2:
+                tip = 2;
+                break;
+            case R.id.tipo3:
+                tip = 3;
+                break;
+            case R.id.tipo4:
+                tip = 4;
+                break;
+            case R.id.tipo5:
+                tip = 5;
+                break;
+            case R.id.tipo6:
+                tip = 6;
+                break;
+            default:
+                tip = 0;
+        }
+        incidencia.setTipo(tip);
+        datos.setIncidencia(incidencia);
+        if (incidencia.getCodigo() < 17) ModificarIncidencias();
+        setResult(RESULT_OK, null);
+
+    }
 
 }

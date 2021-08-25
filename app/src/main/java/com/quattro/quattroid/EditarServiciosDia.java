@@ -25,6 +25,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.security.Guard;
+
+import BaseDatos.BaseDatos;
 import Objetos.Colores;
 import Objetos.Hora;
 
@@ -43,6 +46,7 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
     // VARIABLES
     boolean isNuevo = false;
     int id = -1;
+    BaseDatos datos = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,9 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
 
         // Accedemos a los datos del intent
         Bundle datosIntent = getIntent().getExtras();
+
+        // Inicializamos la base de datos.
+        datos = new BaseDatos(this);
 
         if (datosIntent == null){
             // Nuevo servicio
@@ -122,30 +129,9 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent = null;
         switch (item.getItemId()){
             case R.id.bt_guardar:
-                validarCampos();
-                intent = new Intent(this, EditarServiciosDia.class);
-                intent.putExtra("Linea", linea.getText().toString().trim());
-                intent.putExtra("Servicio", servicio.getText().toString().trim());
-                switch (turno.getText().toString().trim()){
-                    case "1":case "01":
-                        intent.putExtra("Turno", 1);
-                        break;
-                    case "2":case "02":
-                        intent.putExtra("Turno", 2);
-                        break;
-                    default:
-                        intent.putExtra("Turno", 0);
-                }
-                intent.putExtra("Inicio", inicio.getText().toString().trim());
-                intent.putExtra("Final", fin.getText().toString().trim());
-                intent.putExtra("LugarInicio", lugarInicio.getText().toString().trim());
-                intent.putExtra("LugarFinal", lugarFinal.getText().toString().trim());
-                intent.putExtra("Nuevo", isNuevo);
-                intent.putExtra("Id", id);
-                setResult(RESULT_OK, intent);
+                Guardar();
                 finish();
                 return true;
         }
@@ -157,7 +143,11 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            setResult(RESULT_CANCELED);
+            if (datos.opciones.isGuardarSiempre()){
+                Guardar();
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
             return true;
         }
@@ -209,4 +199,30 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
         }
 
     }
+
+
+    private void Guardar(){
+        validarCampos();
+        Intent intent = new Intent(this, EditarServiciosDia.class);
+        intent.putExtra("Linea", linea.getText().toString().trim());
+        intent.putExtra("Servicio", servicio.getText().toString().trim());
+        switch (turno.getText().toString().trim()){
+            case "1":case "01":
+                intent.putExtra("Turno", 1);
+                break;
+            case "2":case "02":
+                intent.putExtra("Turno", 2);
+                break;
+            default:
+                intent.putExtra("Turno", 0);
+        }
+        intent.putExtra("Inicio", inicio.getText().toString().trim());
+        intent.putExtra("Final", fin.getText().toString().trim());
+        intent.putExtra("LugarInicio", lugarInicio.getText().toString().trim());
+        intent.putExtra("LugarFinal", lugarFinal.getText().toString().trim());
+        intent.putExtra("Nuevo", isNuevo);
+        intent.putExtra("Id", id);
+        setResult(RESULT_OK, intent);
+    }
+
 }

@@ -35,6 +35,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.security.Guard;
+
 import BaseDatos.BaseDatos;
 import BaseDatos.Servicio;
 import BaseDatos.ServicioAuxiliar;
@@ -59,7 +61,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     String lineatext = "";
     int id = -1;
     Vibrator vibrador = null;
-    SharedPreferences opciones = null;
+    //SharedPreferences opciones = null;
 
 
     // ELEMENTOS DEL VIEW
@@ -101,13 +103,13 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
-        opciones = PreferenceManager.getDefaultSharedPreferences(this);
+        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Definimos el vibrador.
         vibrador = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
 
         // Activamos el teclado numérico en los campos habituales.
-        if (opciones.getBoolean("ActivarTecladoNumerico", false)){
+        if (datos.opciones.isActivarTecladoNumerico()){ //opciones.getBoolean("ActivarTecladoNumerico", false)){
             servicio.setInputType(InputType.TYPE_CLASS_PHONE);
         }
 
@@ -189,11 +191,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         int idd = item.getItemId();
         switch (idd){
             case R.id.bt_guardar:
-                validarCampos();
-                if (!serv.getServicio().equals("") && serv.getTurno() != 0){
-                    datos.setServicio(id, serv);
-                }
-                setResult(RESULT_OK);
+                Guardar();
                 finish();
                 return true;
             case R.id.bt_nuevo:
@@ -246,7 +244,11 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     public boolean onKeyDown(int keyCode, KeyEvent event){
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            setResult(RESULT_CANCELED);
+            if (datos.opciones.isGuardarSiempre()){
+                Guardar();
+            } else {
+                setResult(RESULT_CANCELED);
+            }
             finish();
             return true;
         }
@@ -454,5 +456,13 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
     }
 
+
+    private void Guardar(){
+        validarCampos();
+        if (!serv.getServicio().equals("") && serv.getTurno() != 0){
+            datos.setServicio(id, serv);
+        }
+        setResult(RESULT_OK);
+    }
 
 }
