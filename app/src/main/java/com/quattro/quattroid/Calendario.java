@@ -15,13 +15,14 @@
  */
 package com.quattro.quattroid;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -40,7 +41,6 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -58,14 +58,12 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
-
+import com.quattro.helpers.DiaHelper;
 import org.joda.time.LocalDate;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import BaseDatos.BaseDatos;
 import BaseDatos.HoraAjena;
 import BaseDatos.Relevo;
@@ -79,9 +77,11 @@ import Objetos.Calculos;
 import Objetos.Colores;
 import Objetos.Hora;
 
+@SuppressLint({"NonConstantResourceId", "Range", "SetTextI18n", "DefaultLocale"})
 public class Calendario extends Activity implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
 
     // AUTOCLASE
+    @SuppressLint("StaticFieldLeak")
     public static Activity activityCalendario;
 
     // PORTAPAPELES
@@ -89,7 +89,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     private int diaPortapapeles;
     private int mesPortapapeles;
     private int añoPortapapeles;
-    private int diaSemanaPortapapeles;
 
     // CONSTANTES
     public static final int ACCION_DIA_CALENDARIO = 1;
@@ -109,9 +108,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     int primerAño;
     int primerMes;
     Calendar fecha;
-    int diaTemporal;
-    DatosDia dia;
-    boolean respuestaDialogo;
 
     // ELEMENTOS DEL LAYOUT
     ListView listaCalendario = null;
@@ -125,7 +121,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     TextView trabajadasConvenio = null;
 
     // PERTENECE A MULTI-SELECCIÓN
-    private ArrayList<Integer> listaIds = new ArrayList<>();
+    private final ArrayList<Integer> listaIds = new ArrayList<>();
 
     // AL CREAR LA ACTIVITY
     @Override
@@ -136,18 +132,16 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         getActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_calendario);
         context = this;
-        
         // Inicializar los elementos del view
-        listaCalendario = (ListView) findViewById(R.id.lw_listaCalendario);
-        acumuladas = (TextView) findViewById(R.id.tv_acumuladas);
-        titulo = (TextView) findViewById(R.id.tv_titulo);
-        acumuladasMes = (TextView) findViewById(R.id.tv_acumuladasMes);
-        nocturnas = (TextView) findViewById(R.id.tv_nocturnas);
-        tomaDeje = (TextView) findViewById(R.id.tv_tomaDeje);
-        euros = (TextView) findViewById(R.id.tv_euros);
-        trabajadasReales = (TextView) findViewById(R.id.tv_trabajadasReales);
-        trabajadasConvenio = (TextView) findViewById(R.id.tv_trabajadasConvenio);
-
+        listaCalendario = findViewById(R.id.lw_listaCalendario);
+        acumuladas = findViewById(R.id.tv_acumuladas);
+        titulo = findViewById(R.id.tv_titulo);
+        acumuladasMes = findViewById(R.id.tv_acumuladasMes);
+        nocturnas = findViewById(R.id.tv_nocturnas);
+        tomaDeje = findViewById(R.id.tv_tomaDeje);
+        euros = findViewById(R.id.tv_euros);
+        trabajadasReales = findViewById(R.id.tv_trabajadasReales);
+        trabajadasConvenio = findViewById(R.id.tv_trabajadasConvenio);
         // Ocultar TomaDeje y Euros
         titulo.setVisibility(View.GONE);
         acumuladasMes.setVisibility(View.GONE);
@@ -156,38 +150,28 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         euros.setVisibility(View.GONE);
         trabajadasReales.setVisibility(View.GONE);
         trabajadasConvenio.setVisibility(View.GONE);
-
         // Inicializar las opciones y la base de datos
         opciones = PreferenceManager.getDefaultSharedPreferences(this);
         datos = new BaseDatos(context);
-
         // Cambiamos el tipo de las incidencias protegidas que han cambiado.
         datos.actualizarTiposIncidencias();
-
         // Inicializar variables
         fecha = Calendar.getInstance();
-        primerAño = datos.opciones.getPrimerAño(); //opciones.getInt("PrimerAño", 2014);
-        primerMes = datos.opciones.getPrimerMes(); //opciones.getInt("PrimerMes", 10);
-
-        if ( datos.opciones.isVerMesActual()){ //opciones.getBoolean("VerMesActual", true)){
+        primerAño = datos.opciones.getPrimerAño();
+        primerMes = datos.opciones.getPrimerMes();
+        if ( datos.opciones.isVerMesActual()){
             mesActual = fecha.get(Calendar.MONTH) + 1;
             añoActual = fecha.get(Calendar.YEAR);
         } else {
             mesActual = opciones.getInt("UltimoMesMostrado", fecha.get(Calendar.MONTH) + 1);
             añoActual = opciones.getInt("UltimoAñoMostrado", fecha.get(Calendar.YEAR));
         }
-        //long jMedia = opciones.getLong("JorMedia", Double.doubleToRawLongBits(7.75d));
-        jornadaMedia = datos.opciones.getJornadaMedia(); //Double.longBitsToDouble(jMedia);
-
-
+        jornadaMedia = datos.opciones.getJornadaMedia();
         // Registrar Listeners y menús contextuales y configuraciones
         listaCalendario.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
         listaCalendario.setDivider(null);
         listaCalendario.setDividerHeight(0);
-
-        // MULTI-SELECCION
-        listaCalendario.setMultiChoiceModeListener(this);
-
+        listaCalendario.setMultiChoiceModeListener(this);// MULTI-SELECCION
         listaDias = datos.datosMes(mesActual, añoActual);
         if(listaDias.isEmpty()) {
             datos.crearMes(mesActual, añoActual);
@@ -195,16 +179,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         }
         inferirTurnos();
         adaptador = new AdaptadorDiaCalendario(this, listaDias);
-
         listaCalendario.setAdapter(adaptador);
         listaCalendario.setOnItemClickListener(this);
-
-        if (datos.opciones.isVerMesActual()) { //opciones.getBoolean("VerMesActual", true)) {
+        if (datos.opciones.isVerMesActual()) {
             listaCalendario.setSelection(fecha.get(Calendar.DAY_OF_MONTH) - 1);
         } else {
             listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
         }
-
         // Escribir horas y título
         escribeHoras();
         escribeTitulo();
@@ -233,22 +214,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             case android.R.id.home:
                 pedirMes();
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     // AL PULSAR UNA TECLA
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
-//        //Al pulsar la tecla retroceso
-//        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-//            Intent intent = new Intent(this, Principal.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//            startActivity(intent);
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
         //Al pulsar la tecla retroceso
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
             finish();
@@ -260,7 +232,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // AL PULSAR UN ÍTEM DEL LISTVIEW
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id){
-
         DatosDia dia = listaDias.get(position);
         // Creamos el intent con los datos de la fecha.
         Intent intent = new Intent(context, DiaCalendario.class);
@@ -268,13 +239,10 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         intent.putExtra("Mes", dia.getMes());
         intent.putExtra("Año", dia.getAño());
         intent.putExtra("Posicion", position);
-
         // Guardamos la posición de la lista
 	    opciones.edit().putInt("PosicionCalendario", listaCalendario.getFirstVisiblePosition()).apply();
-
 	    // Lanzamos la activity
         startActivityForResult(intent, ACCION_DIA_CALENDARIO);
-
     }
 
     // AL TERMINAR EL PROCESO DE LA ACTIVITY.
@@ -297,11 +265,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     @Override
     public void onRestart(){
         super.onRestart();
-        primerAño = datos.opciones.getPrimerAño(); //opciones.getInt("PrimerAño", 2014);
-        primerMes = datos.opciones.getPrimerMes(); //opciones.getInt("PrimerMes", 10);
+        primerAño = datos.opciones.getPrimerAño();
+        primerMes = datos.opciones.getPrimerMes();
         datos = new BaseDatos(context);
         escribeHoras();
-        actualizaLista();
+        actualizaLista(false);
 	    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
     }
 
@@ -319,7 +287,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                         DatosDia diaNuevo = datos.servicioDia(diaActual.getDia(), mesActual, añoActual);
                         diaActual.copiarDe(diaNuevo);
                     }
-                    actualizaLista();
+                    actualizaLista(true);
 	                listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
                     escribeHoras();
                 }
@@ -341,28 +309,21 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 if (resultCode == RESULT_OK){
                     int matricula = data != null ? data.getIntExtra("Matricula", -1) : -1;
                     String apellidos = data != null ? data.getStringExtra("Apellidos") : "";
-
                     for (DatosDia dia : listaDias){
                         if(dia.getMatricula() == matricula) dia.setApellidos(apellidos);
                     }
-                    actualizaLista();
+                    actualizaLista(true);
 	                listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
                 }
-            default:
-                break;
         }
-
     }
 
-
-    // MULTI-SELECCION
-
+    // MULTI-SELECCION: Al seleccionar un día del calendario.
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked){
         int checkedCount = listaCalendario.getCheckedItemCount();
         Menu menu = mode.getMenu();
         mode.setTitle(checkedCount + " Selec.");
-
         if (checkedCount > 1){
             menu.findItem(R.id.bt_repetirAnterior).setVisible(false);
             menu.findItem(R.id.bt_copiar).setVisible(false);
@@ -376,23 +337,18 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             menu.findItem(R.id.bt_ajenas).setVisible(true);
             menu.findItem(R.id.bt_verRelevo).setVisible(true);
         }
-
         if (checked){
-            //listaSeleccionados.add(listaDias.get(position));
             listaIds.add(position);
             listaDias.get(position).setSeleccionado(true);
         } else {
-            //listaSeleccionados.remove(listaDias.get(position));
             Integer pos = position;
             listaIds.remove(pos);
             listaDias.get(position).setSeleccionado(false);
         }
         adaptador.notifyDataSetChanged();
-
-
     }
 
-
+    // MULTI-SELECCION: Al crearse el menú para los días seleccionados.
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         MenuInflater inflater = actionMode.getMenuInflater();
@@ -400,49 +356,37 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         return true;
     }
 
-
+    // MULTI-SELECCION: Al prepararse el menú para los días seleccionados.
     @Override
     public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
         return false;
     }
 
-
+    // MULTI-SELECCION: Al hacer click en un elemento del menú para los días seleccionados.
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
         int itemId = menuItem.getItemId();
         switch (itemId){
             case R.id.bt_repetirAnterior:
-                //repiteDiaAnterior(listaSeleccionados.get(0));
                 repiteDiaAnterior(listaDias.get(listaIds.get(0)));
                 escribeHoras();
-	            //mode.finish();
                 return true;
             case R.id.bt_marcarFranqueo:
-                //for (DatosDia d : listaSeleccionados) {
-                //    marcaFranqueo(d);
-                //}
                 for (int id : listaIds) {
                     marcaFranqueo(listaDias.get(id));
                 }
-                //mode.finish();
                 return true;
             case R.id.bt_marcarFestivo:
-                //for (DatosDia d : listaSeleccionados) {
-                //    marcarFestivo(d);
-                //}
                 for (int id : listaIds) {
                     marcarFestivo(listaDias.get(id));
                 }
-	            //mode.finish();
                 return true;
             case R.id.bt_copiar:
-                //copiar(listaSeleccionados.get(0));
                 copiar(listaDias.get(listaIds.get(0)));
                 Toast.makeText(context, R.string.mensaje_diaCopiado, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.bt_pegar:
                 if (portapapeles == null) return true;
-                //for (DatosDia dia : listaSeleccionados) {
                 for (int id : listaIds) {
                     DatosDia dia = listaDias.get(id);
                     dia.setCodigoIncidencia(portapapeles.getCodigoIncidencia());
@@ -491,12 +435,10 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     }
                     cursor1.close();
                 }
-                actualizaLista();
+                actualizaLista(false);
                 escribeHoras();
-	            //mode.finish();
 	            return true;
             case R.id.bt_ajenas:
-                //DatosDia dia = listaSeleccionados.get(0);
                 DatosDia dia = listaDias.get(listaIds.get(0));
                 // Creamos un intent para devolver los datos de la incidencia
                 Intent intent = new Intent(context, EditarHorasAjenas.class);
@@ -505,42 +447,38 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 intent.putExtra("Año", dia.getAño());
                 intent.putExtra("Nuevo", true);
                 startActivityForResult(intent, ACCION_EDITA_AJENA);
-	            //mode.finish();
                 return true;
             case R.id.bt_vaciar:
                 AlertDialog.Builder aviso = new AlertDialog.Builder(context);
                 aviso.setTitle("ATENCION");
                 aviso.setMessage("Vas a vaciar los días seleccionados\n\n¿Estás seguro?");
-                aviso.setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //for (DatosDia d : listaSeleccionados) {
-                        Boolean vaciado = false;
-                        for (int id : listaIds) {
-	                    //for (DatosDia d : listaDias){
-                            vaciado = vaciarDia(listaDias.get(id));
-
-                        }
-                        if (vaciado) {
-                            Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
-                        }
-                        actualizaLista();
-	                    //mode.finish();
+                aviso.setPositiveButton("SI", (dialog, which) -> {
+                    Boolean vaciado = false;
+                    for (int id : listaIds) {
+                        vaciado = vaciarDia(listaDias.get(id));
                     }
-                });
-                aviso.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
+                    if (vaciado) {
+                        Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
                     }
+                    actualizaLista(false);
                 });
+                aviso.setNegativeButton("NO", (dialog, which) -> {});
                 aviso.show();
                 //TODO: Eliminar los servicios auxiliares.
                 return true;
+            case R.id.bt_recalcular:
+                for (int id : listaIds) {
+                    DatosDia datosDia = listaDias.get(id);
+                    Cursor cursor = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
+                    DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
+                    datos.guardaDia(datosDia);
+                }
+                escribeHoras();
+                actualizaLista(false);
+                return true;
             case R.id.bt_verRelevo:
-                //DatosDia datosD = listaSeleccionados.get(0);
                 DatosDia datosD = listaDias.get(listaIds.get(0));
                 Relevo r = datos.getRelevo(datosD.getMatricula());
                 if (r == null) return true;
@@ -553,33 +491,25 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 i.putExtra("Telefono", r.getTelefono());
                 i.putExtra("Notas", r.getNotas());
                 startActivityForResult(i, ACCION_EDITA_RELEVO);
-	            //mode.finish();
                 return true;
             case R.id.bt_guardarServicio:
-                //DatosDia datosDia = listaSeleccionados.get(0);
                 DatosDia datosDia = listaDias.get(listaIds.get(0));
-                // Si los datos del servicio están vacíos, se sale.
                 if (datosDia.getLinea().equals("") ||
                         datosDia.getServicio().equals("") ||
                         datosDia.getTurno() == 0 ||
                         datosDia.getInicio().equals("") ||
                         datosDia.getFinal().equals("")) {
                     Toast.makeText(context, "Servicio Incompleto", Toast.LENGTH_SHORT).show();
-	                //mode.finish();
                     return true;
                 }
-                // Se crea el servicio que será guardado.
-                Servicio servicio = null;
-                // Si el servicio ya existe, se sale.
-                servicio = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
+                // Se crea el servicio que será guardado. Si el servicio ya existe, se sale.
+                Servicio servicio = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
                 if (servicio != null) {
                     Toast.makeText(context, "El servicio ya existe", Toast.LENGTH_SHORT).show();
-	                //mode.finish();
                     return true;
                 }
                 // Si la línea no existe, se crea.
-                Linea linea = null;
-                linea = datos.getLinea(datosDia.getLinea());
+                Linea linea = datos.getLinea(datosDia.getLinea());
                 if (linea == null){
                     linea = new Linea();
                     linea.setLinea(datosDia.getLinea());
@@ -620,26 +550,21 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 }
                 cur.close();
                 Toast.makeText(context, "Se ha creado el servicio", Toast.LENGTH_SHORT).show();
-	            //mode.finish();
                 return true;
         }
         return true;
     }
 
-
+    // MULTI-SELECCION: Al quitarse todos los días seleccionados.
     @Override
     public void onDestroyActionMode(ActionMode actionMode) {
         //Refrescar la lista.
         for (DatosDia d : listaDias){
             d.setSeleccionado(false);
         }
-        //listaSeleccionados.clear();
         listaIds.clear();
         adaptador.notifyDataSetChanged();
     }
-
-    // FINAL MULTI SELECCION
-
 
     // ESCRIBE EL TÍTULO DEL MENÚ SUPERIOR, PONIENDO MES Y AÑO ACTUALES.
     private void escribeTitulo(){
@@ -649,22 +574,19 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // ESCRIBE LAS HORAS ACUMULADAS Y NOCTURNAS DEL MES
     private void escribeHoras(){
-
         /*
             DEFINIMOS ACUMULADAS HASTA MES
          */
         // Extraemos la acumuladas hasta el mes actual
         double acumHastaMes = datos.acumuladasHastaMes(mesActual, añoActual);
         // Sumamos las acumuladas anteriores desde las opciones
-        //long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
-        acumHastaMes += datos.opciones.getAcumuladasAnteriores(); //Double.longBitsToDouble(acumAnteriores);
+        acumHastaMes += datos.opciones.getAcumuladasAnteriores();
         // Sumamos las horas ajenas al servicio anteriores.
         acumHastaMes += datos.ajenasHastaMes(mesActual, añoActual);
         // Sumamos las horas del toma y deje si la opcion lo dice
-        if (datos.opciones.isSumarTomaDeje()) { //opciones.getBoolean("SumarTomaDeje", false)){
+        if (datos.opciones.isSumarTomaDeje()) {
             acumHastaMes += datos.tomaDejeHastaMes(mesActual, añoActual);
         }
-
         /*
             DEFINIMOS LOS DEMÁS VALORES DEL MES
          */
@@ -681,7 +603,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         // Extraemos las trabajadas por convenio del mes actual.
         int diasTrabConv = datos.diasTrabajadosConvenio(mesActual, añoActual);
         double trabConvMes = diasTrabConv * jornadaMedia;
-
         // Escribimos las acumuladas, poniendo el color correspondiente.
         if (acumHastaMes > -0.01) {
             acumuladas.setTextColor(Colores.VERDE_OSCURO);
@@ -714,10 +635,12 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // ACTUALIZA LA LISTA DEL CALENDARIO
-    private void actualizaLista(){
-	    //listaDias = datos.datosMes(mesActual, añoActual);
-	    //adaptador = new AdaptadorDiaCalendario(this, listaDias);
-	    //listaCalendario.setAdapter(adaptador);
+    private void actualizaLista(boolean completo){
+	    if (completo){
+            listaDias = datos.datosMes(mesActual, añoActual);
+            adaptador = new AdaptadorDiaCalendario(this, listaDias);
+            listaCalendario.setAdapter(adaptador);
+        }
 	    adaptador.notifyDataSetChanged();
     }
 
@@ -880,7 +803,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             }
         }
         c.close();
-        actualizaLista();
+        actualizaLista(false);
     }
 
     // MARCAR/DESMARCAR DIA COMO FRANQUEO
@@ -889,7 +812,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             dia.setEsFranqueo(false);
             if (dia.getCodigoIncidencia() == 2) {
                 datos.guardaDia(dia);
-                actualizaLista();
+                actualizaLista(false);
                 return;
             }
         } else {
@@ -902,18 +825,14 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             }
         }
         datos.guardaDia(dia);
-        actualizaLista();
+        actualizaLista(false);
     }
 
     // MARCAR/DESMARCAR DIA COMO FESTIVO
     private void marcarFestivo(DatosDia dia){
-        if (dia.isEsFestivo()){
-            dia.setEsFestivo(false);
-        } else {
-            dia.setEsFestivo(true);
-        }
+        dia.setEsFestivo(!dia.isEsFestivo());
         datos.guardaDia(dia);
-        actualizaLista();
+        actualizaLista(false);
     }
 
     // VACIAR DIA
@@ -961,7 +880,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         diaPortapapeles = datosDia.getDia();
         mesPortapapeles = datosDia.getMes();
         añoPortapapeles = datosDia.getAño();
-        diaSemanaPortapapeles = datosDia.getDiaSemana();
         portapapeles = new DatosDia();
         portapapeles.setCodigoIncidencia(datosDia.getCodigoIncidencia());
         portapapeles.setTextoIncidencia(datosDia.getTextoIncidencia());
@@ -997,9 +915,8 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         if (listaDias.isEmpty()) return;
         String estadoSD = Environment.getExternalStorageState();
         if(!Environment.MEDIA_MOUNTED.equals(estadoSD)) return;
-
         // Definimos el path de destino y lo creamos si no existe.
-        String destino = Environment.getExternalStorageDirectory().getPath();
+        String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid/PDF";
         File d = new File(destino);
         if (!d.exists()){
@@ -1010,7 +927,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         try {
             PdfWriter writer = new PdfWriter(Ruta);
             PdfDocument pdf = new PdfDocument(writer);
-            boolean horizontal = datos.opciones.isPdfHorizontal(); //opciones.getBoolean("PdfHorizontal", false);
+            boolean horizontal = datos.opciones.isPdfHorizontal();
             if (horizontal) {
                 doc = new Document(pdf, PageSize.A4.rotate());
             } else {
@@ -1021,12 +938,12 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             doc.add(crearTablaCalendario(horizontal));
             // Insertamos la tabla del resumen.
             doc.add(crearTablaResumen());
-
         } catch (IOException ex){
             Toast.makeText(this, "Se produjo un error al crear el PDF.\n", Toast.LENGTH_LONG).show();
             return;
         } finally {
-            doc.close();
+            if (doc != null) doc.close();
+            MediaScannerConnection.scanFile(this, new String[] { Ruta }, null, null);
         }
         Toast.makeText(this, "Se ha creado " + añoActual + "-" + Hora.MESES_MIN[mesActual] + ".pdf" + ".", Toast.LENGTH_SHORT).show();
     }
@@ -1084,20 +1001,9 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         Style estiloFestivos = new Style()
                 .setFontColor(Color.RED);
         // ESTILOS BORDES
-        Style estiloBordeIzq = new Style().setBorderLeft(new SolidBorder(1));
         Style estiloBordeSup = new Style().setBorderTop(new SolidBorder(1));
-        Style estiloBordeInf = new Style().setBorderBottom(new SolidBorder(1));
         Style estiloBordeDer = new Style().setBorderRight(new SolidBorder(1));
-        Style estiloBordeHor = new Style().setBorderTop(new SolidBorder(1)).setBorderBottom(new SolidBorder(1));
         Style estiloBordeVer = new Style().setBorderLeft(new SolidBorder(1)).setBorderRight(new SolidBorder(1));
-        // ESTILO SEPARADOR
-        Style estiloSeparador = new Style()
-                .setMarginBottom(1000)
-                .setBorderBottom(Border.NO_BORDER)
-                .setBorderLeft(Border.NO_BORDER)
-                .setBorderRight(Border.NO_BORDER)
-                .setBorderTop(new SolidBorder(1));
-
         // CREAMOS LA TABLA
         Table tabla;
         if (horizontal){
@@ -1106,7 +1012,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             tabla = new Table(new float[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}); // 14 columnas
         }
         tabla.addStyle(estiloTabla);
-
         // AÑADIMOS LOS TÍTULOS
         int colSpan = horizontal ? 9 : 7;
         Cell celda = new Cell(1,colSpan);
@@ -1116,7 +1021,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         celda = new Cell(1,colSpan);
         celda.add(Hora.MESES_MIN[mesActual] + " - " + añoActual).addStyle(estiloTitulo).setTextAlignment(TextAlignment.RIGHT);
         tabla.addHeaderCell(celda);
-
         // AÑADIMOS LOS ENCABEZADOS
         tabla.addHeaderCell(new Cell().add("Día").addStyle(estiloCabecera).addStyle(estiloBordeVer));
         tabla.addHeaderCell(new Cell().add("Incidencia").addStyle(estiloCabecera));
@@ -1137,29 +1041,17 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         tabla.addHeaderCell(new Cell().add("Euros").addStyle(estiloCabecera));
         tabla.addHeaderCell(new Cell().add("Relevo").addStyle(estiloCabecera));
         tabla.addHeaderCell(new Cell().add("Bus").addStyle(estiloCabecera).addStyle(estiloBordeDer));
-
         // RECORREMOS EL CURSOR DE LOS DÍAS
         if (!listaDias.isEmpty()){
             int fila = 1;
-            int totalFilas = 0;
-            int topeFilas = 35;
-            //if (opciones.getBoolean("PdfHorizontal", false)) topeFilas = 23;
-            if (datos.opciones.isPdfHorizontal()) topeFilas = 23;
             for (DatosDia dia : listaDias) {
                 //TODO: Filtrar por tipo de incidencia para no mostrar los datos de servicio.
                 // Inicializamos las filas que ocupa el día
                 int filas = 1;
                 Cursor servicios = datos.cursorServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());
                 // Añadimos filas al día en función de las opciones.
-                //if (!dia.getNotas().trim().equals("") && opciones.getBoolean("PdfIncluirNotas", false)) filas ++;
                 if (!dia.getNotas().trim().equals("") && datos.opciones.isPdfIncluirNotas()) filas ++;
-                //if (opciones.getBoolean("PdfIncluirServicios", false)) filas += servicios.getCount();
                 if (datos.opciones.isPdfIncluirServicios()) filas += servicios.getCount();
-                totalFilas += filas;
-                //if (!dia.getNotas().trim().equals("") && opciones.getBoolean("PdfIncluirNotas", false))
-                //    totalFilas += dia.getNotas().split("\r\n|\r|\n").length;
-                if (!dia.getNotas().trim().equals("") && datos.opciones.isPdfIncluirNotas())
-                    totalFilas += dia.getNotas().split("\r\n|\r|\n").length;
                 // Celda Día.
                 celda = new Cell(filas,1).addStyle(estiloCeldas).addStyle(estiloBordeVer).addStyle(estiloBordeSup);
                 celda.setKeepTogether(true);
@@ -1177,7 +1069,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
                 celda.add(dia.getTextoIncidencia());
                 tabla.addCell(celda);
-
                 // SI EL CÓDIGO DE LA INCIDENCIA ES DE TRABAJO, SE RELLENAN LOS CAMPOS.
                 if (dia.getTipoIncidencia() == 1 || dia.getTipoIncidencia() == 2 || dia.getTipoIncidencia() == 5) {
                     // Celda Línea
@@ -1327,9 +1218,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                         tabla.addCell(celda);
                     }
                 }
-
                 // SI HAY SERVICIOS COMPLEMENTARIOS SE AÑADEN
-                //if (opciones.getBoolean("PdfIncluirServicios", false) && servicios.getCount() > 0) {
                 if (datos.opciones.isPdfIncluirServicios() && servicios.getCount() > 0) {
                     if (servicios.moveToFirst()) {
                         do {
@@ -1385,7 +1274,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     }
                 }
                 // SI HAY NOTAS SE AÑADEN
-                //if(!dia.getNotas().trim().equals("") && opciones.getBoolean("PdfIncluirNotas", false)){
                 if(!dia.getNotas().trim().equals("") && datos.opciones.isPdfIncluirNotas()){
                     colSpan = horizontal ? 15 : 12;
                     celda = new Cell(1,colSpan).addStyle(estiloCeldas).addStyle(estiloNotas).addStyle(estiloBordeDer).setItalic();
@@ -1393,14 +1281,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
                     if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
                     if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    if (datos.opciones.isPdfAgruparNotas()){ //opciones.getBoolean("PdfAgruparNotas", false)){
+                    if (datos.opciones.isPdfAgruparNotas()){
                         dia.setNotas(dia.getNotas().replace("\n\n", " "));
                         dia.setNotas(dia.getNotas().replace("\n", " "));
                     }
                     celda.add(dia.getNotas());
                     tabla.addCell(celda);
                 }
-
                 // Incrementamos el número de línea
                 fila ++;
             }
@@ -1409,7 +1296,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         tabla.getHeader().setBorderBottom(new SolidBorder(1));
         // DEVOLVEMOS LA TABLA
         return tabla;
-
     }
 
     // CREAR LA TABLA RESUMEN
@@ -1451,16 +1337,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 .setFontColor(new DeviceRgb(0,144,81));
         // ESTILOS BORDES
         Style estiloBordeIzq = new Style().setBorderLeft(new SolidBorder(1));
-        Style estiloBordeSup = new Style().setBorderTop(new SolidBorder(1));
         Style estiloBordeInf = new Style().setBorderBottom(new SolidBorder(1));
         Style estiloBordeDer = new Style().setBorderRight(new SolidBorder(1));
-        Style estiloBordeHor = new Style().setBorderTop(new SolidBorder(1)).setBorderBottom(new SolidBorder(1));
-        Style estiloBordeVer = new Style().setBorderLeft(new SolidBorder(1)).setBorderRight(new SolidBorder(1));
-
         // CREAMOS LA TABLA
         Table tabla = new Table(new float[]{1,1,1,1,1,1,1,1,1}); // 9 columnas
         tabla.addStyle(estiloTabla);
-
         // AÑADIMOS LOS ENCABEZADOS
         tabla.addHeaderCell(new Cell().add("Trabajadas").addStyle(estiloCabecera).addStyle(estiloBordeIzq));
         tabla.addHeaderCell(new Cell().add("Acumuladas").addStyle(estiloCabecera));
@@ -1471,64 +1352,54 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         tabla.addHeaderCell(new Cell().add("Toma Deje").addStyle(estiloCabecera));
         tabla.addHeaderCell(new Cell().add("Euros").addStyle(estiloCabecera));
         tabla.addHeaderCell(new Cell().add("Acum. Hasta Mes").addStyle(estiloCabecera).addStyle(estiloBordeDer));
-
         // TRABAJADAS
         Cell celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeIzq).addStyle(estiloBordeInf);
         double horas = datos.trabajadasMes(mesActual, añoActual);
         celda.add(redondeaDecimales(horas));
         tabla.addCell(celda);
-
         // ACUMULADAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.acumuladasMes(mesActual, añoActual);
         celda.add(redondeaDecimales(horas));
         tabla.addCell(celda);
-
         // NOCTURNAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.nocturnasMes(mesActual, añoActual);
         celda.add(redondeaDecimales(horas));
         tabla.addCell(celda);
-
         // DESAYUNOS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         int dietas = datos.DesayunosMes(mesActual, añoActual);
         celda.add(String.format("%02d", dietas));
         tabla.addCell(celda);
-
         // COMIDAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         dietas = datos.ComidasMes(mesActual, añoActual);
         celda.add(String.format("%02d", dietas));
         tabla.addCell(celda);
-
         // CENAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         dietas = datos.CenasMes(mesActual, añoActual);
         celda.add(String.format("%02d", dietas));
         tabla.addCell(celda);
-
         // TOMA DEJES
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.tomaDejeMes(mesActual, añoActual);
         celda.add(redondeaDecimales(horas));
         tabla.addCell(celda);
-
         // EUROS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.eurosMes(mesActual, añoActual);
         celda.add(redondeaDecimales(horas));
         tabla.addCell(celda);
-
         // ACUMULADAS HASTA MES
         horas = datos.acumuladasHastaMes(mesActual, añoActual);
         // Sumamos las acumuladas anteriores desde las opciones
-        //long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
-        horas += datos.opciones.getAcumuladasAnteriores(); //Double.longBitsToDouble(acumAnteriores);
+        horas += datos.opciones.getAcumuladasAnteriores();
         // Sumamos las horas ajenas al servicio anteriores.
         horas += datos.ajenasHastaMes(mesActual, añoActual);
         // Sumamos las horas del toma y deje si la opcion lo dice
-        if (datos.opciones.isSumarTomaDeje()){ //opciones.getBoolean("SumarTomaDeje", false)){
+        if (datos.opciones.isSumarTomaDeje()){
             horas += datos.tomaDejeHastaMes(mesActual, añoActual);
         }
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf).addStyle(estiloBordeDer);
@@ -1539,7 +1410,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         }
         celda.add(redondeaDecimales(horas));
         tabla.addCell(celda);
-
         // DEVOLVEMOS LA TABLA
         return tabla;
     }
@@ -1552,12 +1422,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // INFIERE EL TURNO DE LA LISTA EN FUNCIÓN DEL DIA BASE ESTABLECIDO
     private void inferirTurnos () {
-        if (datos.opciones.isInferirTurnos()){//opciones.getBoolean("InferirTurnos", false)){
-            int dia = datos.opciones.getDiaBaseTurnos(); //opciones.getInt("DiaBaseTurnos", 3);
-            int mes = datos.opciones.getMesBaseTurnos(); //opciones.getInt("MesBaseTurnos", 1);
-            int año = datos.opciones.getAñoBaseTurnos(); //opciones.getInt("AñoBaseTurnos", 2021);
+        if (datos.opciones.isInferirTurnos()){
+            int dia = datos.opciones.getDiaBaseTurnos();
+            int mes = datos.opciones.getMesBaseTurnos();
+            int año = datos.opciones.getAñoBaseTurnos();
             LocalDate fechaReferencia = new LocalDate(año, mes, dia);
-            String texto = fechaReferencia.toString("yyyy-MM-dd");
             listaDias.stream().filter(d -> d.getTurno() == 0).forEach(d -> {
                 LocalDate fechaDia = new LocalDate(d.getAño(), d.getMes(), d.getDia());
                 d.setTurno(Calculos.InferirTurno(fechaDia, fechaReferencia, 1));
@@ -1570,10 +1439,8 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     private void pedirMes() {
         NumberPicker mesesPicker;
         NumberPicker añosPicker;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Ir a mes");
-
         Calendar minDate = Calendar.getInstance();
         minDate.set(Calendar.DAY_OF_MONTH, 1);
         minDate.set(Calendar.MONTH, 0);
@@ -1582,18 +1449,15 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         maxDate.set(Calendar.DAY_OF_MONTH, 31);
         maxDate.set(Calendar.MONTH, 11);
         maxDate.set(Calendar.YEAR, 2099);
-
         // Creamos los parámetros que van a guardarse en los pickers.
         NumberPicker.LayoutParams pickerParams =
                 new NumberPicker.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         pickerParams.setMargins(20, 10, 20, 10);
-
         // Creamos el linear layout que albergará los spinners.
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setPadding(20, 20, 20, 20);
         linearLayout.setGravity(Gravity.CENTER);
-
         // Creamos el picker de los meses.
         mesesPicker = new NumberPicker(this);
         mesesPicker.setLayoutParams(pickerParams);
@@ -1601,7 +1465,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         mesesPicker.setMinValue(0);
         mesesPicker.setMaxValue(11);
         mesesPicker.setDisplayedValues(new String[]{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",});
-
         // Creamos el picker de los años.
         añosPicker = new NumberPicker(this);
         añosPicker.setLayoutParams(pickerParams);
@@ -1610,7 +1473,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         añosPicker.setPadding(10, 10, 10, 10);
         añosPicker.setMinValue(2000);
         añosPicker.setMaxValue(2100);
-
         // Hacemos que el año se incremente si el mes cambia...
         mesesPicker.setOnValueChangedListener((picker, oldValue, newValue) -> {
             if (oldValue == 11 && newValue == 0 && añosPicker.getValue() < añosPicker.getMaxValue())
@@ -1618,25 +1480,17 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             if (oldValue == 0 && newValue == 11 && añosPicker.getValue() > añosPicker.getMinValue())
                 añosPicker.setValue(añosPicker.getValue() - 1);
         });
-
         // Añadimos los pickers al LinearLayout
         linearLayout.addView(mesesPicker);
         linearLayout.addView(añosPicker);
-
         // Establecemos el valor de los pickers.
         mesesPicker.setValue(mesActual - 1);
         añosPicker.setValue(añoActual);
-
         builder.setView(linearLayout);
-
         builder.setPositiveButton("Aceptar", (s, v) -> irAFecha(mesesPicker.getValue() + 1, añosPicker.getValue()));
-
         builder.setNeutralButton("Hoy", (dialogInterface, i) -> irAFecha(LocalDate.now().getMonthOfYear(), LocalDate.now().getYear()));
-
         builder.setNegativeButton("Cancelar", (dialogInterface, v) -> { });
-
         builder.create().show();
-
     }
 
 }

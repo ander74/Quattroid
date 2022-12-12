@@ -69,7 +69,6 @@ public class CopiaSeguridad extends Activity {
         fecha = (TextView) findViewById(R.id.tv_fecha);
 
         // Inicializamos la base de datos y las opciones
-        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
         datos = new BaseDatos(this);
 
         // Ocultar la confirmación
@@ -78,8 +77,7 @@ public class CopiaSeguridad extends Activity {
         // Buscar el archivo de copia de seguridad.
         String estadoSD = Environment.getExternalStorageState();
         if(Environment.MEDIA_MOUNTED.equals(estadoSD)) {
-            File archivoCopia = new File(Environment.getExternalStorageDirectory().getPath() + "/Quattroid/backup.db");
-            //File archivoCopia = new File(getApplicationContext().getExternalFilesDir("CopiaSeg").getPath() + "/opciones.bak");
+            File archivoCopia = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db");
             if (archivoCopia.exists()){
                 // Extraer la fecha del archivo
                 Date f = new Date(archivoCopia.lastModified());
@@ -118,7 +116,6 @@ public class CopiaSeguridad extends Activity {
     public void botonPulsado(View v){
         switch (v.getId()){
             case R.id.bt_hacerCopia:
-                //if (datos.hacerCopiaSeguridad() && hacerCopiaOpciones()){
                 if (datos.hacerCopiaSeguridad()){
                     fecha.setText("Copia creada correctamente.");
                 } else {
@@ -132,8 +129,6 @@ public class CopiaSeguridad extends Activity {
                 break;
             case R.id.bt_aceptar:
                 if (datos.restaurarCopiaSeguridad()){
-                    // Restaurar las opciones de los ajustes.
-                    //restaurarCopiaOpciones();
                     // Intentar apagar la activity del calendario.
                     try{
                         Calendario.activityCalendario.finish();
@@ -156,124 +151,6 @@ public class CopiaSeguridad extends Activity {
         }
     }
 
-    // HACER COPIA DE LAS OPCIONES
-//    public boolean hacerCopiaOpciones(){
-//
-//        // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
-//        String estadoMemoria = Environment.getExternalStorageState();
-//        if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
-//            return false;
-//        }
-//
-//        // Definimos el path de destino y lo creamos si no existe.
-//        String destino = Environment.getExternalStorageDirectory().getPath();
-//        destino = destino + "/Quattroid";
-//        //String destino = getApplicationContext().getExternalFilesDir("CopiaSeg").getPath();
-//
-//        File d = new File(destino);
-//        if (!d.exists()){
-//            d.mkdir();
-//        }
-//        // Creamos el path del archivo de destino
-//        destino = destino + "/opciones.bak";
-//        d = new File(destino);
-//
-//        boolean res = false;
-//        ObjectOutputStream output = null;
-//
-//        try{
-//            output = new ObjectOutputStream(new FileOutputStream(d));
-//            output.writeObject(opciones.getAll());
-//            res = true;
-//        } catch (IOException e){
-//            // Fallo por error de ficheros.
-//        } finally {
-//            // Cerramos los streams.
-//            try {
-//                if (output != null) {
-//                    output.flush();
-//                    output.close();
-//                }
-//            } catch (IOException ex) {
-//                // Falla el cerrado de los streams
-//            }
-//        }
-//        return res;
-//    }
-
-    // RESTAURAR COPIA DE LAS OPCIONES
-//    public boolean restaurarCopiaOpciones(){
-//
-//        // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
-//        String estadoMemoria = Environment.getExternalStorageState();
-//        if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
-//            return false;
-//        }
-//
-//        // Definimos el path de destino y lo creamos si no existe.
-//        String destino = Environment.getExternalStorageDirectory().getPath();
-//        destino = destino + "/Quattroid/opciones.bak";
-//        //String destino = getApplicationContext().getExternalFilesDir("CopiaSeg").getPath();
-//        //destino = destino + "/opciones.bak";
-//        File d = new File(destino);
-//        if (!d.exists()){
-//            return false;
-//        }
-//
-//        // Guardamos las opciones que no se deben perder.
-//        Boolean logueado = opciones.getBoolean("Logueado", false);
-//        String token = opciones.getString("Token", null);
-//        Boolean primerAccesoDropbox = opciones.getBoolean("PrimerAccesoDropBox", true);
-//        Boolean primerAccesoLogin = opciones.getBoolean("PrimerAccesoLogin", true);
-//
-//        boolean res = false;
-//        ObjectInputStream input = null;
-//        try {
-//            input = new ObjectInputStream(new FileInputStream(d));
-//            SharedPreferences.Editor prefEdit = opciones.edit();
-//            prefEdit.clear();
-//            Map<String, ?> entries = (Map<String, ?>) input.readObject();
-//            for (Map.Entry<String, ?> entry : entries.entrySet()) {
-//                Object v = entry.getValue();
-//                String key = entry.getKey();
-//
-//                if (v instanceof Boolean)
-//                    prefEdit.putBoolean(key, (Boolean) v);
-//                else if (v instanceof Float)
-//                    prefEdit.putFloat(key, (Float) v);
-//                else if (v instanceof Integer)
-//                    prefEdit.putInt(key, (Integer) v);
-//                else if (v instanceof Long)
-//                    prefEdit.putLong(key, (Long) v);
-//                else if (v instanceof String)
-//                    prefEdit.putString(key, ((String) v));
-//            }
-//            prefEdit.apply();
-//            res = true;
-//        } catch (ClassNotFoundException | IOException e) {
-//            // Fallo en el fichero no encontrado.
-//        } finally {
-//            // Cerramos el stream.
-//            try {
-//                if (input != null) {
-//                    input.close();
-//                }
-//            } catch (IOException e) {
-//                // Fallo en el cerrado del stream
-//            }
-//        }
-//
-//        // Desactivamos la sincronización automática.
-//        opciones.edit().putBoolean("SincronizarDropBox", false).apply();
-//
-//        // Restauramos las opciones que no se deben perder.
-//        opciones.edit().putBoolean("Logueado", logueado).apply();
-//        opciones.edit().putString("Token", token).apply();
-//        opciones.edit().putBoolean("PrimerAccesoDropBox", primerAccesoDropbox).apply();
-//        opciones.edit().putBoolean("PrimerAccesoLogin", primerAccesoLogin).apply();
-//
-//        return res;
-//    }
 
 
 }

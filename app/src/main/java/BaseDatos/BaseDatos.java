@@ -2177,7 +2177,7 @@ public class BaseDatos {
             String origen = context.getDatabasePath(BASE_NAME).getPath();
 
             // Definimos el path de destino y lo creamos si no existe.
-            String destino = Environment.getExternalStorageDirectory().getPath();
+            String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
             destino = destino + "/Quattroid";
             File d = new File(destino);
             if (!d.exists()) {
@@ -2213,7 +2213,7 @@ public class BaseDatos {
             hayCambios = true;
 
             // Definimos el path de la copia de seguridad
-            String origen = Environment.getExternalStorageDirectory().getPath();
+            String origen = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
             origen = origen + "/Quattroid/backup.db";
 
             // Evaluamos si existe una copia de seguridad

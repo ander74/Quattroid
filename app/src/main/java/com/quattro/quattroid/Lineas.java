@@ -283,7 +283,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("application/json");
             // Definimos la ubicacion donde buscar.
-            String destino = Environment.getExternalStorageDirectory().getPath();
+            String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
             destino = destino + "/Quattroid/Lineas";
             File d = new File(destino);
             if (!d.exists()){

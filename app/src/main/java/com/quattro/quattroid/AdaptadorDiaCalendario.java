@@ -155,20 +155,21 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
                 if (!ser.trim().equals("") && !lin.trim().equals("") && !tex.trim().equals("") && i != 0) {
                     s = ser + "/" + i + "-" + lin + ": " + tex;
                 } else {
-                    if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
-                        s = dia.getTextoIncidencia() +
-                                " " + i;
-                    } else {
-                        s = "";
-                        if (i != 0) s = "Turno " + i;
-                    }
+                    //if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
+                        s = dia.getTextoIncidencia();
+                        if (i != 0) s = s + " " + i;
+                    //} else {
+                    //    s = "";
+                    //    if (i != 0) s = "Turno " + i;
+                    //}
                 }
 
                 holder.Servicio.setText(s);
                 break;
             case 3:case 4:case 6:
                 String inc = dia.getTextoIncidencia();
-                holder.Servicio.setText(inc + " " + i);
+                if (i != 0) inc = inc + " " + i;
+                holder.Servicio.setText(inc);
                 break;
             default:
                 if (i != 0) holder.Servicio.setText("Turno " + i);

@@ -53,6 +53,10 @@
         android:showAsAction="never"
         android:title="Vaciar día"/>
     <item
+        android:id="@+id/bt_recalcular"
+        android:showAsAction="never"
+        android:title="Recalcular día"/>
+    <item
         android:id="@+id/bt_verRelevo"
         android:showAsAction="never"
         android:title="Ver compañero/a"/>

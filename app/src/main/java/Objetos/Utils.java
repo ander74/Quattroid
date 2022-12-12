@@ -72,7 +72,7 @@ public class Utils {
         }
 
         // Definimos el path de destino y lo creamos si no existe.
-        String destino = Environment.getExternalStorageDirectory().getPath();
+        String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid";
         File d = new File(destino);
         if (!d.exists()){
@@ -120,7 +120,7 @@ public class Utils {
         boolean sincronizarDropbox = Opciones.getBoolean("SincronizarDropBox", false);
 
         // Definimos el path de destino y lo creamos si no existe.
-        String destino = Environment.getExternalStorageDirectory().getPath();
+        String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid/opciones.tmp";
         File d = new File(destino);
         if (!d.exists()){
@@ -188,7 +188,7 @@ public class Utils {
     // Guarda un archivo de texto en la carpeta Quattroid
     public static boolean guardarLineasJson(String nombre, String texto){
         // Definimos el path de destino y lo creamos si no existe.
-        String destino = Environment.getExternalStorageDirectory().getPath();
+        String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid/Lineas";
         File d = new File(destino);
         if (!d.exists()){
