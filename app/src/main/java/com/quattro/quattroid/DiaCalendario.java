@@ -40,6 +40,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.quattro.helpers.DiaHelper;
+import com.quattro.models.ServicioAuxiliarModel;
+import com.quattro.models.ServicioModel;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import BaseDatos.Linea;
 import BaseDatos.Servicio;
@@ -1171,6 +1175,45 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 rellenarSemana();
             }
             regularAño();
+            if (isServicioVacio()){
+
+            }
+            //TODO: Evaluar si el servicio está completo y si es así, evaluar si existe. Si no existe, crearlo.
+            //      Para crearlo, creamos un método que se encarque de guardar como servicio el servicio de un día
+            //      teniendo en cuenta los servicios auxiliares.
+            if (datosDia.isServicioCompleto()){
+                var servicioDia = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
+                // Si el servicio no existe, lo creamos.
+                if (servicioDia == null){
+                    var nuevoServicio = new ServicioModel();
+                    nuevoServicio.setLinea(datosDia.getLinea());
+                    nuevoServicio.setServicio(datosDia.getServicio());
+                    nuevoServicio.setTurno(datosDia.getTurno());
+                    nuevoServicio.setInicio(datosDia.getInicio());
+                    nuevoServicio.setFinal(datosDia.getFinal());
+                    nuevoServicio.setLugarInicio(datosDia.getLugarInicio());
+                    nuevoServicio.setLugarFinal(datosDia.getLugarFinal());
+                    nuevoServicio.setTomaDeje(datosDia.getTomaDeje());
+                    nuevoServicio.setEuros(datosDia.getEuros());
+                    if (cursor.getCount() > 0 && cursor.moveToFirst()){
+                        nuevoServicio.setServiciosAuxiliares(new ArrayList<ServicioAuxiliarModel>());
+                        do {
+                            var sd = new ServicioAuxiliarModel();
+                            sd.setLinea(cursor.getString(cursor.getColumnIndex("Linea")));
+                            sd.setServicio(cursor.getString(cursor.getColumnIndex("Servicio")));
+                            sd.setTurno(cursor.getInt(cursor.getColumnIndex("Turno")));
+                            sd.setInicio(cursor.getString(cursor.getColumnIndex("Inicio")));
+                            sd.setLugarInicio(cursor.getString(cursor.getColumnIndex("LugarInicio")));
+                            sd.setFinal(cursor.getString(cursor.getColumnIndex("Final")));
+                            sd.setLugarFinal(cursor.getString(cursor.getColumnIndex("LugarFinal")));
+                            nuevoServicio.getServiciosAuxiliares().add(sd);
+                        } while (cursor.moveToNext());
+                    }
+                    var lista = new ArrayList<ServicioModel>();
+                    lista.add(nuevoServicio);
+                    datos.guardarServicios(lista);
+                }
+            }
             Toast.makeText(this, R.string.mensaje_diaGuardado, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
             intent.putExtra("Posicion", posicion);

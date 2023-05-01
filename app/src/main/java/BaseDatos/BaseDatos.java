@@ -1671,15 +1671,15 @@ public class BaseDatos {
         if (c.getCount() == 0) return null;
         Servicio s = new Servicio();
         c.moveToFirst();
-        s.setLinea(c.getString(c.getColumnIndex("Linea")));
-        s.setServicio(c.getString(c.getColumnIndex("Servicio")));
-        s.setTurno(c.getInt(c.getColumnIndex("Turno")));
-        s.setTomaDeje(c.getString(c.getColumnIndex("TomaDeje")));
-        s.setEuros(c.getDouble(c.getColumnIndex("Euros")));
-        s.setInicio(c.getString(c.getColumnIndex("Inicio")));
-        s.setLugarInicio(c.getString(c.getColumnIndex("LugarInicio")));
-        s.setFinal(c.getString(c.getColumnIndex("Final")));
-        s.setLugarFinal(c.getString(c.getColumnIndex("LugarFinal")));
+        s.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+        s.setServicio(c.getString(c.getColumnIndexOrThrow("Servicio")));
+        s.setTurno(c.getInt(c.getColumnIndexOrThrow("Turno")));
+        s.setTomaDeje(c.getString(c.getColumnIndexOrThrow("TomaDeje")));
+        s.setEuros(c.getDouble(c.getColumnIndexOrThrow("Euros")));
+        s.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+        s.setLugarInicio(c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+        s.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
+        s.setLugarFinal(c.getString(c.getColumnIndexOrThrow("LugarFinal")));
 
         c.close();
         return s;

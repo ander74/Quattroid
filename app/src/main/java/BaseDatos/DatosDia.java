@@ -72,42 +72,41 @@ public class DatosDia {
 
     DatosDia(Cursor cursor){
 
-        Dia = cursor.getInt(cursor.getColumnIndex("Dia"));
-        Mes = cursor.getInt(cursor.getColumnIndex("Mes"));
-        Año = cursor.getInt(cursor.getColumnIndex("Año"));
-        DiaSemana = cursor.getInt(cursor.getColumnIndex("DiaSemana"));
-        EsFranqueo = cursor.getInt(cursor.getColumnIndex("EsFranqueo")) != 0;
-        EsFestivo = cursor.getInt(cursor.getColumnIndex("EsFestivo")) != 0;
-        CodigoIncidencia = cursor.getInt(cursor.getColumnIndex("CodigoIncidencia"));
-        TextoIncidencia = cursor.getString(cursor.getColumnIndex("TextoIncidencia"));
-        TipoIncidencia = cursor.getInt(cursor.getColumnIndex("TipoIncidencia"));
-        Servicio = cursor.getString(cursor.getColumnIndex("Servicio"));
-        Turno = cursor.getInt(cursor.getColumnIndex("Turno"));
-        Linea = cursor.getString(cursor.getColumnIndex("Linea"));
-        TextoLinea = cursor.getString(cursor.getColumnIndex("TextoLinea"));
-        Inicio = cursor.getString(cursor.getColumnIndex("Inicio"));
-        Final = cursor.getString(cursor.getColumnIndex("Final"));
-        Acumuladas = cursor.getDouble(cursor.getColumnIndex("Acumuladas"));
-        Nocturnas = cursor.getDouble(cursor.getColumnIndex("Nocturnas"));
-        Trabajadas = cursor.getDouble(cursor.getColumnIndex("Trabajadas"));
-        Desayuno = cursor.getInt(cursor.getColumnIndex("Desayuno")) != 0;
-        Comida = cursor.getInt(cursor.getColumnIndex("Comida")) != 0;
-        Cena = cursor.getInt(cursor.getColumnIndex("Cena")) != 0;
-        Matricula = cursor.getInt(cursor.getColumnIndex("Matricula"));
-        Apellidos = cursor.getString(cursor.getColumnIndex("Apellidos"));
-        Calificacion = cursor.getInt(cursor.getColumnIndex("Calificacion"));
-        MatriculaSusti = cursor.getInt(cursor.getColumnIndex("MatriculaSusti"));
-        ApellidosSusti = cursor.getString(cursor.getColumnIndex("ApellidosSusti"));
-        Bus = cursor.getString(cursor.getColumnIndex("Bus"));
-        Notas = cursor.getString(cursor.getColumnIndex("Notas"));
-        LugarInicio = cursor.getString(cursor.getColumnIndex("LugarInicio"));
-        LugarFinal = cursor.getString(cursor.getColumnIndex("LugarFinal"));
-        TomaDeje = cursor.getString(cursor.getColumnIndex("TomaDeje"));
-        TomaDejeDecimal = cursor.getDouble(cursor.getColumnIndex("TomaDejeDecimal"));
-        Euros = cursor.getDouble(cursor.getColumnIndex("Euros"));
-        HorasHuelga = cursor.getDouble(cursor.getColumnIndex("HorasHuelga"));
-        HuelgaParcial = cursor.getInt(cursor.getColumnIndex("HuelgaParcial")) != 0;
-
+        Dia = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
+        Mes = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
+        Año = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
+        DiaSemana = cursor.getInt(cursor.getColumnIndexOrThrow("DiaSemana"));
+        EsFranqueo = cursor.getInt(cursor.getColumnIndexOrThrow("EsFranqueo")) != 0;
+        EsFestivo = cursor.getInt(cursor.getColumnIndexOrThrow("EsFestivo")) != 0;
+        CodigoIncidencia = cursor.getInt(cursor.getColumnIndexOrThrow("CodigoIncidencia"));
+        TextoIncidencia = cursor.getString(cursor.getColumnIndexOrThrow("TextoIncidencia"));
+        TipoIncidencia = cursor.getInt(cursor.getColumnIndexOrThrow("TipoIncidencia"));
+        Servicio = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
+        Turno = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
+        Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
+        TextoLinea = cursor.getString(cursor.getColumnIndexOrThrow("TextoLinea"));
+        Inicio = cursor.getString(cursor.getColumnIndexOrThrow("Inicio"));
+        Final = cursor.getString(cursor.getColumnIndexOrThrow("Final"));
+        Acumuladas = cursor.getDouble(cursor.getColumnIndexOrThrow("Acumuladas"));
+        Nocturnas = cursor.getDouble(cursor.getColumnIndexOrThrow("Nocturnas"));
+        Trabajadas = cursor.getDouble(cursor.getColumnIndexOrThrow("Trabajadas"));
+        Desayuno = cursor.getInt(cursor.getColumnIndexOrThrow("Desayuno")) != 0;
+        Comida = cursor.getInt(cursor.getColumnIndexOrThrow("Comida")) != 0;
+        Cena = cursor.getInt(cursor.getColumnIndexOrThrow("Cena")) != 0;
+        Matricula = cursor.getInt(cursor.getColumnIndexOrThrow("Matricula"));
+        Apellidos = cursor.getString(cursor.getColumnIndexOrThrow("Apellidos"));
+        Calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
+        MatriculaSusti = cursor.getInt(cursor.getColumnIndexOrThrow("MatriculaSusti"));
+        ApellidosSusti = cursor.getString(cursor.getColumnIndexOrThrow("ApellidosSusti"));
+        Bus = cursor.getString(cursor.getColumnIndexOrThrow("Bus"));
+        Notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas"));
+        LugarInicio = cursor.getString(cursor.getColumnIndexOrThrow("LugarInicio"));
+        LugarFinal = cursor.getString(cursor.getColumnIndexOrThrow("LugarFinal"));
+        TomaDeje = cursor.getString(cursor.getColumnIndexOrThrow("TomaDeje"));
+        TomaDejeDecimal = cursor.getDouble(cursor.getColumnIndexOrThrow("TomaDejeDecimal"));
+        Euros = cursor.getDouble(cursor.getColumnIndexOrThrow("Euros"));
+        HorasHuelga = cursor.getDouble(cursor.getColumnIndexOrThrow("HorasHuelga"));
+        HuelgaParcial = cursor.getInt(cursor.getColumnIndexOrThrow("HuelgaParcial")) != 0;
     }
 
 
@@ -452,6 +451,17 @@ public class DatosDia {
         HuelgaParcial = datosDia.isHuelgaParcial();
     }
 
+
+    /***
+     * Devuelve true si el día tiene la línea, servicio, turno, inicio y final con datos.
+     */
+    public boolean isServicioCompleto(){
+        return !(getLinea().trim().equals("")) &&
+        !(getServicio().trim().equals("")) &&
+        !(getTurno() == 0) &&
+        !(getInicio().trim().equals("")) &&
+        !(getFinal().trim().equals(""));
+    }
 
 
     //endregion

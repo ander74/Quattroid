@@ -13,15 +13,15 @@ public class ServicioModel {
     public ServicioModel() { }
 
     public ServicioModel(Cursor cursor){
-        Linea = cursor.getString(cursor.getColumnIndex("Linea"));
-        Servicio = cursor.getString(cursor.getColumnIndex("Servicio"));
-        Turno = cursor.getInt(cursor.getColumnIndex("Turno"));
-        TomaDeje = cursor.getString(cursor.getColumnIndex("TomaDeje"));
-        Euros = cursor.getDouble(cursor.getColumnIndex("Euros"));
-        Inicio = cursor.getString(cursor.getColumnIndex("Inicio"));
-        LugarInicio = cursor.getString(cursor.getColumnIndex("LugarInicio"));
-        Final = cursor.getString(cursor.getColumnIndex("Final"));
-        LugarFinal = cursor.getString(cursor.getColumnIndex("LugarFinal"));
+        Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
+        Servicio = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
+        Turno = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
+        TomaDeje = cursor.getString(cursor.getColumnIndexOrThrow("TomaDeje"));
+        Euros = cursor.getDouble(cursor.getColumnIndexOrThrow("Euros"));
+        Inicio = cursor.getString(cursor.getColumnIndexOrThrow("Inicio"));
+        LugarInicio = cursor.getString(cursor.getColumnIndexOrThrow("LugarInicio"));
+        Final = cursor.getString(cursor.getColumnIndexOrThrow("Final"));
+        LugarFinal = cursor.getString(cursor.getColumnIndexOrThrow("LugarFinal"));
     }
 
     public ServicioModel (ServicioModel servicio){
