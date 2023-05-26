@@ -25,8 +25,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.security.Guard;
-
 import BaseDatos.BaseDatos;
 import Objetos.Colores;
 import Objetos.Hora;
@@ -57,14 +55,14 @@ public class EditarServiciosDia extends Activity implements View.OnFocusChangeLi
         setContentView(R.layout.activity_editarserviciosdia);
 
         // Instanciar los elementos del view
-        titulo = (TextView) findViewById(R.id.titulo);
-        linea = (EditText) findViewById(R.id.et_linea);
-        servicio = (EditText) findViewById(R.id.et_servicio);
-        turno = (EditText) findViewById(R.id.et_turno);
-        inicio = (EditText) findViewById(R.id.et_inicio);
-        fin = (EditText) findViewById(R.id.et_final);
-        lugarInicio = (EditText) findViewById(R.id.et_lugarInicio);
-        lugarFinal = (EditText) findViewById(R.id.et_lugarFinal);
+        titulo = findViewById(R.id.titulo);
+        linea = findViewById(R.id.et_linea);
+        servicio = findViewById(R.id.et_servicio);
+        turno = findViewById(R.id.et_turno);
+        inicio = findViewById(R.id.et_inicio);
+        fin = findViewById(R.id.et_final);
+        lugarInicio = findViewById(R.id.et_lugarInicio);
+        lugarFinal = findViewById(R.id.et_lugarFinal);
 
         // Registramos los listeners
 	    linea.setOnFocusChangeListener(this);

@@ -53,9 +53,9 @@ public class AdaptadorEstadisticas extends ArrayAdapter<Estadistica> {
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_estadistica, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.estadistica = (TextView) convertView.findViewById(R.id.tv_estadistica);
-            viewHolder.valor = (TextView) convertView.findViewById(R.id.tv_valor);
-            viewHolder.fila = (LinearLayout) convertView.findViewById(R.id.ly_fila);
+            viewHolder.estadistica = convertView.findViewById(R.id.tv_estadistica);
+            viewHolder.valor = convertView.findViewById(R.id.tv_valor);
+            viewHolder.fila = convertView.findViewById(R.id.ly_fila);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

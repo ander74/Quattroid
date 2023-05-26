@@ -16,23 +16,27 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/bt_recalcular"
-        android:title="Sig"
+        android:title="Recalcular"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:showAsAction="always"/>
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
     <item
         android:id="@+id/bt_nuevo"
-        android:title="Sig"
+        android:title="Añadir auxiliar"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="always"/>
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
     <item
         android:id="@+id/bt_guardar"
-        android:title="Sig"
+        android:title="Guardar"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_save"
-        android:showAsAction="always"/>
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
 </menu>

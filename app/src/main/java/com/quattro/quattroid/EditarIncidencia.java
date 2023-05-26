@@ -18,7 +18,6 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -57,15 +56,15 @@ public class EditarIncidencia extends Activity {
 
         // Inicialización de los elementos
         context = this;
-        Titulo = (TextView) findViewById(R.id.tv_nuevaIncidencia);
-        textoIncidencia = (EditText) findViewById(R.id.et_nuevaIncidencia);
-        Grupo = (RadioGroup) findViewById(R.id.grupoTipos);
-        Tipo1 = (RadioButton) findViewById(R.id.tipo1);
-        Tipo2 = (RadioButton) findViewById(R.id.tipo2);
-        Tipo3 = (RadioButton) findViewById(R.id.tipo3);
-        Tipo4 = (RadioButton) findViewById(R.id.tipo4);
-        Tipo5 = (RadioButton) findViewById(R.id.tipo5);
-        Tipo6 = (RadioButton) findViewById(R.id.tipo6);
+        Titulo = findViewById(R.id.tv_nuevaIncidencia);
+        textoIncidencia = findViewById(R.id.et_nuevaIncidencia);
+        Grupo = findViewById(R.id.grupoTipos);
+        Tipo1 = findViewById(R.id.tipo1);
+        Tipo2 = findViewById(R.id.tipo2);
+        Tipo3 = findViewById(R.id.tipo3);
+        Tipo4 = findViewById(R.id.tipo4);
+        Tipo5 = findViewById(R.id.tipo5);
+        Tipo6 = findViewById(R.id.tipo6);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);

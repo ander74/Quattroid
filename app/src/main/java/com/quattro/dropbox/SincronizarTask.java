@@ -18,7 +18,6 @@ package com.quattro.dropbox;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import com.dropbox.core.DbxException;

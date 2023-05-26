@@ -18,12 +18,10 @@ package com.quattro.quattroid;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import Objetos.Colores;
@@ -47,9 +45,9 @@ public class AdaptadorHorasAjenas extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        TextView dia = (TextView) view.findViewById(R.id.tv_dia);
-        TextView horas = (TextView) view.findViewById(R.id.tv_horas);
-        TextView motivo = (TextView) view.findViewById(R.id.tv_motivo);
+        TextView dia = view.findViewById(R.id.tv_dia);
+        TextView horas = view.findViewById(R.id.tv_horas);
+        TextView motivo = view.findViewById(R.id.tv_motivo);
 
         // Borrado de los textos anteriores.
         dia.setText("");
@@ -57,11 +55,11 @@ public class AdaptadorHorasAjenas extends CursorAdapter {
         motivo.setText("");
 
         // Extraemos los datos del cursor.
-        int d = cursor.getInt(cursor.getColumnIndex("Dia"));
-        int m = cursor.getInt(cursor.getColumnIndex("Mes"));
-        int a = cursor.getInt(cursor.getColumnIndex("Año"));
-        double h = cursor.getDouble(cursor.getColumnIndex("Horas"));
-        String mot = cursor.getString(cursor.getColumnIndex("Motivo"));
+        int d = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
+        int m = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
+        int a = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
+        double h = cursor.getDouble(cursor.getColumnIndexOrThrow("Horas"));
+        String mot = cursor.getString(cursor.getColumnIndexOrThrow("Motivo"));
 
         // Ponemos el fondo del día fijo
         dia.setBackgroundColor(Colores.VIOLETA);

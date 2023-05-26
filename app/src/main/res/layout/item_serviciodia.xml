@@ -40,7 +40,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="@drawable/fondo_transparente_b"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:text="SERV"/>
     <TextView
         android:layout_width="0dp"
@@ -54,7 +54,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="@drawable/fondo_transparente_b"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:text="TUR"/>
     <TextView
         android:layout_width="0dp"
@@ -68,7 +68,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="@drawable/fondo_transparente_b"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:text="LINEA"/>
     <TextView
         android:layout_width="0dp"
@@ -82,7 +82,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="@drawable/fondo_transparente_b"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:text="INI"/>
     <TextView
         android:layout_width="0dp"
@@ -95,7 +95,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:background="@drawable/fondo_transparente_b"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:text="FIN"/>
 </LinearLayout>
 
@@ -121,7 +121,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:background="@drawable/fondo_transparente_b"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:text="91"/>
         <TextView
             android:id="@+id/tv_turno"
@@ -135,7 +135,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:background="@drawable/fondo_transparente_b"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:text="1"/>
         <TextView
             android:id="@+id/tv_linea"
@@ -149,7 +149,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:background="@drawable/fondo_transparente_b"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:text="2322"/>
         <TextView
             android:id="@+id/tv_inicio"
@@ -163,7 +163,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:background="@drawable/fondo_transparente_b"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:text="08:00"/>
         <TextView
             android:id="@+id/tv_final"
@@ -176,7 +176,7 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:background="@drawable/fondo_transparente_b"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:text="09:10"/>
     </LinearLayout>
 

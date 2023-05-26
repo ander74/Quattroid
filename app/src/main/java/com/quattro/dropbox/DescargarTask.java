@@ -17,11 +17,7 @@
 package com.quattro.dropbox;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-
-import com.dropbox.core.v2.files.FileMetadata;
 
 
 public class DescargarTask extends AsyncTask<Void, Void, Soporte.Resultado> {

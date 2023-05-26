@@ -18,7 +18,6 @@ package com.quattro.quattroid;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -59,7 +58,7 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
 
         // Inicialización de los elementos
         context = this;
-        listaIncidencias = (ListView) findViewById(R.id.lw_Incidencias);
+        listaIncidencias = findViewById(R.id.lw_Incidencias);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
@@ -156,7 +155,7 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
 
         if (llamadaDesdeMenu){
             Cursor c = adaptador.getCursor();
-            int cod = c.getInt(c.getColumnIndex("Codigo"));
+            int cod = c.getInt(c.getColumnIndexOrThrow("Codigo"));
             if (cod < 1){
                 Toast.makeText(this, getResources().getText(R.string.error_incidenciaProtegida),
                                Toast.LENGTH_SHORT).show();
@@ -170,9 +169,9 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
             // Extraemos los datos del cursor
 
             Cursor c = adaptador.getCursor();
-            int cod = c.getInt(c.getColumnIndex("Codigo"));
-            int tip = c.getInt(c.getColumnIndex("Tipo"));
-            String inc = c.getString(c.getColumnIndex("Incidencia"));
+            int cod = c.getInt(c.getColumnIndexOrThrow("Codigo"));
+            int tip = c.getInt(c.getColumnIndexOrThrow("Tipo"));
+            String inc = c.getString(c.getColumnIndexOrThrow("Incidencia"));
 
             // Creamos un intent para devolver los datos de la incidencia
             Intent intent = new Intent(context, Incidencias.class);
@@ -232,7 +231,7 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
         int num = c.getCount();
         for (int i = 0; i < num; i++) {
             c.moveToNext();
-            int cod = c.getInt(c.getColumnIndex("Codigo"));
+            int cod = c.getInt(c.getColumnIndexOrThrow("Codigo"));
             Incidencia inc = datos.getIncidencia(cod);
             if (inc.getCodigo() != 17 + i) {
                 datos.borraIncidencia(inc.getCodigo());

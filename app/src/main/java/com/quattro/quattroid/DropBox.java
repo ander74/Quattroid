@@ -17,7 +17,6 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -30,23 +29,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dropbox.core.DbxAppInfo;
-import com.dropbox.core.DbxAuthFinish;
-import com.dropbox.core.DbxPKCEWebAuth;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.android.Auth;
-import com.dropbox.core.http.OkHttp3Requestor;
 import com.dropbox.core.json.JsonReadException;
 import com.dropbox.core.oauth.DbxCredential;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.quattro.dropbox.DescargarTask;
 import com.quattro.dropbox.EmailTask;
 import com.quattro.dropbox.Soporte;
 import com.quattro.dropbox.SubirTask;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -89,13 +80,13 @@ public class DropBox extends Activity {
         Opciones = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Establcemos los elementos visuales.
-        TxtCuentaDropbox = (TextView) findViewById(R.id.txtCuentaDropbox);
-        LyAutorizacion = (LinearLayout) findViewById(R.id.ly_autorizacion);
-        LyPeticionCopia = (LinearLayout) findViewById(R.id.ly_peticionCopia);
-        LyPrimeraOperación = (LinearLayout) findViewById(R.id.ly_primeraOperacion);
-        LyPrincipal = (LinearLayout) findViewById(R.id.ly_principal);
-        CbAutoSincronizar = (CheckBox) findViewById(R.id.cb_autoSincronizar);
-        CbSoloWifi = (CheckBox) findViewById(R.id.cb_soloWifi);
+        TxtCuentaDropbox = findViewById(R.id.txtCuentaDropbox);
+        LyAutorizacion = findViewById(R.id.ly_autorizacion);
+        LyPeticionCopia = findViewById(R.id.ly_peticionCopia);
+        LyPrimeraOperación = findViewById(R.id.ly_primeraOperacion);
+        LyPrincipal = findViewById(R.id.ly_principal);
+        CbAutoSincronizar = findViewById(R.id.cb_autoSincronizar);
+        CbSoloWifi = findViewById(R.id.cb_soloWifi);
 
         // Establecemos el estado de los checkboxes
         CbAutoSincronizar.setChecked(Opciones.getBoolean("SincronizarDropBox", false));

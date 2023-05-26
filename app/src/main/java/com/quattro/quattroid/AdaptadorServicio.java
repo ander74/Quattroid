@@ -17,7 +17,6 @@ package com.quattro.quattroid;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +42,12 @@ public class AdaptadorServicio extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        TextView servicio = (TextView) view.findViewById(R.id.tv_servicio);
-        TextView turno = (TextView) view.findViewById(R.id.tv_turno);
-        TextView inicio = (TextView) view.findViewById(R.id.tv_inicio);
-        TextView fin = (TextView) view.findViewById(R.id.tv_final);
-        LinearLayout item = (LinearLayout) view.findViewById(R.id.ly_item);
-        LinearLayout cabecera = (LinearLayout) view.findViewById(R.id.ly_cabecera);
+        TextView servicio = view.findViewById(R.id.tv_servicio);
+        TextView turno = view.findViewById(R.id.tv_turno);
+        TextView inicio = view.findViewById(R.id.tv_inicio);
+        TextView fin = view.findViewById(R.id.tv_final);
+        LinearLayout item = view.findViewById(R.id.ly_item);
+        LinearLayout cabecera = view.findViewById(R.id.ly_cabecera);
 
         // Borrado de los textos anteriores.
         servicio.setText("");
@@ -71,10 +70,10 @@ public class AdaptadorServicio extends CursorAdapter {
         }
 
         // Escribimos los datos.
-        servicio.setText(cursor.getString(cursor.getColumnIndex("Servicio")));
-        turno.setText(String.valueOf(cursor.getInt(cursor.getColumnIndex("Turno"))));
-        inicio.setText(cursor.getString(cursor.getColumnIndex("Inicio")));
-        fin.setText(cursor.getString(cursor.getColumnIndex("Final")));
+        servicio.setText(cursor.getString(cursor.getColumnIndexOrThrow("Servicio")));
+        turno.setText(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("Turno"))));
+        inicio.setText(cursor.getString(cursor.getColumnIndexOrThrow("Inicio")));
+        fin.setText(cursor.getString(cursor.getColumnIndexOrThrow("Final")));
 
     }
 }

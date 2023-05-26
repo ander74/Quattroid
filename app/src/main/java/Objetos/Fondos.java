@@ -16,9 +16,7 @@
  */
 package Objetos;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 
 public class Fondos {

@@ -30,7 +30,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import BaseDatos.BaseDatos;
-import BaseDatos.HoraAjena;
 import Objetos.Hora;
 
 public class EditarHorasAjenas extends Activity implements View.OnFocusChangeListener {
@@ -60,11 +59,11 @@ public class EditarHorasAjenas extends Activity implements View.OnFocusChangeLis
 
         // Inicialización de los elementos
         context = this;
-        titulo = (TextView) findViewById(R.id.tv_titulo);
-        horas = (EditText) findViewById(R.id.et_horas);
-        motivo = (EditText) findViewById(R.id.et_motivo);
-        grupoFecha = (LinearLayout) findViewById(R.id.ly_seleccionFecha);
-        selectorFecha = (DatePicker) findViewById(R.id.dp_fecha);
+        titulo = findViewById(R.id.tv_titulo);
+        horas = findViewById(R.id.et_horas);
+        motivo = findViewById(R.id.et_motivo);
+        grupoFecha = findViewById(R.id.ly_seleccionFecha);
+        selectorFecha = findViewById(R.id.dp_fecha);
 
         // Registramos los listeners
         horas.setOnFocusChangeListener(this);

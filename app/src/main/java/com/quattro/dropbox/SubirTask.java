@@ -17,9 +17,7 @@
 package com.quattro.dropbox;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 
 public class SubirTask extends AsyncTask<Void, Void, Soporte.Resultado> {

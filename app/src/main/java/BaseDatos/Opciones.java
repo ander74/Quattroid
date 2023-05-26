@@ -11,38 +11,38 @@ public class Opciones {
     }
 
     public Opciones(Cursor cursor) {
-        id = cursor.getInt(cursor.getColumnIndex("_id"));
-        primerMes = cursor.getInt(cursor.getColumnIndex("PrimerMes"));
-        primerAño = cursor.getInt(cursor.getColumnIndex("PrimerAño"));
-        acumuladasAnteriores = cursor.getDouble(cursor.getColumnIndex("AcumuladasAnteriores"));
-        relevoFijo = cursor.getInt(cursor.getColumnIndex("RelevoFijo"));
-        modoBasico = cursor.getInt(cursor.getColumnIndex("ModoBasico")) > 0;
-        rellenarSemana = cursor.getInt(cursor.getColumnIndex("RellenarSemana")) > 0;
-        jornadaMedia = cursor.getDouble(cursor.getColumnIndex("JorMedia"));
-        jornadaMinima = cursor.getDouble(cursor.getColumnIndex("JorMinima"));
-        limiteEntreServicios = cursor.getInt(cursor.getColumnIndex("LimiteEntreServicios"));
-        jornadaAnual = cursor.getInt(cursor.getColumnIndex("JornadaAnual"));
-        regularJornadaAnual = cursor.getInt(cursor.getColumnIndex("RegularJornadaAnual")) > 0;
-        regularBisiestos = cursor.getInt(cursor.getColumnIndex("RegularBisiestos")) > 0;
-        inicioNocturnas = cursor.getInt(cursor.getColumnIndex("InicioNocturnas"));
-        finalNocturnas = cursor.getInt(cursor.getColumnIndex("FinalNocturnas"));
-        limiteDesayuno = cursor.getInt(cursor.getColumnIndex("LimiteDesayuno"));
-        limiteComida1 = cursor.getInt(cursor.getColumnIndex("LimiteComida1"));
-        limiteComida2 = cursor.getInt(cursor.getColumnIndex("LimiteComida2"));
-        limiteCena = cursor.getInt(cursor.getColumnIndex("LimiteCena"));
-        inferirTurnos = cursor.getInt(cursor.getColumnIndex("InferirTurnos")) > 0;
-        diaBaseTurnos = cursor.getInt(cursor.getColumnIndex("DiaBaseTurnos"));
-        mesBaseTurnos = cursor.getInt(cursor.getColumnIndex("MesBaseTurnos"));
-        añoBaseTurnos = cursor.getInt(cursor.getColumnIndex("AñoBaseTurnos"));
-        pdfHorizontal = cursor.getInt(cursor.getColumnIndex("PdfHorizontal")) > 0;
-        pdfIncluirServicios = cursor.getInt(cursor.getColumnIndex("PdfIncluirServicios")) > 0;
-        pdfIncluirNotas = cursor.getInt(cursor.getColumnIndex("PdfIncluirNotas")) > 0;
-        pdfAgruparNotas = cursor.getInt(cursor.getColumnIndex("PdfAgruparNotas")) > 0;
-        verMesActual = cursor.getInt(cursor.getColumnIndex("VerMesActual")) > 0;
-        iniciarCalendario = cursor.getInt(cursor.getColumnIndex("IniciarCalendario")) > 0;
-        sumarTomaDeje = cursor.getInt(cursor.getColumnIndex("SumarTomaDeje")) > 0;
-        activarTecladoNumerico = cursor.getInt(cursor.getColumnIndex("ActivarTecladoNumerico")) > 0;
-        guardarSiempre = cursor.getInt(cursor.getColumnIndex("GuardarSiempre")) > 0;
+        id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        primerMes = cursor.getInt(cursor.getColumnIndexOrThrow("PrimerMes"));
+        primerAño = cursor.getInt(cursor.getColumnIndexOrThrow("PrimerAño"));
+        acumuladasAnteriores = cursor.getDouble(cursor.getColumnIndexOrThrow("AcumuladasAnteriores"));
+        relevoFijo = cursor.getInt(cursor.getColumnIndexOrThrow("RelevoFijo"));
+        modoBasico = cursor.getInt(cursor.getColumnIndexOrThrow("ModoBasico")) > 0;
+        rellenarSemana = cursor.getInt(cursor.getColumnIndexOrThrow("RellenarSemana")) > 0;
+        jornadaMedia = cursor.getDouble(cursor.getColumnIndexOrThrow("JorMedia"));
+        jornadaMinima = cursor.getDouble(cursor.getColumnIndexOrThrow("JorMinima"));
+        limiteEntreServicios = cursor.getInt(cursor.getColumnIndexOrThrow("LimiteEntreServicios"));
+        jornadaAnual = cursor.getInt(cursor.getColumnIndexOrThrow("JornadaAnual"));
+        regularJornadaAnual = cursor.getInt(cursor.getColumnIndexOrThrow("RegularJornadaAnual")) > 0;
+        regularBisiestos = cursor.getInt(cursor.getColumnIndexOrThrow("RegularBisiestos")) > 0;
+        inicioNocturnas = cursor.getInt(cursor.getColumnIndexOrThrow("InicioNocturnas"));
+        finalNocturnas = cursor.getInt(cursor.getColumnIndexOrThrow("FinalNocturnas"));
+        limiteDesayuno = cursor.getInt(cursor.getColumnIndexOrThrow("LimiteDesayuno"));
+        limiteComida1 = cursor.getInt(cursor.getColumnIndexOrThrow("LimiteComida1"));
+        limiteComida2 = cursor.getInt(cursor.getColumnIndexOrThrow("LimiteComida2"));
+        limiteCena = cursor.getInt(cursor.getColumnIndexOrThrow("LimiteCena"));
+        inferirTurnos = cursor.getInt(cursor.getColumnIndexOrThrow("InferirTurnos")) > 0;
+        diaBaseTurnos = cursor.getInt(cursor.getColumnIndexOrThrow("DiaBaseTurnos"));
+        mesBaseTurnos = cursor.getInt(cursor.getColumnIndexOrThrow("MesBaseTurnos"));
+        añoBaseTurnos = cursor.getInt(cursor.getColumnIndexOrThrow("AñoBaseTurnos"));
+        pdfHorizontal = cursor.getInt(cursor.getColumnIndexOrThrow("PdfHorizontal")) > 0;
+        pdfIncluirServicios = cursor.getInt(cursor.getColumnIndexOrThrow("PdfIncluirServicios")) > 0;
+        pdfIncluirNotas = cursor.getInt(cursor.getColumnIndexOrThrow("PdfIncluirNotas")) > 0;
+        pdfAgruparNotas = cursor.getInt(cursor.getColumnIndexOrThrow("PdfAgruparNotas")) > 0;
+        verMesActual = cursor.getInt(cursor.getColumnIndexOrThrow("VerMesActual")) > 0;
+        iniciarCalendario = cursor.getInt(cursor.getColumnIndexOrThrow("IniciarCalendario")) > 0;
+        sumarTomaDeje = cursor.getInt(cursor.getColumnIndexOrThrow("SumarTomaDeje")) > 0;
+        activarTecladoNumerico = cursor.getInt(cursor.getColumnIndexOrThrow("ActivarTecladoNumerico")) > 0;
+        guardarSiempre = cursor.getInt(cursor.getColumnIndexOrThrow("GuardarSiempre")) > 0;
     }
 
     //endregion

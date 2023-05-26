@@ -51,24 +51,24 @@ public class AdaptadorCalendario extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        LinearLayout Item = (LinearLayout) view.findViewById(R.id.item);
-        RelativeLayout TextoResto = (RelativeLayout) view.findViewById(R.id.resto);
-        RelativeLayout TextoDia = (RelativeLayout) view.findViewById(R.id.textoDia);
-        TextView Dia = (TextView) view.findViewById(R.id.dia);
-        TextView DiaSemana = (TextView) view.findViewById(R.id.diaSemana);
-        ImageView EsHuelga = (ImageView) view.findViewById(R.id.esHuelga);
-        ImageView HayCompañero = (ImageView) view.findViewById(R.id.hayCompañero);
-        ImageView Notas = (ImageView) view.findViewById(R.id.notas);
-        TextView Servicio = (TextView) view.findViewById(R.id.servicio);
-        ImageView Desayuno = (ImageView) view.findViewById(R.id.desayuno);
-        ImageView Comida = (ImageView) view.findViewById(R.id.comida);
-        ImageView Cena = (ImageView) view.findViewById(R.id.cena);
-        TextView Relevo = (TextView) view.findViewById(R.id.relevo);
-        ImageView Calificacion = (ImageView) view.findViewById(R.id.calificacion);
-        TextView Horario = (TextView) view.findViewById(R.id.horario);
-        TextView Nocturnas = (TextView) view.findViewById(R.id.nocturnas);
-        TextView Guion = (TextView) view.findViewById(R.id.guion);
-        TextView Acumuladas = (TextView) view.findViewById(R.id.acumuladas);
+        LinearLayout Item = view.findViewById(R.id.item);
+        RelativeLayout TextoResto = view.findViewById(R.id.resto);
+        RelativeLayout TextoDia = view.findViewById(R.id.textoDia);
+        TextView Dia = view.findViewById(R.id.dia);
+        TextView DiaSemana = view.findViewById(R.id.diaSemana);
+        ImageView EsHuelga = view.findViewById(R.id.esHuelga);
+        ImageView HayCompañero = view.findViewById(R.id.hayCompañero);
+        ImageView Notas = view.findViewById(R.id.notas);
+        TextView Servicio = view.findViewById(R.id.servicio);
+        ImageView Desayuno = view.findViewById(R.id.desayuno);
+        ImageView Comida = view.findViewById(R.id.comida);
+        ImageView Cena = view.findViewById(R.id.cena);
+        TextView Relevo = view.findViewById(R.id.relevo);
+        ImageView Calificacion = view.findViewById(R.id.calificacion);
+        TextView Horario = view.findViewById(R.id.horario);
+        TextView Nocturnas = view.findViewById(R.id.nocturnas);
+        TextView Guion = view.findViewById(R.id.guion);
+        TextView Acumuladas = view.findViewById(R.id.acumuladas);
 
         // Ocultar todas las imágenes.
         EsHuelga.setVisibility(View.GONE);
@@ -83,13 +83,13 @@ public class AdaptadorCalendario extends CursorAdapter {
 
 //        if(Item.isSelected()){
 //            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
-//        } else if (cursor.getInt(cursor.getColumnIndex("Dia")) % 2 == 0) {
+//        } else if (cursor.getInt(cursor.getColumnIndexOrThrow("Dia")) % 2 == 0) {
 //            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
 //            } else {
 //            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
 //        }
 
-        if (cursor.getInt(cursor.getColumnIndex("Dia")) % 2 == 0) {
+        if (cursor.getInt(cursor.getColumnIndexOrThrow("Dia")) % 2 == 0) {
             TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
             TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
             Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
@@ -111,8 +111,8 @@ public class AdaptadorCalendario extends CursorAdapter {
         int i = 0;
 
         // Rellenamos el dia
-        int Dsemana = cursor.getInt(cursor.getColumnIndex("DiaSemana"));
-        i = cursor.getInt(cursor.getColumnIndex("Dia"));
+        int Dsemana = cursor.getInt(cursor.getColumnIndexOrThrow("DiaSemana"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
         s = (i > 9) ? String.valueOf(i) : "0" + String.valueOf(i);
         Dia.setText(s);
         DiaSemana.setText(Hora.DIAS_SEMANA_ABREV[Dsemana]);
@@ -121,25 +121,25 @@ public class AdaptadorCalendario extends CursorAdapter {
         Dia.setTextColor(Colores.NEGRO);
         DiaSemana.setTextColor(Colores.NEGRO);
 
-        if (cursor.getInt(cursor.getColumnIndex("EsFranqueo")) == 1) {
+        if (cursor.getInt(cursor.getColumnIndexOrThrow("EsFranqueo")) == 1) {
             Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
         }
-        if (Dsemana == 1 || cursor.getInt(cursor.getColumnIndex("EsFestivo")) == 1) {
+        if (Dsemana == 1 || cursor.getInt(cursor.getColumnIndexOrThrow("EsFestivo")) == 1) {
             Dia.setTextColor(Colores.ROJO);
             DiaSemana.setTextColor(Colores.ROJO);
         }
 
         // Rellenamos el servicio
         Servicio.setText("");
-        int tipo = cursor.getInt(cursor.getColumnIndex("TipoIncidencia"));
-        String ini = cursor.getString(cursor.getColumnIndex("Inicio"));
-        String fin = cursor.getString(cursor.getColumnIndex("Final"));
-        i = cursor.getInt(cursor.getColumnIndex("Turno"));
+        int tipo = cursor.getInt(cursor.getColumnIndexOrThrow("TipoIncidencia"));
+        String ini = cursor.getString(cursor.getColumnIndexOrThrow("Inicio"));
+        String fin = cursor.getString(cursor.getColumnIndexOrThrow("Final"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
         switch (tipo) {
             case 1:case 2:case 5:
-                String ser = cursor.getString(cursor.getColumnIndex("Servicio"));
-                String lin = cursor.getString(cursor.getColumnIndex("Linea"));
-                String tex = cursor.getString(cursor.getColumnIndex("TextoLinea"));
+                String ser = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
+                String lin = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
+                String tex = cursor.getString(cursor.getColumnIndexOrThrow("TextoLinea"));
                 if (ser == null) ser = "";
                 if (lin == null) lin = "";
                 if (tex == null) tex = "";
@@ -147,7 +147,7 @@ public class AdaptadorCalendario extends CursorAdapter {
                     s = ser + "/" + i + "-" + lin + ": " + tex;
                 } else {
                     if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
-                        s = cursor.getString(cursor.getColumnIndex("TextoIncidencia")) +
+                        s = cursor.getString(cursor.getColumnIndexOrThrow("TextoIncidencia")) +
                                 " " + i;
                     } else {
                         s = "";
@@ -158,7 +158,7 @@ public class AdaptadorCalendario extends CursorAdapter {
                 Servicio.setText(s);
                 break;
             case 3:case 4:case 6:
-                String inc = cursor.getString(cursor.getColumnIndex("TextoIncidencia"));
+                String inc = cursor.getString(cursor.getColumnIndexOrThrow("TextoIncidencia"));
                 if (i > 0){
                     Servicio.setText(inc + " " + i);
                 } else{
@@ -176,8 +176,8 @@ public class AdaptadorCalendario extends CursorAdapter {
 
         // Rellenamos el relevo
         Relevo.setText("");
-        int mat = cursor.getInt(cursor.getColumnIndex("Matricula"));
-        String ape = cursor.getString(cursor.getColumnIndex("Apellidos"));
+        int mat = cursor.getInt(cursor.getColumnIndexOrThrow("Matricula"));
+        String ape = cursor.getString(cursor.getColumnIndexOrThrow("Apellidos"));
         if (mat != 0 && ape != null) {
             s = String.valueOf(mat) + ": " + ape;
         } else {
@@ -197,11 +197,11 @@ public class AdaptadorCalendario extends CursorAdapter {
         // Rellenamos las horas acumuladas y nocturnas, si la incidencia es del tipo 1, 2 o 3
         Nocturnas.setText("");
         Acumuladas.setText("");
-        double hacum = cursor.getDouble(cursor.getColumnIndex("Acumuladas"));
-        double hnoct = cursor.getDouble(cursor.getColumnIndex("Nocturnas"));
+        double hacum = cursor.getDouble(cursor.getColumnIndexOrThrow("Acumuladas"));
+        double hnoct = cursor.getDouble(cursor.getColumnIndexOrThrow("Nocturnas"));
         Guion.setVisibility(View.GONE);
         if (!s.equals("")) {
-            if (tipo > 0 && tipo < 4 && cursor.getInt(cursor.getColumnIndex("Turno")) != 0) {
+            if (tipo > 0 && tipo < 4 && cursor.getInt(cursor.getColumnIndexOrThrow("Turno")) != 0) {
                 Nocturnas.setText(Hora.textoDecimal(hnoct));
                 if (hacum > -0.01) {
                     Acumuladas.setTextColor(Colores.VERDE_OSCURO);
@@ -229,7 +229,7 @@ public class AdaptadorCalendario extends CursorAdapter {
         }
 
         // Activar icono si hay un compañero que nos hace o hacemos el dia o si hay huelga.
-        i = cursor.getInt(cursor.getColumnIndex("CodigoIncidencia"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("CodigoIncidencia"));
         switch (i){
             case 11:
                 HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.usuario_rojo));
@@ -248,18 +248,18 @@ public class AdaptadorCalendario extends CursorAdapter {
         }
 
         // Activar icono si las notas tienen algo escrito
-        if (!cursor.getString(cursor.getColumnIndex("Notas")).trim().equals("")) Notas.setVisibility(View.VISIBLE);
+        if (!cursor.getString(cursor.getColumnIndexOrThrow("Notas")).trim().equals("")) Notas.setVisibility(View.VISIBLE);
 
         // Activar icono de las dietas.
-        i = cursor.getInt(cursor.getColumnIndex("Desayuno"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("Desayuno"));
         if (i > 0) Desayuno.setVisibility(View.VISIBLE);
-        i = cursor.getInt(cursor.getColumnIndex("Comida"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("Comida"));
         if (i > 0) Comida.setVisibility(View.VISIBLE);
-        i = cursor.getInt(cursor.getColumnIndex("Cena"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("Cena"));
         if (i > 0) Cena.setVisibility(View.VISIBLE);
 
         // Activar el icono de la calificación del relevo
-        i = cursor.getInt(cursor.getColumnIndex("Calificacion"));
+        i = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
         switch (i){
             case 1:
                 Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.buenrelevo));

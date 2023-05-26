@@ -27,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import BaseDatos.BaseDatos;
 
@@ -56,7 +55,7 @@ public class Servicios extends Activity implements AdapterView.OnItemClickListen
 
         // Inicialización de los elementos
         context = this;
-        listaServicios = (ListView) findViewById(R.id.lw_servicios);
+        listaServicios = findViewById(R.id.lw_servicios);
 
         // Recoger los datos del intent
         linea = getIntent().getExtras().getString("Linea");
@@ -123,7 +122,7 @@ public class Servicios extends Activity implements AdapterView.OnItemClickListen
         switch (item.getItemId()) {
             case R.id.bt_borrar:
                 Cursor c = adaptador.getCursor();
-                datos.borrarServicio(c.getInt(c.getColumnIndex("_id")));
+                datos.borrarServicio(c.getInt(c.getColumnIndexOrThrow("_id")));
                 actualizarCursor();
                 return true;
             default:
@@ -140,7 +139,7 @@ public class Servicios extends Activity implements AdapterView.OnItemClickListen
 
         // Creamos un intent para devolver los datos de la incidencia
         Intent intent = new Intent(context, EditarServicio.class);
-        intent.putExtra("Id", c.getInt(c.getColumnIndex("_id")));
+        intent.putExtra("Id", c.getInt(c.getColumnIndexOrThrow("_id")));
         startActivityForResult(intent, ACCION_EDITA_SERVICIO);
     }
 

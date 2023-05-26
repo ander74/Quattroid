@@ -36,7 +36,7 @@ public class Licencia extends Activity {
         super.onCreate(savedInstanceState);
         getActionBar().hide();
         setContentView(R.layout.activity_licencia);
-        Licencia = (TextView) findViewById(R.id.tv_licencia);
+        Licencia = findViewById(R.id.tv_licencia);
         Licencia.setText(leeLicencia());
     }
 

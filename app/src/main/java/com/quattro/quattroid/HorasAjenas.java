@@ -59,7 +59,7 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
         context = this;
 
         // Instanciar los elementos
-        listaAjenas = (ListView) findViewById(R.id.lw_ajenas);
+        listaAjenas = findViewById(R.id.lw_ajenas);
 
         datos = new BaseDatos(context);
         cursor = datos.cursorAjenas();
@@ -87,7 +87,7 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
         switch (id) {
             case R.id.bt_nuevo:
                 intent = new Intent(context, EditarHorasAjenas.class);
-                intent.putExtra("Id", (int) -1);
+                intent.putExtra("Id", -1);
                 startActivityForResult(intent, ACCION_NUEVA_AJENA);
                 return true;
             case android.R.id.home:
@@ -119,12 +119,12 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
             case R.id.bt_borrar:
                 // Extraemos los datos del cursor
                 Cursor c = adaptador.getCursor();
-                int i = c.getInt(c.getColumnIndex("_id"));
-                int d = c.getInt(c.getColumnIndex("Dia"));
-                int m = c.getInt(c.getColumnIndex("Mes"));
-                int a = c.getInt(c.getColumnIndex("Año"));
-                double h = c.getDouble(c.getColumnIndex("Horas"));
-                String mot = c.getString(c.getColumnIndex("Motivo"));
+                int i = c.getInt(c.getColumnIndexOrThrow("_id"));
+                int d = c.getInt(c.getColumnIndexOrThrow("Dia"));
+                int m = c.getInt(c.getColumnIndexOrThrow("Mes"));
+                int a = c.getInt(c.getColumnIndexOrThrow("Año"));
+                double h = c.getDouble(c.getColumnIndexOrThrow("Horas"));
+                String mot = c.getString(c.getColumnIndexOrThrow("Motivo"));
                 HoraAjena horaAjena = new HoraAjena();
                 horaAjena.setDia(d);
                 horaAjena.setMes(m);
@@ -149,12 +149,12 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
 
         // Extraemos los datos del cursor
         Cursor c = adaptador.getCursor();
-        int i = c.getInt(c.getColumnIndex("_id"));
-        int d = c.getInt(c.getColumnIndex("Dia"));
-        int m = c.getInt(c.getColumnIndex("Mes"));
-        int a = c.getInt(c.getColumnIndex("Año"));
-        double h = c.getDouble(c.getColumnIndex("Horas"));
-        String mot = c.getString(c.getColumnIndex("Motivo"));
+        int i = c.getInt(c.getColumnIndexOrThrow("_id"));
+        int d = c.getInt(c.getColumnIndexOrThrow("Dia"));
+        int m = c.getInt(c.getColumnIndexOrThrow("Mes"));
+        int a = c.getInt(c.getColumnIndexOrThrow("Año"));
+        double h = c.getDouble(c.getColumnIndexOrThrow("Horas"));
+        String mot = c.getString(c.getColumnIndexOrThrow("Motivo"));
 
         // Creamos un intent para devolver los datos de la incidencia
         Intent intent = new Intent(context, EditarHorasAjenas.class);

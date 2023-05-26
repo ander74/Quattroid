@@ -794,11 +794,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 sd.setDia(dia.getDia());
                 sd.setMes(dia.getMes());
                 sd.setAño(dia.getAño());
-                sd.setLinea(c.getString(c.getColumnIndex("Linea")));
-                sd.setServicio(c.getString(c.getColumnIndex("Servicio")));
-                sd.setTurno(c.getInt(c.getColumnIndex("Turno")));
-                sd.setInicio(c.getString(c.getColumnIndex("Inicio")));
-                sd.setFinal(c.getString(c.getColumnIndex("Final")));
+                sd.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+                sd.setServicio(c.getString(c.getColumnIndexOrThrow("Servicio")));
+                sd.setTurno(c.getInt(c.getColumnIndexOrThrow("Turno")));
+                sd.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+                sd.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
                 datos.guardaServicioDia(sd);
             }
         }

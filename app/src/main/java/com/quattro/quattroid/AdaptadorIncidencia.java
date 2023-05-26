@@ -18,7 +18,6 @@ package com.quattro.quattroid;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,17 +45,17 @@ public class AdaptadorIncidencia extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        TextView codigo = (TextView) view.findViewById(R.id.codigo);
-        TextView incidencia = (TextView) view.findViewById(R.id.incidencia);
-        LinearLayout item = (LinearLayout) view.findViewById(R.id.itemIncidencia);
+        TextView codigo = view.findViewById(R.id.codigo);
+        TextView incidencia = view.findViewById(R.id.incidencia);
+        LinearLayout item = view.findViewById(R.id.itemIncidencia);
 
         // Borrado de los textos anteriores.
         codigo.setText("");
         incidencia.setText("");
 
         // Extraemos los datos del cursor.
-        int cod = cursor.getInt(cursor.getColumnIndex("Codigo"));
-        String inc = cursor.getString(cursor.getColumnIndex("Incidencia"));
+        int cod = cursor.getInt(cursor.getColumnIndexOrThrow("Codigo"));
+        String inc = cursor.getString(cursor.getColumnIndexOrThrow("Incidencia"));
 
         // Color del fondo
         if (cod % 2 == 0) {

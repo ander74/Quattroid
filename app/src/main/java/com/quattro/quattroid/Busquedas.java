@@ -18,15 +18,11 @@ package com.quattro.quattroid;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.text.InputType;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -36,15 +32,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.Switch;
-import android.widget.Toast;
 
-import java.time.LocalDate;
 import java.util.Calendar;
 
 import BaseDatos.BaseDatos;
-import BaseDatos.DatosDia;
-import BaseDatos.Relevo;
 import Objetos.Hora;
 
 public class Busquedas extends Activity implements View.OnFocusChangeListener, View.OnLongClickListener, AdapterView.OnItemClickListener{
@@ -106,24 +97,24 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
         // Inicialización de los elementos
         context = this;
 
-        linea = (EditText) findViewById(R.id.et_linea);
-        servicio = (EditText) findViewById(R.id.et_servicio);
-        turno = (EditText) findViewById(R.id.et_turno);
-        matricula = (EditText) findViewById(R.id.et_matricula);
-        deuda = (CheckBox) findViewById(R.id.ch_deuda);
+        linea = findViewById(R.id.et_linea);
+        servicio = findViewById(R.id.et_servicio);
+        turno = findViewById(R.id.et_turno);
+        matricula = findViewById(R.id.et_matricula);
+        deuda = findViewById(R.id.ch_deuda);
         //año = (EditText) findViewById(R.id.et_año);
-        bus = (EditText) findViewById(R.id.et_bus);
-        notas = (EditText) findViewById(R.id.et_notas);
-        selectorAño = (NumberPicker) findViewById(R.id.np_año);
-        limitarAño = (CheckBox) findViewById(R.id.ch_limitarAño);
-        grupoBotones = (LinearLayout) findViewById(R.id.ly_botones);
-        grupoServicio = (LinearLayout) findViewById(R.id.ly_porServicio);
-        grupoMatrícula = (LinearLayout) findViewById(R.id.ly_porMatricula);
-        grupoBus = (LinearLayout) findViewById(R.id.ly_porBus);
-        grupoNotas = (LinearLayout) findViewById(R.id.ly_porNotas);
-        grupoVerListado = (LinearLayout) findViewById(R.id.ly_verListado);
-        verListado = (Button) findViewById(R.id.bt_verlistado);
-        listaBusquedas = (ListView) findViewById(R.id.lw_listaBusquedas);
+        bus = findViewById(R.id.et_bus);
+        notas = findViewById(R.id.et_notas);
+        selectorAño = findViewById(R.id.np_año);
+        limitarAño = findViewById(R.id.ch_limitarAño);
+        grupoBotones = findViewById(R.id.ly_botones);
+        grupoServicio = findViewById(R.id.ly_porServicio);
+        grupoMatrícula = findViewById(R.id.ly_porMatricula);
+        grupoBus = findViewById(R.id.ly_porBus);
+        grupoNotas = findViewById(R.id.ly_porNotas);
+        grupoVerListado = findViewById(R.id.ly_verListado);
+        verListado = findViewById(R.id.bt_verlistado);
+        listaBusquedas = findViewById(R.id.lw_listaBusquedas);
 
         // Ocultar los bloques inicialmente
         grupoServicio.setVisibility(View.GONE);
@@ -449,9 +440,9 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
 
         // Extraemos la fecha del cursor.
         Cursor c = adaptador.getCursor();
-        int dia = c.getInt(c.getColumnIndex("Dia"));
-        int mes = c.getInt(c.getColumnIndex("Mes"));
-        int año = c.getInt(c.getColumnIndex("Año"));
+        int dia = c.getInt(c.getColumnIndexOrThrow("Dia"));
+        int mes = c.getInt(c.getColumnIndexOrThrow("Mes"));
+        int año = c.getInt(c.getColumnIndexOrThrow("Año"));
 
         // Creamos el intent con los datos de la fecha.
         Intent intent = new Intent(context, DiaCalendario.class);

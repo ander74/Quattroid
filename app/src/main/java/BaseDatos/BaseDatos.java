@@ -24,7 +24,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.quattro.models.LineaModel;
 import com.quattro.models.ServicioAuxiliarModel;
@@ -38,7 +37,6 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import Objetos.Hora;
 
@@ -369,41 +367,41 @@ public class BaseDatos {
         DatosDia datosDia = new DatosDia();
         if (c.getCount() == 0) return datosDia;
         c.moveToFirst();
-        datosDia.setDia(c.getInt(c.getColumnIndex("Dia")));
-        datosDia.setMes(c.getInt(c.getColumnIndex("Mes")));
-        datosDia.setAño(c.getInt(c.getColumnIndex("Año")));
-        datosDia.setDiaSemana(c.getInt(c.getColumnIndex("DiaSemana")));
-        datosDia.setEsFranqueo(c.getInt(c.getColumnIndex("EsFranqueo")) != 0);
-        datosDia.setEsFestivo(c.getInt(c.getColumnIndex("EsFestivo")) != 0);
-        datosDia.setCodigoIncidencia(c.getInt(c.getColumnIndex("CodigoIncidencia")));
-        datosDia.setTextoIncidencia(c.getString(c.getColumnIndex("TextoIncidencia")));
-        datosDia.setTipoIncidencia(c.getInt(c.getColumnIndex("TipoIncidencia")));
-        datosDia.setHuelgaParcial(c.getInt(c.getColumnIndex("HuelgaParcial")) != 0);
-        datosDia.setHorasHuelga(c.getDouble(c.getColumnIndex("HorasHuelga")));
-        datosDia.setServicio(c.getString(c.getColumnIndex("Servicio")));
-        datosDia.setTurno(c.getInt(c.getColumnIndex("Turno")));
-        datosDia.setLinea(c.getString(c.getColumnIndex("Linea")));
-        datosDia.setTextoLinea(c.getString(c.getColumnIndex("TextoLinea")));
-        datosDia.setInicio(c.getString(c.getColumnIndex("Inicio")));
-        datosDia.setLugarInicio(c.getString(c.getColumnIndex("LugarInicio")));
-        datosDia.setFinal(c.getString(c.getColumnIndex("Final")));
-        datosDia.setLugarFinal(c.getString(c.getColumnIndex("LugarFinal")));
-        datosDia.setTrabajadas(c.getDouble(c.getColumnIndex("Trabajadas")));
-        datosDia.setAcumuladas(c.getDouble(c.getColumnIndex("Acumuladas")));
-        datosDia.setNocturnas(c.getDouble(c.getColumnIndex("Nocturnas")));
-        datosDia.setDesayuno(c.getInt(c.getColumnIndex("Desayuno")) != 0);
-        datosDia.setComida(c.getInt(c.getColumnIndex("Comida")) != 0);
-        datosDia.setCena(c.getInt(c.getColumnIndex("Cena")) != 0);
-        datosDia.setTomaDeje(c.getString(c.getColumnIndex("TomaDeje")));
-        datosDia.setTomaDejeDecimal(c.getDouble(c.getColumnIndex("TomaDejeDecimal")));
-        datosDia.setEuros(c.getDouble(c.getColumnIndex("Euros")));
-        datosDia.setMatricula(c.getInt(c.getColumnIndex("Matricula")));
-        datosDia.setApellidos(c.getString(c.getColumnIndex("Apellidos")));
-        datosDia.setCalificacion(c.getInt(c.getColumnIndex("Calificacion")));
-        datosDia.setMatriculaSusti(c.getInt(c.getColumnIndex("MatriculaSusti")));
-        datosDia.setApellidosSusti(c.getString(c.getColumnIndex("ApellidosSusti")));
-        datosDia.setBus(c.getString(c.getColumnIndex("Bus")));
-        datosDia.setNotas(c.getString(c.getColumnIndex("Notas")));
+        datosDia.setDia(c.getInt(c.getColumnIndexOrThrow("Dia")));
+        datosDia.setMes(c.getInt(c.getColumnIndexOrThrow("Mes")));
+        datosDia.setAño(c.getInt(c.getColumnIndexOrThrow("Año")));
+        datosDia.setDiaSemana(c.getInt(c.getColumnIndexOrThrow("DiaSemana")));
+        datosDia.setEsFranqueo(c.getInt(c.getColumnIndexOrThrow("EsFranqueo")) != 0);
+        datosDia.setEsFestivo(c.getInt(c.getColumnIndexOrThrow("EsFestivo")) != 0);
+        datosDia.setCodigoIncidencia(c.getInt(c.getColumnIndexOrThrow("CodigoIncidencia")));
+        datosDia.setTextoIncidencia(c.getString(c.getColumnIndexOrThrow("TextoIncidencia")));
+        datosDia.setTipoIncidencia(c.getInt(c.getColumnIndexOrThrow("TipoIncidencia")));
+        datosDia.setHuelgaParcial(c.getInt(c.getColumnIndexOrThrow("HuelgaParcial")) != 0);
+        datosDia.setHorasHuelga(c.getDouble(c.getColumnIndexOrThrow("HorasHuelga")));
+        datosDia.setServicio(c.getString(c.getColumnIndexOrThrow("Servicio")));
+        datosDia.setTurno(c.getInt(c.getColumnIndexOrThrow("Turno")));
+        datosDia.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+        datosDia.setTextoLinea(c.getString(c.getColumnIndexOrThrow("TextoLinea")));
+        datosDia.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+        datosDia.setLugarInicio(c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+        datosDia.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
+        datosDia.setLugarFinal(c.getString(c.getColumnIndexOrThrow("LugarFinal")));
+        datosDia.setTrabajadas(c.getDouble(c.getColumnIndexOrThrow("Trabajadas")));
+        datosDia.setAcumuladas(c.getDouble(c.getColumnIndexOrThrow("Acumuladas")));
+        datosDia.setNocturnas(c.getDouble(c.getColumnIndexOrThrow("Nocturnas")));
+        datosDia.setDesayuno(c.getInt(c.getColumnIndexOrThrow("Desayuno")) != 0);
+        datosDia.setComida(c.getInt(c.getColumnIndexOrThrow("Comida")) != 0);
+        datosDia.setCena(c.getInt(c.getColumnIndexOrThrow("Cena")) != 0);
+        datosDia.setTomaDeje(c.getString(c.getColumnIndexOrThrow("TomaDeje")));
+        datosDia.setTomaDejeDecimal(c.getDouble(c.getColumnIndexOrThrow("TomaDejeDecimal")));
+        datosDia.setEuros(c.getDouble(c.getColumnIndexOrThrow("Euros")));
+        datosDia.setMatricula(c.getInt(c.getColumnIndexOrThrow("Matricula")));
+        datosDia.setApellidos(c.getString(c.getColumnIndexOrThrow("Apellidos")));
+        datosDia.setCalificacion(c.getInt(c.getColumnIndexOrThrow("Calificacion")));
+        datosDia.setMatriculaSusti(c.getInt(c.getColumnIndexOrThrow("MatriculaSusti")));
+        datosDia.setApellidosSusti(c.getString(c.getColumnIndexOrThrow("ApellidosSusti")));
+        datosDia.setBus(c.getString(c.getColumnIndexOrThrow("Bus")));
+        datosDia.setNotas(c.getString(c.getColumnIndexOrThrow("Notas")));
 
         c.close();
         return datosDia;
@@ -532,9 +530,9 @@ public class BaseDatos {
         Incidencia i = new Incidencia();
         if (c.getCount() == 0) return i;
         c.moveToFirst();
-        i.setCodigo(c.getInt(c.getColumnIndex("Codigo")));
-        i.setTexto(c.getString(c.getColumnIndex("Incidencia")));
-        i.setTipo(c.getInt(c.getColumnIndex("Tipo")));
+        i.setCodigo(c.getInt(c.getColumnIndexOrThrow("Codigo")));
+        i.setTexto(c.getString(c.getColumnIndexOrThrow("Incidencia")));
+        i.setTipo(c.getInt(c.getColumnIndexOrThrow("Tipo")));
 
         c.close();
         return i;
@@ -555,7 +553,7 @@ public class BaseDatos {
     public int codigoNuevaIncidencia() {
         Cursor c = cursorIncidencias();
         c.moveToLast();
-        int ultima = c.getInt(c.getColumnIndex("Codigo"));
+        int ultima = c.getInt(c.getColumnIndexOrThrow("Codigo"));
 
         return ultima + 1;
     }
@@ -628,11 +626,11 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Acumuladas)" +
                 " AS sumaAcumuladas FROM Calendario WHERE Año<" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndex("sumaAcumuladas"));
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
         consulta = "SELECT SUM(Acumuladas) AS sumaAcumuladas FROM Calendario WHERE Mes<=" +
                 String.valueOf(mes) + " AND Año=" + String.valueOf(año);
         c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndex("sumaAcumuladas"));
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
         c.close();
         return acum;
     }
@@ -648,7 +646,7 @@ public class BaseDatos {
                 " AS sumaAcumuladas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndex("sumaAcumuladas"));
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
         c.close();
         return acum;
     }
@@ -658,7 +656,7 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Acumuladas)" +
                 " AS sumaAcumuladas FROM Calendario WHERE Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndex("sumaAcumuladas"));
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
         c.close();
         return acum;
     }
@@ -668,7 +666,7 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Acumuladas) AS Suma FROM Calendario WHERE ";
         consulta = consulta + where;
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndex("Suma"));
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("Suma"));
         c.close();
         return acum;
     }
@@ -684,7 +682,7 @@ public class BaseDatos {
                 " AS sumaNocturnas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) noct += c.getDouble(c.getColumnIndex("sumaNocturnas"));
+        if (c.moveToFirst()) noct += c.getDouble(c.getColumnIndexOrThrow("sumaNocturnas"));
         c.close();
         return noct;
     }
@@ -700,7 +698,7 @@ public class BaseDatos {
                 " AS sumaTrabajadas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndex("sumaTrabajadas"));
+        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndexOrThrow("sumaTrabajadas"));
         c.close();
         return trab;
     }
@@ -710,7 +708,7 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Trabajadas)" +
                 " AS sumaTrabajadas FROM Calendario WHERE Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndex("sumaTrabajadas"));
+        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndexOrThrow("sumaTrabajadas"));
         c.close();
         return trab;
     }
@@ -720,7 +718,7 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Trabajadas) AS Suma FROM Calendario WHERE ";
         consulta = consulta + where;
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndex("Suma"));
+        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndexOrThrow("Suma"));
         c.close();
         return trab;
     }
@@ -769,7 +767,7 @@ public class BaseDatos {
                 " AS sumaDesayuno FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndex("sumaDesayuno"));
+        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaDesayuno"));
         c.close();
         return trab;
     }
@@ -780,7 +778,7 @@ public class BaseDatos {
                 " AS sumaComida FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndex("sumaComida"));
+        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaComida"));
         c.close();
         return trab;
     }
@@ -791,7 +789,7 @@ public class BaseDatos {
                 " AS sumaCena FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndex("sumaCena"));
+        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaCena"));
         c.close();
         return trab;
     }
@@ -802,12 +800,12 @@ public class BaseDatos {
         String consulta = "SELECT SUM(TomaDejeDecimal)" +
                 " AS sumaTomaDeje FROM Calendario WHERE Año<" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndex("sumaTomaDeje"));
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
         consulta = "SELECT SUM(TomaDejeDecimal) AS sumaTomaDeje FROM Calendario WHERE Mes<=" +
                 String.valueOf(mes) + " AND Año=" + String.valueOf(año);
         c.close();
         c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndex("sumaTomaDeje"));
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
         c.close();
         return tomadeje;
     }
@@ -818,7 +816,7 @@ public class BaseDatos {
                 " AS sumaTomaDeje FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndex("sumaTomaDeje"));
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
         c.close();
         return tomadeje;
     }
@@ -829,7 +827,7 @@ public class BaseDatos {
                 " AS sumaEuros FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) euros += c.getDouble(c.getColumnIndex("sumaEuros"));
+        if (c.moveToFirst()) euros += c.getDouble(c.getColumnIndexOrThrow("sumaEuros"));
         c.close();
         return euros;
     }
@@ -863,7 +861,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma")));
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -913,7 +911,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma")));
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -928,7 +926,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma")));
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -943,7 +941,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma")));
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -958,7 +956,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma")));
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -983,7 +981,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = String.valueOf(c.getInt(c.getColumnIndex("Suma")));
+            e.Valor = String.valueOf(c.getInt(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -998,7 +996,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = String.valueOf(c.getInt(c.getColumnIndex("Suma")));
+            e.Valor = String.valueOf(c.getInt(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1013,7 +1011,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = String.valueOf(c.getInt(c.getColumnIndex("Suma")));
+            e.Valor = String.valueOf(c.getInt(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1234,7 +1232,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma")));
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1255,16 +1253,16 @@ public class BaseDatos {
 
         while (i.moveToNext()) {
             select = "SELECT * FROM Calendario ";
-            whereFiltro = " AND CodigoIncidencia=" + String.valueOf(i.getInt(i.getColumnIndex("Codigo")));
+            whereFiltro = " AND CodigoIncidencia=" + String.valueOf(i.getInt(i.getColumnIndexOrThrow("Codigo")));
             consulta = select + whereFecha + whereFiltro;
             c = baseDatos.rawQuery(consulta, null);
             if (c.getCount() > 0) {
-                String textoIncidencia = i.getString(i.getColumnIndex("Incidencia"));
+                String textoIncidencia = i.getString(i.getColumnIndexOrThrow("Incidencia"));
                 if (textoIncidencia.equals("Repetir Día Anterior")) {
                     sinIncidencia = c.getCount();
                 } else {
                     e = new Estadistica();
-                    e.Texto = i.getString(i.getColumnIndex("Incidencia"));
+                    e.Texto = i.getString(i.getColumnIndexOrThrow("Incidencia"));
                     e.Valor = String.valueOf(c.getCount());
                     e.Contador = contador;
                     contador++;
@@ -1314,7 +1312,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndex("Suma"))) + " €";
+            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma"))) + " €";
         }
         lista.add(e);
 
@@ -1410,11 +1408,11 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Horas)" +
                 " AS sumaAjenas FROM HorasAjenas WHERE Año<" + String.valueOf(año);
         Cursor c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndex("sumaAjenas"));
+        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndexOrThrow("sumaAjenas"));
         consulta = "SELECT SUM(Horas) AS sumaAjenas FROM HorasAjenas WHERE Mes<=" +
                 String.valueOf(mes) + " AND Año=" + String.valueOf(año);
         c = baseDatos.rawQuery(consulta, null);
-        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndex("sumaAjenas"));
+        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndexOrThrow("sumaAjenas"));
 
         c.close();
         return ajenas;
@@ -1504,8 +1502,8 @@ public class BaseDatos {
         Cursor c = baseDatos.query(TABLA_LINEAS, null, where, null, null, null, null);
         if (c.getCount() == 0) return null;
         c.moveToFirst();
-        l.setLinea(c.getString(c.getColumnIndex("Linea")));
-        l.setTexto(c.getString(c.getColumnIndex("Texto")));
+        l.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+        l.setTexto(c.getString(c.getColumnIndexOrThrow("Texto")));
 
         c.close();
         return l;
@@ -1517,8 +1515,8 @@ public class BaseDatos {
         Cursor c = baseDatos.query(TABLA_LINEAS, null, where, null, null, null, null);
         if (c.getCount() == 0) return null;
         c.moveToFirst();
-        l.setLinea(c.getString(c.getColumnIndex("Linea")));
-        l.setTexto(c.getString(c.getColumnIndex("Texto")));
+        l.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+        l.setTexto(c.getString(c.getColumnIndexOrThrow("Texto")));
 
         c.close();
         return l;
@@ -1650,15 +1648,15 @@ public class BaseDatos {
         if (c.getCount() == 0) return null;
         Servicio s = new Servicio();
         c.moveToFirst();
-        s.setLinea(c.getString(c.getColumnIndex("Linea")));
-        s.setServicio(c.getString(c.getColumnIndex("Servicio")));
-        s.setTurno(c.getInt(c.getColumnIndex("Turno")));
-        s.setTomaDeje(c.getString(c.getColumnIndex("TomaDeje")));
-        s.setEuros(c.getDouble(c.getColumnIndex("Euros")));
-        s.setInicio(c.getString(c.getColumnIndex("Inicio")));
-        s.setLugarInicio(c.getString(c.getColumnIndex("LugarInicio")));
-        s.setFinal(c.getString(c.getColumnIndex("Final")));
-        s.setLugarFinal(c.getString(c.getColumnIndex("LugarFinal")));
+        s.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+        s.setServicio(c.getString(c.getColumnIndexOrThrow("Servicio")));
+        s.setTurno(c.getInt(c.getColumnIndexOrThrow("Turno")));
+        s.setTomaDeje(c.getString(c.getColumnIndexOrThrow("TomaDeje")));
+        s.setEuros(c.getDouble(c.getColumnIndexOrThrow("Euros")));
+        s.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+        s.setLugarInicio(c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+        s.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
+        s.setLugarFinal(c.getString(c.getColumnIndexOrThrow("LugarFinal")));
 
         c.close();
         return s;
@@ -1777,9 +1775,9 @@ public class BaseDatos {
         if (cursor.moveToFirst()) {
             do {
                 Servicio s = new Servicio();
-                s.setLinea(cursor.getString(cursor.getColumnIndex("Linea")));
-                s.setServicio(cursor.getString(cursor.getColumnIndex("Servicio")));
-                s.setTurno(cursor.getInt(cursor.getColumnIndex("Turno")));
+                s.setLinea(cursor.getString(cursor.getColumnIndexOrThrow("Linea")));
+                s.setServicio(cursor.getString(cursor.getColumnIndexOrThrow("Servicio")));
+                s.setTurno(cursor.getInt(cursor.getColumnIndexOrThrow("Turno")));
                 lista.add(s);
             } while (cursor.moveToNext());
         }
@@ -1821,13 +1819,13 @@ public class BaseDatos {
         Cursor c = baseDatos.query(TABLA_RELEVOS, null, where, null, null, null, null);
         if (c.getCount() == 0) return null;
         c.moveToFirst();
-        r.setMatricula(c.getInt(c.getColumnIndex("Matricula")));
-        r.setNombre(c.getString(c.getColumnIndex("Nombre")));
-        r.setApellidos(c.getString(c.getColumnIndex("Apellidos")));
-        r.setTelefono(c.getString(c.getColumnIndex("Telefono")));
-        r.setCalificacion(c.getInt(c.getColumnIndex("Calificacion")));
-        r.setDeuda(c.getInt(c.getColumnIndex("Deuda")));
-        r.setNotas(c.getString(c.getColumnIndex("Notas")));
+        r.setMatricula(c.getInt(c.getColumnIndexOrThrow("Matricula")));
+        r.setNombre(c.getString(c.getColumnIndexOrThrow("Nombre")));
+        r.setApellidos(c.getString(c.getColumnIndexOrThrow("Apellidos")));
+        r.setTelefono(c.getString(c.getColumnIndexOrThrow("Telefono")));
+        r.setCalificacion(c.getInt(c.getColumnIndexOrThrow("Calificacion")));
+        r.setDeuda(c.getInt(c.getColumnIndexOrThrow("Deuda")));
+        r.setNotas(c.getString(c.getColumnIndexOrThrow("Notas")));
 
         c.close();
         return r;

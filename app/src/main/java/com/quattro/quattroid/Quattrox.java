@@ -37,7 +37,7 @@ public class Quattrox extends Activity {
         super.onCreate(savedInstanceState);
         getActionBar().hide();
         setContentView(R.layout.activity_quattrox);
-        Texto = (TextView) findViewById(R.id.texto);
+        Texto = findViewById(R.id.texto);
         Texto.setText(Html.fromHtml(leeTexto()));
     }
 

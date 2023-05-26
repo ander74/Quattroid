@@ -16,25 +16,15 @@
 package com.quattro.quattroid;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Date;
-import java.util.Map;
 
 import BaseDatos.BaseDatos;
 
@@ -64,9 +54,9 @@ public class CopiaSeguridad extends Activity {
         setContentView(R.layout.activity_copiaseguridad);
 
         // Inicializar los elementos del view.
-        copia = (LinearLayout) findViewById(R.id.ly_copia);
-        confirmacion = (LinearLayout) findViewById(R.id.ly_confirmacion);
-        fecha = (TextView) findViewById(R.id.tv_fecha);
+        copia = findViewById(R.id.ly_copia);
+        confirmacion = findViewById(R.id.ly_confirmacion);
+        fecha = findViewById(R.id.tv_fecha);
 
         // Inicializamos la base de datos y las opciones
         datos = new BaseDatos(this);

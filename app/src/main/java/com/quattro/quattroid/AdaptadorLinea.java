@@ -17,7 +17,6 @@ package com.quattro.quattroid;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +42,9 @@ public class AdaptadorLinea extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        TextView linea = (TextView) view.findViewById(R.id.tv_linea);
-        TextView texto = (TextView) view.findViewById(R.id.tv_texto);
-        LinearLayout item = (LinearLayout) view.findViewById(R.id.ly_item);
+        TextView linea = view.findViewById(R.id.tv_linea);
+        TextView texto = view.findViewById(R.id.tv_texto);
+        LinearLayout item = view.findViewById(R.id.ly_item);
 
         // Borrado de los textos anteriores.
         linea.setText("");
@@ -59,8 +58,8 @@ public class AdaptadorLinea extends CursorAdapter {
         }
 
         // Escribimos los datos.
-        linea.setText(cursor.getString(cursor.getColumnIndex("Linea")));
-        texto.setText(cursor.getString(cursor.getColumnIndex("Texto")));
+        linea.setText(cursor.getString(cursor.getColumnIndexOrThrow("Linea")));
+        texto.setText(cursor.getString(cursor.getColumnIndexOrThrow("Texto")));
 
     }
 }

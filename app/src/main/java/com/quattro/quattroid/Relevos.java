@@ -27,10 +27,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import BaseDatos.BaseDatos;
-import BaseDatos.HoraAjena;
 
 public class Relevos extends Activity implements AdapterView.OnItemClickListener {
 
@@ -62,7 +60,7 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         context = this;
 
         // Instanciar los elementos
-        listaRelevos = (ListView) findViewById(R.id.lw_relevos);
+        listaRelevos = findViewById(R.id.lw_relevos);
 
         datos = new BaseDatos(context);
         cursor = datos.cursorRelevos(orden);
@@ -139,12 +137,12 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
                 return true;
             case R.id.bt_borrar:
                 Cursor c = adaptador.getCursor();
-                datos.borrarRelevo(c.getInt(c.getColumnIndex("Matricula")));
+                datos.borrarRelevo(c.getInt(c.getColumnIndexOrThrow("Matricula")));
                 actualizarCursor();
                 return true;
             case R.id.bt_relevoFijo:
                 c = adaptador.getCursor();
-                datos.opciones.setRelevoFijo(c.getInt(c.getColumnIndex("Matricula")));
+                datos.opciones.setRelevoFijo(c.getInt(c.getColumnIndexOrThrow("Matricula")));
                 datos.guardarOpciones();
             default:
                 return super.onContextItemSelected(item);
@@ -161,18 +159,18 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         if (llamadaDesdeMenu) {
             // Creamos un intent para devolver los datos de la incidencia
             Intent intent = new Intent(context, EditarRelevo.class);
-            intent.putExtra("Matricula", c.getInt(c.getColumnIndex("Matricula")));
-            intent.putExtra("Deuda", c.getInt(c.getColumnIndex("Deuda")));
-            intent.putExtra("Calificacion", c.getInt(c.getColumnIndex("Calificacion")));
-            intent.putExtra("Nombre", c.getString(c.getColumnIndex("Nombre")));
-            intent.putExtra("Apellidos", c.getString(c.getColumnIndex("Apellidos")));
-            intent.putExtra("Telefono", c.getString(c.getColumnIndex("Telefono")));
-            intent.putExtra("Notas", c.getString(c.getColumnIndex("Notas")));
+            intent.putExtra("Matricula", c.getInt(c.getColumnIndexOrThrow("Matricula")));
+            intent.putExtra("Deuda", c.getInt(c.getColumnIndexOrThrow("Deuda")));
+            intent.putExtra("Calificacion", c.getInt(c.getColumnIndexOrThrow("Calificacion")));
+            intent.putExtra("Nombre", c.getString(c.getColumnIndexOrThrow("Nombre")));
+            intent.putExtra("Apellidos", c.getString(c.getColumnIndexOrThrow("Apellidos")));
+            intent.putExtra("Telefono", c.getString(c.getColumnIndexOrThrow("Telefono")));
+            intent.putExtra("Notas", c.getString(c.getColumnIndexOrThrow("Notas")));
             startActivityForResult(intent, ACCION_EDITA_RELEVO);
         } else {
             Intent intent = new Intent(context, Relevos.class);
-            intent.putExtra("Matricula", c.getInt(c.getColumnIndex("Matricula")));
-            intent.putExtra("Apellidos", c.getString(c.getColumnIndex("Apellidos")));
+            intent.putExtra("Matricula", c.getInt(c.getColumnIndexOrThrow("Matricula")));
+            intent.putExtra("Apellidos", c.getString(c.getColumnIndexOrThrow("Apellidos")));
             setResult(RESULT_OK, intent);
             finish();
         }

@@ -17,7 +17,6 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,7 +27,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.text.InputType;
-import android.util.JsonWriter;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,16 +50,13 @@ import com.quattro.models.ServicioModel;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 import BaseDatos.BaseDatos;
-import Objetos.Hora;
 import Objetos.Utils;
 
 public class Lineas extends Activity implements AdapterView.OnItemClickListener {
@@ -92,7 +87,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
 
         // Inicialización de los elementos
         context = this;
-        listaLineas = (ListView) findViewById(R.id.lw_lineas);
+        listaLineas = findViewById(R.id.lw_lineas);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
@@ -124,7 +119,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         switch (id) {
             case R.id.bt_nuevo:
                 intent = new Intent(context, EditarLinea.class);
-                intent.putExtra("Id", (int) -1);
+                intent.putExtra("Id", -1);
                 startActivityForResult(intent, ACCION_EDITA_LINEA);
                 return true;
             case R.id.bt_importar:
@@ -161,12 +156,12 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
             case R.id.bt_editar:
                 Intent intent = new Intent(context, EditarLinea.class);
                 c = adaptador.getCursor();
-                intent.putExtra("Id", c.getInt(c.getColumnIndex("_id")));
+                intent.putExtra("Id", c.getInt(c.getColumnIndexOrThrow("_id")));
                 startActivityForResult(intent, ACCION_EDITA_LINEA);
                 return true;
             case R.id.bt_borrar:
                 c = adaptador.getCursor();
-                datos.borrarLinea(c.getString(c.getColumnIndex("Linea")));
+                datos.borrarLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
                 actualizarCursor();
                 return true;
             default:
@@ -183,7 +178,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
 
         // Creamos un intent para enviar la línea pulsada.
         Intent intent = new Intent(context, Servicios.class);
-        intent.putExtra("Linea", c.getString(c.getColumnIndex("Linea")));
+        intent.putExtra("Linea", c.getString(c.getColumnIndexOrThrow("Linea")));
         startActivity(intent);
 
     }

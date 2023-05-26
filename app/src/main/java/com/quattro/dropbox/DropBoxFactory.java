@@ -16,31 +16,15 @@
 
 package com.quattro.dropbox;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.JsonWriter;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
-import com.dropbox.core.android.Auth;
-import com.dropbox.core.http.OkHttp3Requestor;
-import com.dropbox.core.http.OkHttpRequestor;
-import com.dropbox.core.http.StandardHttpRequestor;
 import com.dropbox.core.json.JsonReadException;
 import com.dropbox.core.oauth.DbxCredential;
-import com.dropbox.core.oauth.DbxRefreshResult;
 import com.dropbox.core.v2.DbxClientV2;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.quattro.quattroid.BuildConfig;
-import com.quattro.quattroid.DropBox;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Calendar;
-import java.util.Locale;
 
 
 public class DropBoxFactory {

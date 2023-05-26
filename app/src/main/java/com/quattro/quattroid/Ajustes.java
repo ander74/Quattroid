@@ -17,16 +17,11 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Switch;
 
 
@@ -93,37 +88,37 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         context = this;
         datos = new BaseDatos(this);
 
-        primerMes = (EditText) findViewById(R.id.et_primerMes);
-        primerAño = (EditText) findViewById(R.id.et_primerAño);
-        verMesActual = (Switch) findViewById(R.id.sw_verMesActual);
-        horasAnteriores = (EditText) findViewById(R.id.et_acumuladasAnteriores);
-        relevoFijo = (EditText) findViewById(R.id.et_relevoFijo);
-        rellenarSemana = (Switch) findViewById(R.id.sw_rellenarSemana);
-        modoBasico = (Switch) findViewById(R.id.sw_modoBasico);
-        jornadaMedia = (EditText) findViewById(R.id.et_jornadaMedia);
-        jornadaMinima = (EditText) findViewById(R.id.et_jornadaMinima);
-        limiteServicios = (EditText) findViewById(R.id.et_limiteServicios);
-        jornadaAnual = (EditText) findViewById(R.id.et_jornadaAnual);
-        regularJornada = (Switch) findViewById(R.id.sw_regularJornada);
-        regularBisiestos = (Switch) findViewById(R.id.sw_RegularBisiestos);
-        inicioNocturnas = (EditText) findViewById(R.id.et_inicioNocturnas);
-        finalNocturnas = (EditText) findViewById(R.id.et_finalNocturnas);
-        desayuno = (EditText) findViewById(R.id.et_desayuno);
-        comida1 = (EditText) findViewById(R.id.et_comida1);
-        comida2 = (EditText) findViewById(R.id.et_comida2);
-        cena = (EditText) findViewById(R.id.et_cena);
-        pdfHorizontal = (Switch) findViewById(R.id.sw_pdfHorizontal);
-        pdfIncluirServicios = (Switch) findViewById(R.id.sw_pdfIncluirServicios);
-        pdfIncluirNotas = (Switch) findViewById(R.id.sw_pdfIncluirNotas);
-        pdfAgruparNotas = (Switch) findViewById(R.id.sw_pdfAgruparNotas);
-        sumarTomaDeje = (Switch) findViewById(R.id.sw_sumarTomaDeje);
-        iniciarCalendario = (Switch) findViewById(R.id.sw_iniarCalendario);
-        activarTecladoNumerico = (Switch) findViewById(R.id.sw_TecladoNumerico);
-        swInferirTurnos = (Switch) findViewById(R.id.sw_inferirTurnos);
-        diaBaseTurnos = (EditText) findViewById(R.id.et_diaBaseTurnos);
-        mesBaseTurnos = (EditText) findViewById(R.id.et_mesBaseTurnos);
-        añoBaseTurnos = (EditText) findViewById(R.id.et_añoBaseTurnos);
-        swGuardarSiempre = (Switch) findViewById(R.id.sw_guardarSiempre);
+        primerMes = findViewById(R.id.et_primerMes);
+        primerAño = findViewById(R.id.et_primerAño);
+        verMesActual = findViewById(R.id.sw_verMesActual);
+        horasAnteriores = findViewById(R.id.et_acumuladasAnteriores);
+        relevoFijo = findViewById(R.id.et_relevoFijo);
+        rellenarSemana = findViewById(R.id.sw_rellenarSemana);
+        modoBasico = findViewById(R.id.sw_modoBasico);
+        jornadaMedia = findViewById(R.id.et_jornadaMedia);
+        jornadaMinima = findViewById(R.id.et_jornadaMinima);
+        limiteServicios = findViewById(R.id.et_limiteServicios);
+        jornadaAnual = findViewById(R.id.et_jornadaAnual);
+        regularJornada = findViewById(R.id.sw_regularJornada);
+        regularBisiestos = findViewById(R.id.sw_RegularBisiestos);
+        inicioNocturnas = findViewById(R.id.et_inicioNocturnas);
+        finalNocturnas = findViewById(R.id.et_finalNocturnas);
+        desayuno = findViewById(R.id.et_desayuno);
+        comida1 = findViewById(R.id.et_comida1);
+        comida2 = findViewById(R.id.et_comida2);
+        cena = findViewById(R.id.et_cena);
+        pdfHorizontal = findViewById(R.id.sw_pdfHorizontal);
+        pdfIncluirServicios = findViewById(R.id.sw_pdfIncluirServicios);
+        pdfIncluirNotas = findViewById(R.id.sw_pdfIncluirNotas);
+        pdfAgruparNotas = findViewById(R.id.sw_pdfAgruparNotas);
+        sumarTomaDeje = findViewById(R.id.sw_sumarTomaDeje);
+        iniciarCalendario = findViewById(R.id.sw_iniarCalendario);
+        activarTecladoNumerico = findViewById(R.id.sw_TecladoNumerico);
+        swInferirTurnos = findViewById(R.id.sw_inferirTurnos);
+        diaBaseTurnos = findViewById(R.id.et_diaBaseTurnos);
+        mesBaseTurnos = findViewById(R.id.et_mesBaseTurnos);
+        añoBaseTurnos = findViewById(R.id.et_añoBaseTurnos);
+        swGuardarSiempre = findViewById(R.id.sw_guardarSiempre);
 
         // Inicializamos las opciones
         //opciones = PreferenceManager.getDefaultSharedPreferences(this);
@@ -359,7 +354,7 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     datos.guardarOpciones();
                     break;
                 case R.id.et_acumuladasAnteriores:
-                    if (Hora.validaHoraDecimal(horasAnteriores.getText().toString()) == "") {
+                    if (Hora.validaHoraDecimal(horasAnteriores.getText().toString()).equals("")) {
                         horasAnteriores.setText(hAnteriores);
                     }
                     //long l = Double.doubleToRawLongBits(Double.valueOf(horasAnteriores.getText().toString().replace(",", ".")));

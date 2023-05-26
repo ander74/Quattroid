@@ -15,8 +15,8 @@ public class LineaModel {
     public LineaModel() { }
 
     public LineaModel(Cursor cursor){
-        Linea = cursor.getString(cursor.getColumnIndex("Linea"));
-        Texto = cursor.getString(cursor.getColumnIndex("Texto"));
+        Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
+        Texto = cursor.getString(cursor.getColumnIndexOrThrow("Texto"));
     }
 
     public LineaModel(LineaModel linea){

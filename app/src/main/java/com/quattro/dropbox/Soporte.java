@@ -17,10 +17,6 @@
 package com.quattro.dropbox;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.dropbox.core.DbxDownloader;
 import com.dropbox.core.DbxException;
@@ -33,12 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.util.Date;
-
-import BaseDatos.BaseDatos;
-import Objetos.Utils;
 
 
 public class Soporte {

@@ -17,7 +17,6 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -38,8 +36,6 @@ import java.util.Calendar;
 
 import BaseDatos.BaseDatos;
 import BaseDatos.Estadistica;
-import BaseDatos.EstadisticasMes;
-import BaseDatos.EstadisticasAño;
 import Objetos.Hora;
 
 public class Estadisticas extends Activity{
@@ -181,15 +177,15 @@ public class Estadisticas extends Activity{
     private void instanciarElementos(){
 
         // Grupos
-        grupoBotones = (LinearLayout) findViewById(R.id.ly_botones);
-        grupoTitulo = (LinearLayout) findViewById(R.id.ly_titulo);
+        grupoBotones = findViewById(R.id.ly_botones);
+        grupoTitulo = findViewById(R.id.ly_titulo);
         // Titulo
-        titulo = (TextView) findViewById(R.id.tv_titulo);
+        titulo = findViewById(R.id.tv_titulo);
         // Estadisticas
-        lista = (ListView) findViewById(R.id.lw_estadisticas);
+        lista = findViewById(R.id.lw_estadisticas);
         // Selectores
-        selectorMes = (NumberPicker) findViewById(R.id.np_mes);
-        selectorAño = (NumberPicker) findViewById(R.id.np_año);
+        selectorMes = findViewById(R.id.np_mes);
+        selectorAño = findViewById(R.id.np_año);
 
     }
 

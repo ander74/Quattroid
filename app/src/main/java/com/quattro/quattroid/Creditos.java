@@ -17,14 +17,9 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,11 +29,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import BaseDatos.Linea;
-import Objetos.Colores;
-import Objetos.Fondos;
-import Objetos.Forma;
 
 
 public class Creditos extends Activity {
@@ -67,9 +57,9 @@ public class Creditos extends Activity {
         context = this;
 
         // Inicializamos los elementos
-        Licencia = (TextView) findViewById(R.id.tv_licencia);
-        grupoCreditos = (LinearLayout) findViewById(R.id.ly_creditos);
-        grupoLicencia = (RelativeLayout) findViewById(R.id.ry_licencia);
+        Licencia = findViewById(R.id.tv_licencia);
+        grupoCreditos = findViewById(R.id.ly_creditos);
+        grupoLicencia = findViewById(R.id.ry_licencia);
 
         // Rellenamos la licencia
         Licencia.setText(leeLicencia());

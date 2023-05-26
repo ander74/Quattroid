@@ -21,8 +21,8 @@ public class DiaHelper {
         for (int m=1; m <num; m++){
             cursor.moveToPosition(m-1);
             servs[m] = new HorasServicio();
-            servs[m].Inicio = Hora.horaToInt(cursor.getString(cursor.getColumnIndex("Inicio")));
-            servs[m].Final = Hora.horaToInt(cursor.getString(cursor.getColumnIndex("Final")));
+            servs[m].Inicio = Hora.horaToInt(cursor.getString(cursor.getColumnIndexOrThrow("Inicio")));
+            servs[m].Final = Hora.horaToInt(cursor.getString(cursor.getColumnIndexOrThrow("Final")));
         }
         EstadoDia resultado = Calculos.TiempoTrabajado(servs, datos.opciones, datosDia.getTurno(), datosDia.getTipoIncidencia());
         if (resultado == null){
@@ -49,7 +49,7 @@ public class DiaHelper {
             if (datosDia.isHuelgaParcial()){
                 datosDia.setTrabajadas(Jornada);
                 //TODO Comprobar que las horas trabajadas son la jornada media y no la jornada mínima.
-                Double acum = ((Jornada - JornadaMinima) * datosDia.getHorasHuelga())/Jornada;
+                double acum = ((Jornada - JornadaMinima) * datosDia.getHorasHuelga())/Jornada;
                 datosDia.setAcumuladas(-acum);
                 // Si la huelga es completa...
             } else {

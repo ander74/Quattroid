@@ -1,7 +1,7 @@
 package com.quattro.quattroid;
 
 import android.content.Context;
-import androidx.annotation.LayoutRes;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -53,24 +53,24 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
             view = LayoutInflater.from(context).inflate(R.layout.item_calendario, null);
             holder = new ViewHolder();
 
-            holder.Item = (LinearLayout) view.findViewById(R.id.item);
-            holder.TextoResto = (RelativeLayout) view.findViewById(R.id.resto);
-            holder.TextoDia = (RelativeLayout) view.findViewById(R.id.textoDia);
-            holder.Dia = (TextView) view.findViewById(R.id.dia);
-            holder.DiaSemana = (TextView) view.findViewById(R.id.diaSemana);
-            holder.EsHuelga = (ImageView) view.findViewById(R.id.esHuelga);
-            holder.HayCompañero = (ImageView) view.findViewById(R.id.hayCompañero);
-            holder.Notas = (ImageView) view.findViewById(R.id.notas);
-            holder.Servicio = (TextView) view.findViewById(R.id.servicio);
-            holder.Desayuno = (ImageView) view.findViewById(R.id.desayuno);
-            holder.Comida = (ImageView) view.findViewById(R.id.comida);
-            holder.Cena = (ImageView) view.findViewById(R.id.cena);
-            holder.Relevo = (TextView) view.findViewById(R.id.relevo);
-            holder.Calificacion = (ImageView) view.findViewById(R.id.calificacion);
-            holder.Horario = (TextView) view.findViewById(R.id.horario);
-            holder.Nocturnas = (TextView) view.findViewById(R.id.nocturnas);
-            holder.Guion = (TextView) view.findViewById(R.id.guion);
-            holder.Acumuladas = (TextView) view.findViewById(R.id.acumuladas);
+            holder.Item = view.findViewById(R.id.item);
+            holder.TextoResto = view.findViewById(R.id.resto);
+            holder.TextoDia = view.findViewById(R.id.textoDia);
+            holder.Dia = view.findViewById(R.id.dia);
+            holder.DiaSemana = view.findViewById(R.id.diaSemana);
+            holder.EsHuelga = view.findViewById(R.id.esHuelga);
+            holder.HayCompañero = view.findViewById(R.id.hayCompañero);
+            holder.Notas = view.findViewById(R.id.notas);
+            holder.Servicio = view.findViewById(R.id.servicio);
+            holder.Desayuno = view.findViewById(R.id.desayuno);
+            holder.Comida = view.findViewById(R.id.comida);
+            holder.Cena = view.findViewById(R.id.cena);
+            holder.Relevo = view.findViewById(R.id.relevo);
+            holder.Calificacion = view.findViewById(R.id.calificacion);
+            holder.Horario = view.findViewById(R.id.horario);
+            holder.Nocturnas = view.findViewById(R.id.nocturnas);
+            holder.Guion = view.findViewById(R.id.guion);
+            holder.Acumuladas = view.findViewById(R.id.acumuladas);
 
             view.setTag(holder);
         } else {

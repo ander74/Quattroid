@@ -42,7 +42,7 @@ public class Calculos {
      */
     public static int ConvierteDpEnPx(int dp, Context context){
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int)(dp * (metrics.densityDpi / 160));
+        return dp * (metrics.densityDpi / 160);
     }
 
 
@@ -55,7 +55,7 @@ public class Calculos {
      */
     public static int ConviertePxEnDp(int px, Context context){
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int)(px / (metrics.densityDpi / 160));
+        return px / (metrics.densityDpi / 160);
     }
 
 

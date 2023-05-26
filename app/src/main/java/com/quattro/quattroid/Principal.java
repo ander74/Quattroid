@@ -17,17 +17,13 @@ package com.quattro.quattroid;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -40,15 +36,8 @@ import android.widget.Toast;
 import com.quattro.dropbox.SincronizarTask;
 import com.quattro.dropbox.Soporte;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import BaseDatos.BaseDatos;
-import Objetos.Hora;
 import Objetos.Utils;
-
-import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 
 
 public class Principal extends Activity implements View.OnLongClickListener {
@@ -81,9 +70,9 @@ public class Principal extends Activity implements View.OnLongClickListener {
         context = this;
 
         // Declaramos los elementos visuales
-        tvActualizando = (TextView) findViewById(R.id.tv_actualizando);
-        textTitulo = (TextView) findViewById(R.id.textTitulo);
-        lyTitulo = (LinearLayout) findViewById(R.id.ly_titulo);
+        tvActualizando = findViewById(R.id.tv_actualizando);
+        textTitulo = findViewById(R.id.textTitulo);
+        lyTitulo = findViewById(R.id.ly_titulo);
         
         // Establecemos los listeners
 	    lyTitulo.setOnLongClickListener(this);
@@ -134,7 +123,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
         // Nuevo sistema de autorización de Dropbox.
         // Si no tenemos las credenciales de Dropox, revocar los tokens anteriores para forzar a tenerlas.
         String dropboxCredential = opciones.getString("DropboxCredential", null);
-        if (dropboxCredential == null || dropboxCredential == ""){
+        if (dropboxCredential == null || dropboxCredential.equals("")){
             opciones.edit()
                     .putString("DropboxCredential", null)
                     .putBoolean("Logueado", false)

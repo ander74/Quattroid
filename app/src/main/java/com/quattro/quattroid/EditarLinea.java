@@ -17,28 +17,19 @@
 package com.quattro.quattroid;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.os.Vibrator;
 import BaseDatos.BaseDatos;
 import BaseDatos.Linea;
 import Objetos.Colores;
-import Objetos.Hora;
 
 public class EditarLinea extends Activity implements View.OnFocusChangeListener,
                                                      View.OnLongClickListener {
@@ -69,9 +60,9 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
 
         // Inicialización de los elementos
         context = this;
-        titulo = (TextView) findViewById(R.id.tv_titulo);
-        linea = (EditText) findViewById(R.id.et_linea);
-        texto = (EditText) findViewById(R.id.et_texto);
+        titulo = findViewById(R.id.tv_titulo);
+        linea = findViewById(R.id.et_linea);
+        texto = findViewById(R.id.et_texto);
 
         // Definir los listeners
         linea.setOnFocusChangeListener(this);
@@ -187,7 +178,7 @@ public class EditarLinea extends Activity implements View.OnFocusChangeListener,
 
 
     private void Guardar(){
-        if (linea.getText().toString().trim() != ""){
+        if (!linea.getText().toString().trim().equals("")){
             lin.setLinea(linea.getText().toString());
             lin.setTexto(texto.getText().toString());
             datos.setLinea(lin);

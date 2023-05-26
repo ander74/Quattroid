@@ -39,18 +39,20 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.quattro.helpers.DiaHelper;
 import com.quattro.models.ServicioAuxiliarModel;
 import com.quattro.models.ServicioModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import BaseDatos.Linea;
-import BaseDatos.Servicio;
-import BaseDatos.ServicioDia;
-import BaseDatos.Relevo;
+
 import BaseDatos.BaseDatos;
 import BaseDatos.DatosDia;
+import BaseDatos.Linea;
+import BaseDatos.Relevo;
+import BaseDatos.Servicio;
+import BaseDatos.ServicioDia;
 import Objetos.Calculos;
 import Objetos.Colores;
 import Objetos.Hora;
@@ -297,9 +299,9 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 servicioDia.setDia(diaActual);
                 servicioDia.setMes(mesActual);
                 servicioDia.setAño(añoActual);
-                servicioDia.setLinea(c.getString(c.getColumnIndex("Linea")));
-                servicioDia.setServicio(c.getString(c.getColumnIndex("Servicio")));
-                servicioDia.setTurno(c.getInt(c.getColumnIndex("Turno")));
+                servicioDia.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+                servicioDia.setServicio(c.getString(c.getColumnIndexOrThrow("Servicio")));
+                servicioDia.setTurno(c.getInt(c.getColumnIndexOrThrow("Turno")));
                 datos.borraServicioDia(servicioDia);
                 actualizarCursor();
                 DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
@@ -651,13 +653,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
 
         // Creamos un intent para devolver los datos de la incidencia
         Intent intent = new Intent(context, EditarServiciosDia.class);
-        intent.putExtra("Linea", c.getString(c.getColumnIndex("Linea")));
-        intent.putExtra("Servicio", c.getString(c.getColumnIndex("Servicio")));
-        intent.putExtra("Turno", c.getInt(c.getColumnIndex("Turno")));
-        intent.putExtra("Inicio", c.getString(c.getColumnIndex("Inicio")));
-        intent.putExtra("Final", c.getString(c.getColumnIndex("Final")));
-        intent.putExtra("LugarInicio", c.getString(c.getColumnIndex("LugarInicio")));
-        intent.putExtra("LugarFinal", c.getString(c.getColumnIndex("LugarFinal")));
+        intent.putExtra("Linea", c.getString(c.getColumnIndexOrThrow("Linea")));
+        intent.putExtra("Servicio", c.getString(c.getColumnIndexOrThrow("Servicio")));
+        intent.putExtra("Turno", c.getInt(c.getColumnIndexOrThrow("Turno")));
+        intent.putExtra("Inicio", c.getString(c.getColumnIndexOrThrow("Inicio")));
+        intent.putExtra("Final", c.getString(c.getColumnIndexOrThrow("Final")));
+        intent.putExtra("LugarInicio", c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+        intent.putExtra("LugarFinal", c.getString(c.getColumnIndexOrThrow("LugarFinal")));
         startActivityForResult(intent, ACCION_SERVICIOS_DIA);
 
     }
@@ -1150,13 +1152,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                         sd.setDia(dia);
                         sd.setMes(mes);
                         sd.setAño(año);
-                        sd.setLinea(cursor.getString(cursor.getColumnIndex("Linea")));
-                        sd.setServicio(cursor.getString(cursor.getColumnIndex("Servicio")));
-                        sd.setTurno(cursor.getInt(cursor.getColumnIndex("Turno")));
-                        sd.setInicio(cursor.getString(cursor.getColumnIndex("Inicio")));
-                        sd.setLugarInicio(cursor.getString(cursor.getColumnIndex("LugarInicio")));
-                        sd.setFinal(cursor.getString(cursor.getColumnIndex("Final")));
-                        sd.setLugarFinal(cursor.getString(cursor.getColumnIndex("LugarFinal")));
+                        sd.setLinea(cursor.getString(cursor.getColumnIndexOrThrow("Linea")));
+                        sd.setServicio(cursor.getString(cursor.getColumnIndexOrThrow("Servicio")));
+                        sd.setTurno(cursor.getInt(cursor.getColumnIndexOrThrow("Turno")));
+                        sd.setInicio(cursor.getString(cursor.getColumnIndexOrThrow("Inicio")));
+                        sd.setLugarInicio(cursor.getString(cursor.getColumnIndexOrThrow("LugarInicio")));
+                        sd.setFinal(cursor.getString(cursor.getColumnIndexOrThrow("Final")));
+                        sd.setLugarFinal(cursor.getString(cursor.getColumnIndexOrThrow("LugarFinal")));
                         datos.guardaServicioDia(sd);
                     } while (cursor.moveToNext());
                 }
@@ -1175,17 +1177,14 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 rellenarSemana();
             }
             regularAño();
-            if (isServicioVacio()){
-
-            }
             //TODO: Evaluar si el servicio está completo y si es así, evaluar si existe. Si no existe, crearlo.
             //      Para crearlo, creamos un método que se encarque de guardar como servicio el servicio de un día
             //      teniendo en cuenta los servicios auxiliares.
             if (datosDia.isServicioCompleto()){
-                var servicioDia = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
+                Servicio servicioDia = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
                 // Si el servicio no existe, lo creamos.
                 if (servicioDia == null){
-                    var nuevoServicio = new ServicioModel();
+                    ServicioModel nuevoServicio = new ServicioModel();
                     nuevoServicio.setLinea(datosDia.getLinea());
                     nuevoServicio.setServicio(datosDia.getServicio());
                     nuevoServicio.setTurno(datosDia.getTurno());
@@ -1196,20 +1195,20 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                     nuevoServicio.setTomaDeje(datosDia.getTomaDeje());
                     nuevoServicio.setEuros(datosDia.getEuros());
                     if (cursor.getCount() > 0 && cursor.moveToFirst()){
-                        nuevoServicio.setServiciosAuxiliares(new ArrayList<ServicioAuxiliarModel>());
+                        nuevoServicio.setServiciosAuxiliares(new ArrayList<>());
                         do {
-                            var sd = new ServicioAuxiliarModel();
-                            sd.setLinea(cursor.getString(cursor.getColumnIndex("Linea")));
-                            sd.setServicio(cursor.getString(cursor.getColumnIndex("Servicio")));
-                            sd.setTurno(cursor.getInt(cursor.getColumnIndex("Turno")));
-                            sd.setInicio(cursor.getString(cursor.getColumnIndex("Inicio")));
-                            sd.setLugarInicio(cursor.getString(cursor.getColumnIndex("LugarInicio")));
-                            sd.setFinal(cursor.getString(cursor.getColumnIndex("Final")));
-                            sd.setLugarFinal(cursor.getString(cursor.getColumnIndex("LugarFinal")));
+                            ServicioAuxiliarModel sd = new ServicioAuxiliarModel();
+                            sd.setLinea(cursor.getString(cursor.getColumnIndexOrThrow("Linea")));
+                            sd.setServicio(cursor.getString(cursor.getColumnIndexOrThrow("Servicio")));
+                            sd.setTurno(cursor.getInt(cursor.getColumnIndexOrThrow("Turno")));
+                            sd.setInicio(cursor.getString(cursor.getColumnIndexOrThrow("Inicio")));
+                            sd.setLugarInicio(cursor.getString(cursor.getColumnIndexOrThrow("LugarInicio")));
+                            sd.setFinal(cursor.getString(cursor.getColumnIndexOrThrow("Final")));
+                            sd.setLugarFinal(cursor.getString(cursor.getColumnIndexOrThrow("LugarFinal")));
                             nuevoServicio.getServiciosAuxiliares().add(sd);
                         } while (cursor.moveToNext());
                     }
-                    var lista = new ArrayList<ServicioModel>();
+                    ArrayList<ServicioModel> lista = new ArrayList<ServicioModel>();
                     lista.add(nuevoServicio);
                     datos.guardarServicios(lista);
                 }
@@ -1284,13 +1283,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                     sd.setDia(diaOriginal);
                     sd.setMes(mesOriginal);
                     sd.setAño(añoOriginal);
-                    sd.setLinea(c.getString(c.getColumnIndex("Linea")));
-                    sd.setServicio(c.getString(c.getColumnIndex("Servicio")));
-                    sd.setTurno(c.getInt(c.getColumnIndex("Turno")));
-                    sd.setInicio(c.getString(c.getColumnIndex("Inicio")));
-                    sd.setFinal(c.getString(c.getColumnIndex("Final")));
-                    sd.setLugarInicio(c.getString(c.getColumnIndex("LugarInicio")));
-                    sd.setLugarFinal(c.getString(c.getColumnIndex("LugarFinal")));
+                    sd.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+                    sd.setServicio(c.getString(c.getColumnIndexOrThrow("Servicio")));
+                    sd.setTurno(c.getInt(c.getColumnIndexOrThrow("Turno")));
+                    sd.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+                    sd.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
+                    sd.setLugarInicio(c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+                    sd.setLugarFinal(c.getString(c.getColumnIndexOrThrow("LugarFinal")));
                     datos.guardaServicioDia(sd);
                     actualizarCursor();
                 }
@@ -1385,13 +1384,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                         sd.setDia(diaActual);
                         sd.setMes(mesActual);
                         sd.setAño(añoActual);
-                        sd.setLinea(c.getString(c.getColumnIndex("LineaAuxiliar")));
-                        sd.setServicio(c.getString(c.getColumnIndex("ServicioAuxiliar")));
-                        sd.setTurno(c.getInt(c.getColumnIndex("TurnoAuxiliar")));
-                        sd.setInicio(c.getString(c.getColumnIndex("Inicio")));
-                        sd.setFinal(c.getString(c.getColumnIndex("Final")));
-                        sd.setLugarInicio(c.getString(c.getColumnIndex("LugarInicio")));
-                        sd.setLugarFinal(c.getString(c.getColumnIndex("LugarFinal")));
+                        sd.setLinea(c.getString(c.getColumnIndexOrThrow("LineaAuxiliar")));
+                        sd.setServicio(c.getString(c.getColumnIndexOrThrow("ServicioAuxiliar")));
+                        sd.setTurno(c.getInt(c.getColumnIndexOrThrow("TurnoAuxiliar")));
+                        sd.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+                        sd.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
+                        sd.setLugarInicio(c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+                        sd.setLugarFinal(c.getString(c.getColumnIndexOrThrow("LugarFinal")));
                         datos.guardaServicioDia(sd);
                     }
                 }
@@ -1445,13 +1444,13 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                         sd.setDia(diaActual);
                         sd.setMes(mesActual);
                         sd.setAño(añoActual);
-                        sd.setLinea(c.getString(c.getColumnIndex("LineaAuxiliar")));
-                        sd.setServicio(c.getString(c.getColumnIndex("ServicioAuxiliar")));
-                        sd.setTurno(c.getInt(c.getColumnIndex("TurnoAuxiliar")));
-                        sd.setInicio(c.getString(c.getColumnIndex("Inicio")));
-                        sd.setFinal(c.getString(c.getColumnIndex("Final")));
-                        sd.setLugarInicio(c.getString(c.getColumnIndex("LugarInicio")));
-                        sd.setLugarFinal(c.getString(c.getColumnIndex("LugarFinal")));
+                        sd.setLinea(c.getString(c.getColumnIndexOrThrow("LineaAuxiliar")));
+                        sd.setServicio(c.getString(c.getColumnIndexOrThrow("ServicioAuxiliar")));
+                        sd.setTurno(c.getInt(c.getColumnIndexOrThrow("TurnoAuxiliar")));
+                        sd.setInicio(c.getString(c.getColumnIndexOrThrow("Inicio")));
+                        sd.setFinal(c.getString(c.getColumnIndexOrThrow("Final")));
+                        sd.setLugarInicio(c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+                        sd.setLugarFinal(c.getString(c.getColumnIndexOrThrow("LugarFinal")));
                         datos.guardaServicioDia(sd);
                     }
                 }

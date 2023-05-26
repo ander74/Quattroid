@@ -19,11 +19,9 @@ package com.quattro.quattroid;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -34,8 +32,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.security.Guard;
 
 import BaseDatos.BaseDatos;
 import BaseDatos.Servicio;
@@ -88,18 +84,17 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
         // Inicialización de los elementos
         context = this;
-        titulo = (TextView) findViewById(R.id.tv_titulo);
-        complementarios = (TextView) findViewById(R.id.tv_complementarios);
-        servicio = (EditText) findViewById(R.id.et_linea);
-	    servicio = (EditText) findViewById(R.id.et_servicio);
-        turno = (EditText) findViewById(R.id.et_turno);
-        inicio = (EditText) findViewById(R.id.et_inicio);
-        fin = (EditText) findViewById(R.id.et_final);
-        lugarInicio = (EditText) findViewById(R.id.et_lugarInicio);
-        lugarFinal = (EditText) findViewById(R.id.et_lugarFinal);
-        tomaDeje = (EditText) findViewById(R.id.et_tomaDeje);
-        euros = (EditText) findViewById(R.id.et_euros);
-        listaServicios = (ListView) findViewById(R.id.lw_listaServicios);
+        titulo = findViewById(R.id.titulo);
+        complementarios = findViewById(R.id.tv_complementarios);
+	    servicio = findViewById(R.id.et_servicio);
+        turno = findViewById(R.id.et_turno);
+        inicio = findViewById(R.id.et_inicio);
+        fin = findViewById(R.id.et_final);
+        lugarInicio = findViewById(R.id.et_lugarInicio);
+        lugarFinal = findViewById(R.id.et_lugarFinal);
+        tomaDeje = findViewById(R.id.et_tomaDeje);
+        euros = findViewById(R.id.et_euros);
+        listaServicios = findViewById(R.id.lw_listaServicios);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
@@ -134,7 +129,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         // Definir si vamos a editar un servicio o crear una nuevo.
         if (id == -1){
             //SERVICIO NUEVO
-            if (lineatext == "") finish();
+            if (lineatext.equals("")) finish();
             serv = new Servicio();
             serv.setLinea(lineatext);
             servicio.setText("");
@@ -226,7 +221,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         switch (item.getItemId()){
             case R.id.bt_borrar:
                 Cursor c = adaptador.getCursor();
-                datos.borraServicioAuxiliar(c.getInt(c.getColumnIndex("_id")));
+                datos.borraServicioAuxiliar(c.getInt(c.getColumnIndexOrThrow("_id")));
                 actualizarCursor();
                 return true;
             case R.id.bt_vaciar:
@@ -280,14 +275,14 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
         // Creamos un intent para editar el servicio
         Intent intent = new Intent(context, EditarServiciosDia.class);
-        intent.putExtra("Linea", c.getString(c.getColumnIndex("LineaAuxiliar")));
-        intent.putExtra("Servicio", c.getString(c.getColumnIndex("ServicioAuxiliar")));
-        intent.putExtra("Turno", c.getInt(c.getColumnIndex("TurnoAuxiliar")));
-        intent.putExtra("Inicio", c.getString(c.getColumnIndex("Inicio")));
-        intent.putExtra("Final", c.getString(c.getColumnIndex("Final")));
-        intent.putExtra("LugarInicio", c.getString(c.getColumnIndex("LugarInicio")));
-        intent.putExtra("LugarFinal", c.getString(c.getColumnIndex("LugarFinal")));
-        intent.putExtra("Id", c.getInt(c.getColumnIndex("_id")));
+        intent.putExtra("Linea", c.getString(c.getColumnIndexOrThrow("LineaAuxiliar")));
+        intent.putExtra("Servicio", c.getString(c.getColumnIndexOrThrow("ServicioAuxiliar")));
+        intent.putExtra("Turno", c.getInt(c.getColumnIndexOrThrow("TurnoAuxiliar")));
+        intent.putExtra("Inicio", c.getString(c.getColumnIndexOrThrow("Inicio")));
+        intent.putExtra("Final", c.getString(c.getColumnIndexOrThrow("Final")));
+        intent.putExtra("LugarInicio", c.getString(c.getColumnIndexOrThrow("LugarInicio")));
+        intent.putExtra("LugarFinal", c.getString(c.getColumnIndexOrThrow("LugarFinal")));
+        intent.putExtra("Id", c.getInt(c.getColumnIndexOrThrow("_id")));
         startActivityForResult(intent, ACCION_EDITA_SERVICIO_AUXILIAR);
     }
 

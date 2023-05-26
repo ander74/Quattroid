@@ -16,11 +16,6 @@
  */
 package Objetos;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,7 +81,7 @@ public class Hora {
     // Si la hora no es válida, devuelve -1.
     public static int horaToInt(String h){
         // Si h es nulo, devolvemos -1
-        if (h == null || h == "") return -1;
+        if (h == null || h.equals("")) return -1;
         // Creamos un filtro para evaluar la cadena pasada.
         Pattern p = Pattern.compile("[0-9]{1,2}:[0-9]{2}");
         // Reemplazamos tanto los puntos, como las comas, por el símbolo : y quitamos espacios.

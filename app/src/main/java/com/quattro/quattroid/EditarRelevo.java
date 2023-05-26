@@ -65,18 +65,18 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
 
         // Inicialización de los elementos
         context = this;
-        titulo = (TextView) findViewById(R.id.tv_titulo);
-        deudaTotal = (TextView) findViewById(R.id.tv_deudaTotal);
-        matricula = (EditText) findViewById(R.id.et_matricula);
-        nombre = (EditText) findViewById(R.id.et_nombre);
-        apellidos = (EditText) findViewById(R.id.et_apellidos);
-        telefono = (EditText) findViewById(R.id.et_telefono);
-        deuda = (EditText) findViewById(R.id.et_deuda);
-        notas = (EditText) findViewById(R.id.et_notas);
-        grupo = (RadioGroup) findViewById(R.id.rg_calificacion);
-        malo = (RadioButton) findViewById(R.id.rb_malo);
-        normal = (RadioButton) findViewById(R.id.rb_normal);
-        bueno = (RadioButton) findViewById(R.id.rb_bueno);
+        titulo = findViewById(R.id.tv_titulo);
+        deudaTotal = findViewById(R.id.tv_deudaTotal);
+        matricula = findViewById(R.id.et_matricula);
+        nombre = findViewById(R.id.et_nombre);
+        apellidos = findViewById(R.id.et_apellidos);
+        telefono = findViewById(R.id.et_telefono);
+        deuda = findViewById(R.id.et_deuda);
+        notas = findViewById(R.id.et_notas);
+        grupo = findViewById(R.id.rg_calificacion);
+        malo = findViewById(R.id.rb_malo);
+        normal = findViewById(R.id.rb_normal);
+        bueno = findViewById(R.id.rb_bueno);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);

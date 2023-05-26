@@ -1,9 +1,6 @@
 package com.quattro.models;
 
 import android.database.Cursor;
-
-import com.itextpdf.kernel.geom.Line;
-
 import BaseDatos.ServicioAuxiliar;
 
 public class ServicioAuxiliarModel {
@@ -14,16 +11,16 @@ public class ServicioAuxiliarModel {
     public ServicioAuxiliarModel() { }
 
     public ServicioAuxiliarModel(Cursor cursor){
-        Linea = cursor.getString(cursor.getColumnIndex("Linea"));
-        Servicio = cursor.getString(cursor.getColumnIndex("Servicio"));
-        Turno = cursor.getInt(cursor.getColumnIndex("Turno"));
-        LineaAuxiliar = cursor.getString(cursor.getColumnIndex("LineaAuxiliar"));
-        ServicioAuxiliar = cursor.getString(cursor.getColumnIndex("ServicioAuxiliar"));
-        TurnoAuxiliar = cursor.getInt(cursor.getColumnIndex("TurnoAuxiliar"));
-        Inicio = cursor.getString(cursor.getColumnIndex("Inicio"));
-        LugarInicio = cursor.getString(cursor.getColumnIndex("LugarInicio"));
-        Final = cursor.getString(cursor.getColumnIndex("Final"));
-        LugarFinal = cursor.getString(cursor.getColumnIndex("LugarFinal"));
+        Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
+        Servicio = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
+        Turno = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
+        LineaAuxiliar = cursor.getString(cursor.getColumnIndexOrThrow("LineaAuxiliar"));
+        ServicioAuxiliar = cursor.getString(cursor.getColumnIndexOrThrow("ServicioAuxiliar"));
+        TurnoAuxiliar = cursor.getInt(cursor.getColumnIndexOrThrow("TurnoAuxiliar"));
+        Inicio = cursor.getString(cursor.getColumnIndexOrThrow("Inicio"));
+        LugarInicio = cursor.getString(cursor.getColumnIndexOrThrow("LugarInicio"));
+        Final = cursor.getString(cursor.getColumnIndexOrThrow("Final"));
+        LugarFinal = cursor.getString(cursor.getColumnIndexOrThrow("LugarFinal"));
     }
 
     public ServicioAuxiliarModel (ServicioAuxiliarModel auxiliar){
