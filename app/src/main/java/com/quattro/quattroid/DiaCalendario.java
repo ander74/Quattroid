@@ -1177,9 +1177,6 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 rellenarSemana();
             }
             regularAño();
-            //TODO: Evaluar si el servicio está completo y si es así, evaluar si existe. Si no existe, crearlo.
-            //      Para crearlo, creamos un método que se encarque de guardar como servicio el servicio de un día
-            //      teniendo en cuenta los servicios auxiliares.
             if (datosDia.isServicioCompleto()){
                 Servicio servicioDia = datos.getServicio(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
                 // Si el servicio no existe, lo creamos.
