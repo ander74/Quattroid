@@ -23,7 +23,7 @@
 
 
     <!-- ACTIVITY PRINCIPAL -->
-    <string name="nombreAplicacion">Quattroid 1.9.3</string>
+    <string name="nombreAplicacion">Quattroid 2.0</string>
     <string name="creditoPrincipal">A. Herrero</string>
     <string name="bt_quattrox">Quattro X</string>
     <string name="bt_calendario">Calendario</string>
@@ -37,7 +37,7 @@
 
     <!-- ACTIVITY HERRAMIENTAS -->
     <string name="bt_ajustes">Ajustes</string>
-    <string name="bt_estadisticas">Estadisticas</string>
+    <string name="bt_estadisticas">Estadísticas</string>
     <string name="bt_busquedas">Búsquedas</string>
 
 
@@ -91,7 +91,7 @@
     <string-array name="inferirTurnosArray">
         <item>Lunes</item>
         <item>Martes</item>
-        <item>Miercoles</item>
+        <item>Miércoles</item>
         <item>Jueves</item>
         <item>Viernes</item>
         <item>Sábado</item>

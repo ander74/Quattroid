@@ -51,6 +51,7 @@
                 android:textColor="#ffdcdcdc"
                 android:textStyle="bold" />
 
+            <!--
             <TextView
                 android:id="@+id/textTitulo2"
                 android:layout_width="wrap_content"
@@ -59,6 +60,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#ffdcdcdc"
                 android:textStyle="bold" />
+            -->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,36 +105,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="25dp"
+                    android:textColor="#ff00aa00"
                     android:text="@string/bt_calendario"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
             </LinearLayout>
 
-            <!-- QUATTRO X -->
-            <!--
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|center_horizontal"
-                android:padding="10dp"
-                android:layout_marginLeft="5dp"
-                android:clickable="true"
-                android:longClickable="true"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/bt_quattrox"
-                android:onClick="BotonPulsado"
-                android:id="@+id/bt_quattrox">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/quattrox"/>
-
-            </LinearLayout>
-            -->
         </LinearLayout>
 
 
@@ -160,6 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="25dp"
+                android:textColor="#ffff6600"
                 android:text="@string/bt_relevos"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
@@ -188,6 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="25dp"
+                android:textColor="#03A9F4"
                 android:text="@string/bt_servicios"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
@@ -216,6 +196,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="25dp"
+                android:textColor="#ffaa00aa"
                 android:text="@string/bt_ajenas"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
@@ -244,6 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="25dp"
+                android:textColor="#ff909090"
                 android:text="@string/bt_herramientas"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>

@@ -23,15 +23,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.quattro.dropbox.SincronizarTask;
 import com.quattro.dropbox.Soporte;
@@ -96,34 +95,11 @@ public class Principal extends Activity implements View.OnLongClickListener {
         if (!TienePermisoEscritura){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PEDIR_PERMISO_ESCRITURA);
         }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()){
-//            // Preguntar si se quiere activar el permiso.
-//            AlertDialog.Builder dialogo = new AlertDialog.Builder(this);
-//            dialogo.setTitle("PERMISO MANUAL REQUERIDO");
-//            dialogo.setMessage("Se necesita activar manualmente el permiso para guardar archivos.\n\n¿Quieres ir a la página del permiso?");
-//            dialogo.setPositiveButton("SI", (d, w) -> {
-//                // Llevar al usuario a la configuración de los permisos de la aplicación
-//                Intent intent = new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-//                startActivity(intent);
-//            });
-//            dialogo.setNegativeButton("NO", (d, w) -> {});
-//            dialogo.show();
-//        }
-
-
-//        if (!opciones.contains("JorMedia")) {
-//            // Creamos las nuevas preferencias de jornada media y minima.
-//            long jorMedia = Double.doubleToLongBits(Hora.horaToDecimal(opciones.getInt("JornadaMedia", 465)));
-//            opciones.edit().putLong("JorMedia", jorMedia).apply();
-//
-//            long jorMinima = Double.doubleToLongBits(Hora.horaToDecimal(opciones.getInt("JornadaMinima", 420)));
-//            opciones.edit().putLong("JorMinima", jorMinima).apply();
-//        }
 
         // Nuevo sistema de autorización de Dropbox.
         // Si no tenemos las credenciales de Dropox, revocar los tokens anteriores para forzar a tenerlas.
         String dropboxCredential = opciones.getString("DropboxCredential", null);
-        if (dropboxCredential == null || dropboxCredential.equals("")){
+        if (dropboxCredential == null || dropboxCredential.isEmpty()){
             opciones.edit()
                     .putString("DropboxCredential", null)
                     .putBoolean("Logueado", false)
@@ -133,7 +109,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
                     .putString("EmailDropbox", null).apply();
         }
 
-        if (datos.opciones.isIniciarCalendario()){ //opciones.getBoolean("IniciarCalendario", false)){
+        if (datos.opciones.isIniciarCalendario()){
             Intent intent = new Intent(this, Calendario.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);

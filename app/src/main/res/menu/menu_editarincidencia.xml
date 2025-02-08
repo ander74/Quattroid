@@ -16,12 +16,13 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/bt_guardar"
         android:title="Guardar"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_save"
-        app:showAsAction="always" />
+        android:showAsAction="always"
+        tools:ignore="AppCompatResource" />
 </menu>

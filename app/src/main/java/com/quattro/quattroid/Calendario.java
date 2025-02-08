@@ -41,6 +41,7 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -59,20 +60,23 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import com.quattro.helpers.DiaHelper;
+
 import org.joda.time.LocalDate;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import BaseDatos.BaseDatos;
-import BaseDatos.HoraAjena;
-import BaseDatos.Relevo;
 import BaseDatos.DatosDia;
-import BaseDatos.ServicioDia;
+import BaseDatos.HoraAjena;
+import BaseDatos.Incidencia;
+import BaseDatos.Linea;
+import BaseDatos.Relevo;
 import BaseDatos.Servicio;
 import BaseDatos.ServicioAuxiliar;
-import BaseDatos.Linea;
-import BaseDatos.Incidencia;
+import BaseDatos.ServicioDia;
 import Objetos.Calculos;
 import Objetos.Colores;
 import Objetos.Hora;
@@ -1427,7 +1431,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             int mes = datos.opciones.getMesBaseTurnos();
             int año = datos.opciones.getAñoBaseTurnos();
             LocalDate fechaReferencia = new LocalDate(año, mes, dia);
-            listaDias.stream().filter(d -> d.getTurno() == 0).forEach(d -> {
+            listaDias.stream().filter(d -> d.getCodigoIncidencia() == 0).forEach(d -> {
                 LocalDate fechaDia = new LocalDate(d.getAño(), d.getMes(), d.getDia());
                 d.setTurno(Calculos.InferirTurno(fechaDia, fechaReferencia, 1));
                 datos.guardaDia(d);

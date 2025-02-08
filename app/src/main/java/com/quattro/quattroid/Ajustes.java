@@ -24,7 +24,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 
-
 import org.joda.time.LocalDate;
 
 import BaseDatos.BaseDatos;
@@ -36,7 +35,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
 
     // VARIABLES
     Context context = null;
-    //SharedPreferences opciones = null;
     BaseDatos datos = null;
 
     String pMes, pAño, hAnteriores, rFijo, jMedia, jMinima, lServicios, jAnual, iNocturnas, fNocturnas, dDesayuno, dComida1,
@@ -120,57 +118,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         añoBaseTurnos = findViewById(R.id.et_añoBaseTurnos);
         swGuardarSiempre = findViewById(R.id.sw_guardarSiempre);
 
-        // Inicializamos las opciones
-        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
-
-//        // Llenamos las opciones con sus valores
-//        primerMes.setText(String.valueOf(opciones.getInt("PrimerMes", 10)));
-//        primerAño.setText(String.valueOf(opciones.getInt("PrimerAño", 2014)));
-//
-//        verMesActual.setChecked(opciones.getBoolean("VerMesActual", true));
-//
-//        long acumAnteriores = opciones.getLong("AcumuladasAnteriores", 0);
-//        horasAnteriores.setText(Hora.textoDecimal(Double.longBitsToDouble(acumAnteriores)));
-//
-//        relevoFijo.setText(String.valueOf(opciones.getInt("RelevoFijo", 0)));
-//	    modoBasico.setChecked(opciones.getBoolean("ModoBasico", false));
-//        rellenarSemana.setChecked(opciones.getBoolean("RellenarSemana", false));
-//
-//        long jorMedia = opciones.getLong("JorMedia", 0);
-//        jornadaMedia.setText(Hora.textoDecimal(Double.longBitsToDouble(jorMedia)));
-//
-//        long jorMinima = opciones.getLong("JorMinima", 0);
-//        jornadaMinima.setText(Hora.textoDecimal(Double.longBitsToDouble(jorMinima)));
-//
-//        limiteServicios.setText(Hora.horaToString(opciones.getInt("LimiteEntreServicios", 60)));
-//
-//        jornadaAnual.setText(String.valueOf(opciones.getInt("JornadaAnual", 1592)));
-//        regularJornada.setChecked(opciones.getBoolean("RegularJornadaAnual", true));
-//        regularBisiestos.setChecked(opciones.getBoolean("RegularBisiestos", true));
-//
-//        inicioNocturnas.setText(Hora.horaToString(opciones.getInt("InicioNocturnas", 1320)));
-//        finalNocturnas.setText(Hora.horaToString(opciones.getInt("FinalNocturnas", 390)));
-//
-//        desayuno.setText(Hora.horaToString(opciones.getInt("LimiteDesayuno", 270)));
-//        comida1.setText(Hora.horaToString(opciones.getInt("LimiteComida1", 930)));
-//        comida2.setText(Hora.horaToString(opciones.getInt("LimiteComida2", 810)));
-//        cena.setText(Hora.horaToString(opciones.getInt("LimiteCena", 30)));
-//
-//        pdfHorizontal.setChecked(opciones.getBoolean("PdfHorizontal", false));
-//        pdfIncluirServicios.setChecked(opciones.getBoolean("PdfIncluirServicios", false));
-//        pdfIncluirNotas.setChecked(opciones.getBoolean("PdfIncluirNotas", false));
-//        pdfAgruparNotas.setChecked(opciones.getBoolean("PdfAgruparNotas", false));
-//
-//        sumarTomaDeje.setChecked(opciones.getBoolean("SumarTomaDeje", false));
-//        iniciarCalendario.setChecked(opciones.getBoolean("IniciarCalendario", false));
-//        activarTecladoNumerico.setChecked(opciones.getBoolean("ActivarTecladoNumerico", false));
-//
-//        swInferirTurnos.setChecked(opciones.getBoolean("InferirTurnos", false));
-//        diaBaseTurnos.setText(String.valueOf(opciones.getInt("DiaBaseTurnos", 3)));
-//        mesBaseTurnos.setText(String.valueOf(opciones.getInt("MesBaseTurnos", 1)));
-//        añoBaseTurnos.setText(String.valueOf(opciones.getInt("AñoBaseTurnos", 2021)));
-
-
         // Llenamos las opciones con sus valores desde la base de datos
         primerMes.setText(String.valueOf(datos.opciones.getPrimerMes()));
         primerAño.setText(String.valueOf(datos.opciones.getPrimerAño()));
@@ -237,9 +184,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
         pdfAgruparNotas.setOnCheckedChangeListener(this);
         swInferirTurnos.setOnCheckedChangeListener(this);
         swGuardarSiempre.setOnCheckedChangeListener(this);
-
-
-
     }
 
     // AL PULSAR UNA TECLA
@@ -334,7 +278,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                             i = Integer.valueOf(pMes);
                         }
                     }
-                    //opciones.edit().putInt("PrimerMes", i).apply();
                     datos.opciones.setPrimerMes(i);
                     datos.guardarOpciones();
                     break;
@@ -349,7 +292,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                             primerAño.setText(pAño);
                         }
                     }
-                    //opciones.edit().putInt("PrimerAño", i).apply();
                     datos.opciones.setPrimerAño(i);
                     datos.guardarOpciones();
                     break;
@@ -357,8 +299,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     if (Hora.validaHoraDecimal(horasAnteriores.getText().toString()).equals("")) {
                         horasAnteriores.setText(hAnteriores);
                     }
-                    //long l = Double.doubleToRawLongBits(Double.valueOf(horasAnteriores.getText().toString().replace(",", ".")));
-                    //opciones.edit().putLong("AcumuladasAnteriores", l).apply();
                     datos.opciones.setAcumuladasAnteriores(Double.valueOf(horasAnteriores.getText().toString().replace(",", ".")));
                     datos.guardarOpciones();
                     horasAnteriores.setText(Hora.validaHoraDecimal(horasAnteriores.getText().toString()).replace(".", ","));
@@ -369,7 +309,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         relevoFijo.setText(rFijo);
                         i = Integer.valueOf(rFijo);
                     }
-                    //opciones.edit().putInt("RelevoFijo", i).apply();
                     datos.opciones.setRelevoFijo(i);
                     datos.guardarOpciones();
                     break;
@@ -377,8 +316,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     if (Hora.validaHoraDecimal(jornadaMedia.getText().toString()).equals("")) {
                         jornadaMedia.setText(jMedia);
                     }
-                    //long jmed = Double.doubleToRawLongBits(Double.valueOf(jornadaMedia.getText().toString().replace(",", ".")));
-                    //opciones.edit().putLong("JorMedia", jmed).apply();
                     datos.opciones.setJornadaMedia(Double.valueOf(jornadaMedia.getText().toString().replace(",", ".")));
                     datos.guardarOpciones();
                     jornadaMedia.setText(Hora.validaHoraDecimal(jornadaMedia.getText().toString()).replace(".", ","));
@@ -387,8 +324,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                     if (Hora.validaHoraDecimal(jornadaMinima.getText().toString()).equals("")) {
                         jornadaMinima.setText(jMinima);
                     }
-                    //long jmin = Double.doubleToRawLongBits(Double.valueOf(jornadaMinima.getText().toString().replace(",", ".")));
-                    //opciones.edit().putLong("JorMinima", jmin).apply();
                     datos.opciones.setJornadaMinima(Double.valueOf(jornadaMinima.getText().toString().replace(",", ".")));
                     datos.guardarOpciones();
                     jornadaMinima.setText(Hora.validaHoraDecimal(jornadaMinima.getText().toString()).replace(".", ","));
@@ -398,7 +333,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         limiteServicios.setText(lServicios);
                     }
                     limiteServicios.setText(Hora.horaToString(limiteServicios.getText().toString()));
-                    //opciones.edit().putInt("LimiteEntreServicios", Hora.horaToInt(limiteServicios.getText().toString())).apply();
                     datos.opciones.setLimiteEntreServicios(Hora.horaToInt(limiteServicios.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -412,7 +346,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                             i = Integer.valueOf(jAnual);
                         }
                     }
-                    //opciones.edit().putInt("JornadaAnual", i).apply();
                     datos.opciones.setJornadaAnual(i);
                     datos.guardarOpciones();
                     break;
@@ -421,7 +354,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         inicioNocturnas.setText(iNocturnas);
                     }
                     inicioNocturnas.setText(Hora.horaToString(inicioNocturnas.getText().toString()));
-                    //opciones.edit().putInt("InicioNocturnas", Hora.horaToInt(inicioNocturnas.getText().toString())).apply();
                     datos.opciones.setInicioNocturnas(Hora.horaToInt(inicioNocturnas.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -430,7 +362,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         finalNocturnas.setText(fNocturnas);
                     }
                     finalNocturnas.setText(Hora.horaToString(finalNocturnas.getText().toString()));
-                    //opciones.edit().putInt("FinalNocturnas", Hora.horaToInt(finalNocturnas.getText().toString())).apply();
                     datos.opciones.setFinalNocturnas(Hora.horaToInt(finalNocturnas.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -439,7 +370,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         desayuno.setText(dDesayuno);
                     }
                     desayuno.setText(Hora.horaToString(desayuno.getText().toString()));
-                    //opciones.edit().putInt("LimiteDesayuno", Hora.horaToInt(desayuno.getText().toString())).apply();
                     datos.opciones.setLimiteDesayuno(Hora.horaToInt(desayuno.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -448,7 +378,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         comida1.setText(dComida1);
                     }
                     comida1.setText(Hora.horaToString(comida1.getText().toString()));
-                    //opciones.edit().putInt("LimiteComida1", Hora.horaToInt(comida1.getText().toString())).apply();
                     datos.opciones.setLimiteComida1(Hora.horaToInt(comida1.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -457,7 +386,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         comida2.setText(dComida2);
                     }
                     comida2.setText(Hora.horaToString(comida2.getText().toString()));
-                    //opciones.edit().putInt("LimiteComida2", Hora.horaToInt(comida2.getText().toString())).apply();
                     datos.opciones.setLimiteComida2(Hora.horaToInt(comida2.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -466,7 +394,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                         cena.setText(dCena);
                     }
                     cena.setText(Hora.horaToString(cena.getText().toString()));
-                    //opciones.edit().putInt("LimiteCena", Hora.horaToInt(cena.getText().toString())).apply();
                     datos.opciones.setLimiteCena(Hora.horaToInt(cena.getText().toString()));
                     datos.guardarOpciones();
                     break;
@@ -492,7 +419,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                             }
                         }
                     }
-                    //opciones.edit().putInt("DiaBaseTurnos", i).apply();
                     datos.opciones.setDiaBaseTurnos(i);
                     datos.guardarOpciones();
                     break;
@@ -517,7 +443,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                             }
                         }
                     }
-                    //opciones.edit().putInt("MesBaseTurnos", i).apply();
                     datos.opciones.setMesBaseTurnos(i);
                     datos.guardarOpciones();
                     break;
@@ -532,7 +457,6 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
                             i = Integer.valueOf(aTurnos);
                         }
                     }
-                    //opciones.edit().putInt("AñoBaseTurnos", i).apply();
                     datos.opciones.setAñoBaseTurnos(i);
                     datos.guardarOpciones();
                     break;
@@ -564,67 +488,54 @@ public class Ajustes extends Activity implements View.OnFocusChangeListener, Com
 
         switch (buttonView.getId()) {
             case R.id.sw_modoBasico:
-                //opciones.edit().putBoolean("ModoBasico", modoBasico.isChecked()).apply();
                 datos.opciones.setModoBasico(modoBasico.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_rellenarSemana:
-                //opciones.edit().putBoolean("RellenarSemana", rellenarSemana.isChecked()).apply();
                 datos.opciones.setRellenarSemana(rellenarSemana.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_verMesActual:
-                //opciones.edit().putBoolean("VerMesActual", verMesActual.isChecked()).apply();
                 datos.opciones.setVerMesActual(verMesActual.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_sumarTomaDeje:
-                //opciones.edit().putBoolean("SumarTomaDeje", sumarTomaDeje.isChecked()).apply();
                 datos.opciones.setSumarTomaDeje(sumarTomaDeje.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_iniarCalendario:
-                //opciones.edit().putBoolean("IniciarCalendario", iniciarCalendario.isChecked()).apply();
                 datos.opciones.setIniciarCalendario(iniciarCalendario.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_regularJornada:
-                //opciones.edit().putBoolean("RegularJornadaAnual", regularJornada.isChecked()).apply();
                 datos.opciones.setRegularJornadaAnual(regularJornada.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_RegularBisiestos:
-                //opciones.edit().putBoolean("RegularBisiestos", regularBisiestos.isChecked()).apply();
                 datos.opciones.setRegularBisiestos(regularBisiestos.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_TecladoNumerico:
-                //opciones.edit().putBoolean("ActivarTecladoNumerico", activarTecladoNumerico.isChecked()).apply();
                 datos.opciones.setActivarTecladoNumerico(activarTecladoNumerico.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_pdfHorizontal:
-                //opciones.edit().putBoolean("PdfHorizontal", pdfHorizontal.isChecked()).apply();
                 datos.opciones.setPdfHorizontal(pdfHorizontal.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_pdfIncluirServicios:
-                //opciones.edit().putBoolean("PdfIncluirServicios", pdfIncluirServicios.isChecked()).apply();
                 datos.opciones.setPdfIncluirServicios(pdfIncluirServicios.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_pdfIncluirNotas:
-                //opciones.edit().putBoolean("PdfIncluirNotas", pdfIncluirNotas.isChecked()).apply();
                 datos.opciones.setPdfIncluirNotas(pdfIncluirNotas.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_pdfAgruparNotas:
-                //opciones.edit().putBoolean("PdfAgruparNotas", pdfAgruparNotas.isChecked()).apply();
                 datos.opciones.setPdfAgruparNotas(pdfAgruparNotas.isChecked());
                 datos.guardarOpciones();
                 break;
             case R.id.sw_inferirTurnos:
-                //opciones.edit().putBoolean("InferirTurnos", swInferirTurnos.isChecked()).apply();
                 datos.opciones.setInferirTurnos(swInferirTurnos.isChecked());
                 datos.guardarOpciones();
                 break;

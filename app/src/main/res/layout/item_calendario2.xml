@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ AnderSoft - Open Source Software
+  ~ Licencia GPL 3.0 - 2025
+  ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
+  -->
+
+<LinearLayout android:id="@+id/item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/fondo_calendario_p"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+    <LinearLayout
+        android:id="@+id/esFranqueo"
+        android:layout_width="6dp"
+        android:orientation="horizontal"
+        android:layout_height="90dp">
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/textoDia"
+        android:layout_width="50dp"
+        android:layout_height="90dp"
+        android:gravity="center"
+        android:padding="5dp">
+        <!-- Dia -->
+        <TextView
+            android:id="@+id/dia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <!-- DiaSemana -->
+        <TextView
+            android:id="@+id/diaSemana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|center_horizontal"
+            android:textSize="13sp"
+            android:layout_below="@id/dia"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/resto"
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+
+        <!-- Es Huelga -->
+        <ImageView
+            android:id="@+id/esHuelga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_huelga"
+            android:maxHeight="16dp"
+            android:layout_marginTop="2dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
+        <!-- Hay compañero -->
+        <ImageView
+            android:id="@+id/hayCompañero"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_usuario_verde"
+            android:maxHeight="16dp"
+            android:layout_marginTop="2dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/esHuelga"/>
+
+        <!-- Servicio -->
+        <TextView
+            android:id="@+id/servicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:maxLines="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="2dp"
+            android:textSize="15sp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/hayCompañero"/>
+
+        <!-- Horario -->
+        <TextView
+            android:id="@+id/horario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="2dp"
+            android:maxLines="1"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:textSize="12sp"
+            android:layout_below="@id/servicio"
+            android:layout_alignParentLeft="true"/>
+
+        <!-- Notas -->
+        <ImageView
+            android:id="@+id/notas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_notas"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:maxHeight="16dp"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/servicio"
+            android:layout_centerHorizontal="true"/>
+
+        <!-- Desayuno -->
+        <ImageView
+            android:id="@+id/desayuno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_dieta_desayuno"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:maxHeight="16dp"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/servicio"
+            android:layout_toRightOf="@id/notas"/>
+
+        <!-- Comida -->
+        <ImageView
+            android:id="@+id/comida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_dieta_comida"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:maxHeight="16dp"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/servicio"
+            android:layout_toRightOf="@+id/desayuno"/>
+
+        <!-- Cena -->
+        <ImageView
+            android:id="@+id/cena"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_dieta_cena"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:maxHeight="16dp"
+            android:adjustViewBounds="true"
+            android:layout_below="@id/servicio"
+            android:layout_toRightOf="@+id/comida"/>
+
+        <!-- Nocturnas -->
+        <TextView
+            android:id="@+id/nocturnas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="2dp"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textColor="#ff0000ff"
+            android:layout_below="@id/servicio"
+            android:layout_alignParentRight="true"/>
+
+        <!-- Guion -->
+        <TextView
+            android:id="@+id/guion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" - "
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:layout_marginBottom="2dp"
+            android:layout_below="@id/servicio"
+            android:layout_toLeftOf="@+id/nocturnas"/>
+
+        <!-- Acumuladas -->
+        <TextView
+            android:id="@+id/acumuladas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="4dp"
+            android:textSize="12sp"
+            android:textColor="#ffff0000"
+            android:layout_below="@id/servicio"
+            android:layout_toLeftOf="@+id/guion"/>
+
+        <!-- Calificacion -->
+        <ImageView
+            android:id="@+id/calificacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icono_buen_relevo"
+            android:maxHeight="16dp"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_below="@id/horario"/>
+
+        <!-- Relevo -->
+        <TextView
+            android:id="@+id/relevo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:maxLines="1"
+            android:textSize="13sp"
+            android:layout_below="@id/horario"
+            android:layout_toRightOf="@+id/calificacion"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

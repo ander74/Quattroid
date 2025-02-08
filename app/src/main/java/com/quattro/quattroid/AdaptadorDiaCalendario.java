@@ -1,9 +1,6 @@
 package com.quattro.quattroid;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
@@ -50,10 +50,11 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         final ViewHolder holder;
 
         if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.item_calendario, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_calendario2, null);
             holder = new ViewHolder();
 
             holder.Item = view.findViewById(R.id.item);
+            holder.EsFranqueo = view.findViewById(R.id.esFranqueo);
             holder.TextoResto = view.findViewById(R.id.resto);
             holder.TextoDia = view.findViewById(R.id.textoDia);
             holder.Dia = view.findViewById(R.id.dia);
@@ -88,29 +89,34 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         holder.Cena.setVisibility(View.GONE);
 
         // Establece los fondos.
-        holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
+        //holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
 
         if(dia.isSeleccionado()){
-            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
+           holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
+            holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
+//            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
+//            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
+//            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
+//            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
+//            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
+//            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
         } else if (dia.getDia() % 2 == 0) {
-            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
+            holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
+//            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
+//            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
+//            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+//            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+//            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+//            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
         } else {
-            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
+            holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
+//            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
+//            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+//            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+//            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+//            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
         }
 
 
@@ -131,7 +137,8 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         holder.DiaSemana.setTextColor(Colores.NEGRO);
 
         if (dia.isEsFranqueo()) {
-            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
+            holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_franqueo));
+//            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
         }
         if (Dsemana == 1 || dia.isEsFestivo()) {
             holder.Dia.setTextColor(Colores.ROJO);
@@ -140,6 +147,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
 
         // Rellenamos el servicio
         holder.Servicio.setText("");
+        holder.Servicio.setTextColor(Colores.NEGRO);
         int tipo = dia.getTipoIncidencia();
         String ini = dia.getInicio();
         String fin = dia.getFinal();
@@ -155,13 +163,8 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
                 if (!ser.trim().equals("") && !lin.trim().equals("") && !tex.trim().equals("") && i != 0) {
                     s = ser + "/" + i + "-" + lin + ": " + tex;
                 } else {
-                    //if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
                         s = dia.getTextoIncidencia();
                         if (i != 0) s = s + " " + i;
-                    //} else {
-                    //    s = "";
-                    //    if (i != 0) s = "Turno " + i;
-                    //}
                 }
 
                 holder.Servicio.setText(s);
@@ -179,6 +182,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
 
         // Rellenamos el relevo
         holder.Relevo.setText("");
+        //holder.Relevo.setTextColor(Colores.GRIS_OSCURO);
         int mat = dia.getMatricula();
         String ape = dia.getApellidos();
         if (mat != 0 && ape != null) {
@@ -190,6 +194,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
 
         // Rellenamos el horario
         holder.Horario.setText("");
+        holder.Horario.setTextColor(Colores.GRIS_OSCURO);
         if (!ini.trim().equals("") && !fin.trim().equals("")) {
             s = ini + " - " + fin;
         } else {
@@ -235,11 +240,11 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         i = dia.getCodigoIncidencia();
         switch (i){
             case 11:
-                holder.HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.usuario_rojo));
+                holder.HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_usuario_rojo));
                 holder.HayCompañero.setVisibility(View.VISIBLE);
                 break;
             case 12:
-                holder.HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.usuario_verde));
+                holder.HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_usuario_verde));
                 holder.HayCompañero.setVisibility(View.VISIBLE);
                 break;
             case 15:
@@ -262,11 +267,11 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         i = dia.getCalificacion();
         switch (i){
             case 1:
-                holder.Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.buenrelevo));
+                holder.Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_buen_relevo));
                 holder.Calificacion.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                holder.Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.malrelevo));
+                holder.Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_mal_relevo));
                 holder.Calificacion.setVisibility(View.VISIBLE);
                 break;
             default:
@@ -280,6 +285,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
 
     public static class ViewHolder{
         LinearLayout Item;
+        LinearLayout EsFranqueo;
         RelativeLayout TextoResto;
         RelativeLayout TextoDia;
         TextView Dia;

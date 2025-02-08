@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
@@ -16,14 +15,7 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<menu  xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/bt_nuevo"
-        android:title="Nueva"
-        android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="always"
-        tools:ignore="AppCompatResource" />
-
-</menu>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FFE9BE"/>
+</shape>

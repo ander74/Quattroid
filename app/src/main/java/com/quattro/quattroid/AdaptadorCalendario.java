@@ -81,14 +81,6 @@ public class AdaptadorCalendario extends CursorAdapter {
         // Establece los fondos.
         Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
 
-//        if(Item.isSelected()){
-//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
-//        } else if (cursor.getInt(cursor.getColumnIndexOrThrow("Dia")) % 2 == 0) {
-//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-//            } else {
-//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-//        }
-
         if (cursor.getInt(cursor.getColumnIndexOrThrow("Dia")) % 2 == 0) {
             TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
             TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
@@ -104,7 +96,6 @@ public class AdaptadorCalendario extends CursorAdapter {
             Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
             Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
         }
-
 
         // Variables a usar.
         String s = "";

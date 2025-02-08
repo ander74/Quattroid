@@ -20,7 +20,7 @@
     <item android:state_pressed="true" >
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
             <stroke android:width="2dp" android:color="#ffffffff" />
-            <solid android:color="#ff909090"/>
+            <solid android:color="#ffbbffbb"/>
             <corners android:radius="5dp"/>
         </shape>
     </item>
@@ -28,7 +28,7 @@
     <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
             <stroke android:width="2dp" android:color="#ff00aa00" />
-            <solid android:color="#ffbbffbb"/>
+            <!--<solid android:color="#ffbbffbb"/>-->
             <corners android:radius="5dp"/>
         </shape>
     </item>
