@@ -50,7 +50,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         final ViewHolder holder;
 
         if (view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.item_calendario2, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_calendario3, null);
             holder = new ViewHolder();
 
             holder.Item = view.findViewById(R.id.item);

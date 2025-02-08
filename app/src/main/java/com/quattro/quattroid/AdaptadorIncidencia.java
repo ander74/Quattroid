@@ -38,7 +38,7 @@ public class AdaptadorIncidencia extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_incidencia, parent, false);
+        return inflater.inflate(R.layout.item_incidencia2, parent, false);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AdaptadorIncidencia extends CursorAdapter {
         // Instancias de los elementos del item.
         TextView codigo = view.findViewById(R.id.codigo);
         TextView incidencia = view.findViewById(R.id.incidencia);
-        LinearLayout item = view.findViewById(R.id.itemIncidencia);
+        LinearLayout item = view.findViewById(R.id.item);
 
         // Borrado de los textos anteriores.
         codigo.setText("");

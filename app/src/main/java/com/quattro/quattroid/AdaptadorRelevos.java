@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import BaseDatos.BaseDatos;
@@ -39,14 +39,14 @@ public class AdaptadorRelevos extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_relevo, parent, false);
+        return inflater.inflate(R.layout.item_relevo2, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        RelativeLayout item = view.findViewById(R.id.item);
+        LinearLayout item = view.findViewById(R.id.item);
         TextView matricula = view.findViewById(R.id.tv_matricula);
         TextView nombre = view.findViewById(R.id.tv_nombre);
         TextView apellidos = view.findViewById(R.id.tv_apellidos);
@@ -74,19 +74,19 @@ public class AdaptadorRelevos extends CursorAdapter {
 
         // Color del fondo
         if ((cursor.getPosition() + 1) % 2 == 0) {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_p));
+            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_par));
         } else {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_i));
+            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_impar));
         }
 
         // Mostramos la calificacion
         switch (c){
             case 1:
-                calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.buenrelevo));
+                calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_buen_relevo));
                 calificacion.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.malrelevo));
+                calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_mal_relevo));
                 calificacion.setVisibility(View.VISIBLE);
                 break;
             default:

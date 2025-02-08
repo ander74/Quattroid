@@ -54,7 +54,7 @@ public class AdaptadorBusquedas extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_busquedas, parent, false);
+        return inflater.inflate(R.layout.item_busquedas_2, parent, false);
     }
 
     @Override
@@ -62,7 +62,8 @@ public class AdaptadorBusquedas extends CursorAdapter {
 
         // Instancias de los elementos del item.
         LinearLayout Item = view.findViewById(R.id.item);
-        RelativeLayout TextoResto = view.findViewById(R.id.resto);
+        //RelativeLayout TextoResto = view.findViewById(R.id.resto);
+        LinearLayout EsFranqueo = view.findViewById(R.id.esFranqueo);
         RelativeLayout TextoDia = view.findViewById(R.id.textoDia);
         TextView Dia = view.findViewById(R.id.dia);
         TextView DiaSemana = view.findViewById(R.id.diaSemana);
@@ -124,21 +125,25 @@ public class AdaptadorBusquedas extends CursorAdapter {
         Cena.setVisibility(View.GONE);
 
         // Establece los fondos.
-        Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
+        //Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
         if ((cursor.getPosition() + 1) % 2 == 0) {
-            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-            TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-            Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-            Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-            Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-            Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+            Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
+            EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
+//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
+//            TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
+//            Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+//            Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+//            Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
+//            Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
         } else {
-            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-            TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-            Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-            Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-            Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-            Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+            Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
+            EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
+//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
+//            TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
+//            Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+//            Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+//            Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
+//            Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
         }
 
         // Variables a usar.
@@ -157,7 +162,7 @@ public class AdaptadorBusquedas extends CursorAdapter {
         DiaSemana.setTextColor(Colores.NEGRO);
 
         if (cursor.getInt(cursor.getColumnIndexOrThrow("EsFranqueo")) == 1) {
-            Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
+            EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_franqueo));
         }
         if (Dsemana == 1 || cursor.getInt(cursor.getColumnIndexOrThrow("EsFestivo")) == 1) {
             Dia.setTextColor(Colores.ROJO);
@@ -209,6 +214,7 @@ public class AdaptadorBusquedas extends CursorAdapter {
 
         // Rellenamos el horario
         Horario.setText("");
+        Horario.setTextColor(Colores.GRIS_OSCURO);
         if (!ini.trim().equals("") && !fin.trim().equals("")) {
             s = ini + " - " + fin;
         } else {
@@ -254,11 +260,11 @@ public class AdaptadorBusquedas extends CursorAdapter {
         i = cursor.getInt(cursor.getColumnIndexOrThrow("CodigoIncidencia"));
         switch (i){
             case 11:
-                HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.usuario_rojo));
+                HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_usuario_rojo));
                 HayCompañero.setVisibility(View.VISIBLE);
                 break;
             case 12:
-                HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.usuario_verde));
+                HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_usuario_verde));
                 HayCompañero.setVisibility(View.VISIBLE);
                 break;
             default:
@@ -277,11 +283,11 @@ public class AdaptadorBusquedas extends CursorAdapter {
         i = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
         switch (i){
             case 1:
-                Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.buenrelevo));
+                Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_buen_relevo));
                 Calificacion.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.malrelevo));
+                Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_mal_relevo));
                 Calificacion.setVisibility(View.VISIBLE);
                 break;
             default:

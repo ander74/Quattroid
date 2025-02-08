@@ -35,16 +35,16 @@ public class AdaptadorLinea extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_linea, parent, false);
+        return inflater.inflate(R.layout.item_linea2, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
+        LinearLayout item = view.findViewById(R.id.item);
         TextView linea = view.findViewById(R.id.tv_linea);
         TextView texto = view.findViewById(R.id.tv_texto);
-        LinearLayout item = view.findViewById(R.id.ly_item);
 
         // Borrado de los textos anteriores.
         linea.setText("");
@@ -52,9 +52,9 @@ public class AdaptadorLinea extends CursorAdapter {
 
         // Color del fondo
         if ((cursor.getPosition() + 1) % 2 == 0) {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_linea_p));
+            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_linea_par));
         } else {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_linea_i));
+            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_linea_impar));
         }
 
         // Escribimos los datos.

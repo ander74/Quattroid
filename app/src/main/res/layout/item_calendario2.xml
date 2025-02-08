@@ -4,8 +4,13 @@
   ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
   -->
 
-<LinearLayout android:id="@+id/item"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
+
+<LinearLayout android:id="@+id/item"
     android:background="@drawable/fondo_calendario_p"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -223,5 +228,13 @@
             android:layout_toRightOf="@+id/calificacion"/>
 
     </RelativeLayout>
+
+</LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="#FFDDDDDD"
+        android:layout_height="1dp"/>
 
 </LinearLayout>

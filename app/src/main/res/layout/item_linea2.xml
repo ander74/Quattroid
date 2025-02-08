@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ AnderSoft - Open Source Software
+  ~ Licencia GPL 3.0 - 2025
+  ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Principal -->
+    <LinearLayout
+        android:id="@+id/item"
+        android:background="@drawable/fondo_linea_impar"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:padding="2dp"
+        android:layout_height="match_parent">
+
+        <!-- Línea -->
+        <TextView
+            android:id="@+id/tv_linea"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:gravity="center|center_vertical"
+            android:textSize="22sp"
+            android:background="@android:color/transparent"/>
+
+        <!-- Texto de la línea -->
+        <TextView
+            android:id="@+id/tv_texto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:textSize="18sp"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+
+    <!-- Separador -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="#FFDDDDDD"
+        android:layout_height="2dp"/>
+
+
+</LinearLayout>

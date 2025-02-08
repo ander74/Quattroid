@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ AnderSoft - Open Source Software
+  ~ Licencia GPL 3.0 - 2025
+  ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Principal -->
+    <LinearLayout android:id="@+id/item"
+        android:background="@drawable/fondo_calendario_par"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Franqueo -->
+        <LinearLayout
+            android:id="@+id/esFranqueo"
+            android:layout_width="6dp"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+
+        <!-- Dia del mes -->
+        <RelativeLayout
+            android:id="@+id/textoDia"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="5dp">
+            <!-- Dia -->
+            <TextView
+                android:id="@+id/dia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|center_horizontal"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <!-- DiaSemana -->
+            <TextView
+                android:id="@+id/diaSemana"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|center_horizontal"
+                android:textSize="13sp"
+                android:layout_below="@id/dia"/>
+        </RelativeLayout>
+
+        <!-- Contenido del día -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Línea uno -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_gravity="top"
+                android:layout_marginTop="2dp"
+                android:layout_height="wrap_content">
+
+                <!-- Es Huelga -->
+                <ImageView
+                    android:id="@+id/esHuelga"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icono_huelga"
+                    android:maxHeight="16dp"
+                    android:padding="2dp"
+                    android:adjustViewBounds="true"/>
+
+                <!-- Hay compañero -->
+                <ImageView
+                    android:id="@+id/hayCompañero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icono_usuario_verde"
+                    android:maxHeight="16dp"
+                    android:padding="2dp"
+                    android:adjustViewBounds="true"/>
+
+                <!-- Servicio -->
+                <TextView
+                    android:id="@+id/servicio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:maxLines="1"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
+
+            <!-- Línea dos -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_height="wrap_content">
+
+                <!-- Notas -->
+                <ImageView
+                    android:id="@+id/notas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icono_notas"
+                    android:padding="2dp"
+                    android:maxHeight="16dp"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentStart="true"/>
+
+                <!-- Horario -->
+                <TextView
+                    android:id="@+id/horario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="2dp"
+                    android:maxLines="1"
+                    android:textSize="12sp"
+                    android:layout_toEndOf="@id/notas"/>
+
+                <!-- Cena -->
+                <ImageView
+                    android:id="@+id/cena"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icono_dieta_cena"
+                    android:layout_marginEnd="5dp"
+                    android:padding="2dp"
+                    android:maxHeight="16dp"
+                    android:adjustViewBounds="true"
+                    android:layout_toStartOf="@+id/acumuladas"/>
+
+                <!-- Comida -->
+                <ImageView
+                    android:id="@+id/comida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icono_dieta_comida"
+                    android:padding="2dp"
+                    android:maxHeight="16dp"
+                    android:adjustViewBounds="true"
+                    android:layout_toStartOf="@+id/cena"/>
+
+                <!-- Desayuno -->
+                <ImageView
+                    android:id="@+id/desayuno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icono_dieta_desayuno"
+                    android:padding="2dp"
+                    android:maxHeight="16dp"
+                    android:adjustViewBounds="true"
+                    android:layout_toStartOf="@id/comida"/>
+
+                <!-- Nocturnas -->
+                <TextView
+                    android:id="@+id/nocturnas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="2dp"
+                    android:maxLines="1"
+                    android:textSize="12sp"
+                    android:textColor="#ff0000ff"
+                    android:layout_alignParentEnd="true"/>
+
+                <!-- Guion -->
+                <TextView
+                    android:id="@+id/guion"
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content"
+                    android:text=" - "
+                    android:maxLines="1"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_toStartOf="@+id/nocturnas"/>
+
+                <!-- Acumuladas -->
+                <TextView
+                    android:id="@+id/acumuladas"
+                    android:layout_width="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginStart="4dp"
+                    android:textSize="12sp"
+                    android:textColor="#ffff0000"
+                    android:layout_toStartOf="@+id/guion"/>
+
+            </RelativeLayout>
+
+            <!-- Línea tres -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="2dp"
+                android:layout_height="wrap_content">
+
+                <!-- Calificacion -->
+                <ImageView
+                    android:id="@+id/calificacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/icono_buen_relevo"
+                    android:maxHeight="16dp"
+                    android:adjustViewBounds="true"
+                    android:padding="2dp"/>
+
+                <!-- Relevo -->
+                <TextView
+                    android:id="@+id/relevo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:maxLines="1"
+                    android:textSize="13sp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <!-- Separador -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:background="#FFDDDDDD"
+        android:layout_height="1dp"/>
+
+</LinearLayout>
