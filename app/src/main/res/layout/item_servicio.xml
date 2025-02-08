@@ -37,8 +37,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
             android:text="SERVICIO"/>
         <TextView
             android:layout_width="0dp"
@@ -51,8 +51,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
             android:text="TURNO"/>
         <TextView
             android:layout_width="0dp"
@@ -65,8 +65,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
             android:text="INICIO"/>
         <TextView
             android:layout_width="0dp"
@@ -78,8 +78,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
             android:text="FINAL"/>
     </LinearLayout>
 
@@ -101,7 +101,7 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
+            android:background="@android:color/transparent"
             android:textSize="14sp"
             android:text="91"/>
         <TextView
@@ -115,7 +115,7 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
+            android:background="@android:color/transparent"
             android:textSize="14sp"
             android:text="1"/>
         <TextView
@@ -129,7 +129,7 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
+            android:background="@android:color/transparent"
             android:textSize="14sp"
             android:text="08:00"/>
         <TextView
@@ -142,7 +142,7 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
+            android:background="@android:color/transparent"
             android:textSize="14sp"
             android:text="09:10"/>
     </LinearLayout>

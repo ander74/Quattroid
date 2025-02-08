@@ -26,15 +26,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    android:gravity="center"
+    android:layout_gravity="center"
     android:background="#000000">
 
     <!-- TITULO -->
     <LinearLayout
-        style="@style/vertical"
-        android:clickable="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="40dp"
         android:gravity="center_horizontal">
 
         <ImageView
