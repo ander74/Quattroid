@@ -210,7 +210,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
 
         Intent intent = null;
 
-        // Evaluar el view que ha llamado al método.
+        // Evaluar el view que ha llamado.
         switch (view.getId()){
 
             // Botón Calendario Pulsado
@@ -287,7 +287,7 @@ public class Principal extends Activity implements View.OnLongClickListener {
 	{
 		if (v.getId() != R.id.ly_titulo) return false;
 		
-		//TODO: Aquí es donde irá la llamada a alguna activity que nos muestre los datos que se requieran.
+		//Aquí es donde irá la llamada a alguna activity que nos muestre los datos que se requieran.
 		Toast.makeText(this,"Has pulsado el título" , Toast.LENGTH_SHORT).show();
 		
 		return true;

@@ -48,13 +48,11 @@ public class DiaHelper {
             // Si la huelga es parcial...
             if (datosDia.isHuelgaParcial()){
                 datosDia.setTrabajadas(Jornada);
-                //TODO Comprobar que las horas trabajadas son la jornada media y no la jornada mínima.
                 double acum = ((Jornada - JornadaMinima) * datosDia.getHorasHuelga())/Jornada;
                 datosDia.setAcumuladas(-acum);
                 // Si la huelga es completa...
             } else {
                 datosDia.setTrabajadas(Jornada);
-                //TODO Comprobar que las horas trabajadas son la jornada media y no la jornada mínima.
                 datosDia.setAcumuladas(JornadaMinima - Jornada);
                 datosDia.setNocturnas(0d);
             }

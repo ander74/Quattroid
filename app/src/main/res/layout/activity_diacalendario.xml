@@ -50,12 +50,12 @@ android:padding="5dp">
     android:textSize="18sp"
     android:textStyle="bold" />
 
-<View
-    android:layout_width="match_parent"
-    android:layout_height="2dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginRight="5dp"
-    android:background="#000000" />
+<!--<View-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="2dp"-->
+<!--    android:layout_marginBottom="8dp"-->
+<!--    android:layout_marginRight="5dp"-->
+<!--    android:background="#000000" />-->
 
 
 <ScrollView

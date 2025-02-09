@@ -67,9 +67,9 @@ public class AdaptadorServiciosDia extends CursorAdapter {
         // Color del fondo
         int cod = cursor.getPosition() + 1;
         if (cod % 2 == 0) {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_serviciosdia_p));
+            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_par));
         } else {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_serviciosdia_i));
+            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_impar));
         }
 
         // Escribimos los datos.

@@ -470,7 +470,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 });
                 aviso.setNegativeButton("NO", (dialog, which) -> {});
                 aviso.show();
-                //TODO: Eliminar los servicios auxiliares.
                 return true;
             case R.id.bt_recalcular:
                 for (int id : listaIds) {
@@ -955,7 +954,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // CREAR LA TABLA DEL PDF USANDO EL CURSOR ACTUAL
     public Table crearTablaCalendario(boolean horizontal) throws IOException{
         // FUENTE VERDANA
-        PdfFont Fuente = PdfFontFactory.createFont(FontConstants.HELVETICA);
+        PdfFont Fuente = PdfFontFactory.createFont(FontConstants.TIMES);
         // ESTILO TABLA
         Style estiloTabla = new Style()
                 .setTextAlignment(TextAlignment.CENTER)
@@ -1049,7 +1048,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         if (!listaDias.isEmpty()){
             int fila = 1;
             for (DatosDia dia : listaDias) {
-                //TODO: Filtrar por tipo de incidencia para no mostrar los datos de servicio.
                 // Inicializamos las filas que ocupa el día
                 int filas = 1;
                 Cursor servicios = datos.cursorServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());

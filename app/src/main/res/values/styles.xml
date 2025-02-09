@@ -26,7 +26,7 @@
     <style name="edit_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_margin">4dp</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
@@ -35,8 +35,8 @@
         <item name="android:selectAllOnFocus">true</item>
         <item name="android:maxLines">1</item>
         <item name="android:inputType">text</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/fondo_edittext</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/fondo_edittext2</item>
     </style>
 
     <!-- EDIT TEXT MULTILINEA -->
@@ -130,7 +130,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#FFFFFFFF</item>
-        <item name="android:background">@drawable/fondo_edit_opcion</item>
+        <item name="android:background">@drawable/fondo_edit_opcion2</item>
     </style>
 
     <style name="op_separador">
@@ -206,7 +206,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:inputType">text</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:background">@drawable/fondo_edittext</item>
+        <item name="android:background">@drawable/fondo_edittext2</item>
     </style>
 
 

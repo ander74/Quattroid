@@ -77,7 +77,7 @@
         android:paddingLeft="20dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:background="@drawable/fondo_edittext">
+        android:background="@drawable/fondo_edittext2">
         <RadioButton
             android:id="@+id/tipo1"
             android:layout_width="wrap_content"

@@ -70,7 +70,7 @@ public class Herramientas extends Activity {
 
         Intent intent = null;
 
-        // Evaluar el view que ha llamado al método.
+        // Evaluar el view que ha llamado.
         switch (view.getId()){
 
             // Botón Consultas Pulsado

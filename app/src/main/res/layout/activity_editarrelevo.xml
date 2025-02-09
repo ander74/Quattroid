@@ -39,13 +39,13 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:text="NUEVO RELEVO"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="5dp"
-        android:nextFocusDown="@+id/Et_linea"
-        android:background="#000000"/>
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:nextFocusDown="@+id/Et_linea"-->
+<!--        android:background="#000000"/>-->
 
     <ScrollView
         android:layout_width="match_parent"

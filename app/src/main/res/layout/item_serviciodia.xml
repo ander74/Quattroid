@@ -39,8 +39,8 @@
         android:paddingLeft="12dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:background="@drawable/fondo_transparente_b"
-        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:textSize="10sp"
         android:text="SERV"/>
     <TextView
         android:layout_width="0dp"
@@ -53,9 +53,9 @@
         android:paddingLeft="12dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:background="@drawable/fondo_transparente_b"
-        android:textSize="14sp"
-        android:text="TUR"/>
+        android:background="@android:color/transparent"
+        android:textSize="10sp"
+        android:text="TURNO"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -67,8 +67,8 @@
         android:paddingLeft="12dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:background="@drawable/fondo_transparente_b"
-        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:textSize="10sp"
         android:text="LINEA"/>
     <TextView
         android:layout_width="0dp"
@@ -81,8 +81,8 @@
         android:paddingLeft="12dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:background="@drawable/fondo_transparente_b"
-        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:textSize="10sp"
         android:text="INI"/>
     <TextView
         android:layout_width="0dp"
@@ -94,8 +94,8 @@
         android:paddingLeft="12dp"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:background="@drawable/fondo_transparente_b"
-        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        android:textSize="10sp"
         android:text="FIN"/>
 </LinearLayout>
 
@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:background="@drawable/fondo_serviciosdia_i"
+        android:background="@drawable/fondo_relevo_impar"
         android:orientation="horizontal">
 
         <TextView
@@ -120,8 +120,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
             android:text="91"/>
         <TextView
             android:id="@+id/tv_turno"
@@ -134,8 +134,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
             android:text="1"/>
         <TextView
             android:id="@+id/tv_linea"
@@ -148,8 +148,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
             android:text="2322"/>
         <TextView
             android:id="@+id/tv_inicio"
@@ -162,8 +162,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
             android:text="08:00"/>
         <TextView
             android:id="@+id/tv_final"
@@ -175,8 +175,8 @@
             android:paddingLeft="12dp"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:background="@drawable/fondo_transparente_b"
-            android:textSize="14sp"
+            android:background="@android:color/transparent"
+            android:textSize="12sp"
             android:text="09:10"/>
     </LinearLayout>
 

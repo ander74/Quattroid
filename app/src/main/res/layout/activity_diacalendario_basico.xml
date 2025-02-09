@@ -149,12 +149,12 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="5dp"
-        android:background="#000000" />
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:background="#000000" />-->
 
     <!-- CONTENIDO -->
     <ScrollView

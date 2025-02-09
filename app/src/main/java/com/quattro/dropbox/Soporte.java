@@ -74,7 +74,7 @@ public class Soporte {
     }
 
 
-    // Método estático que sube la base de datos.
+    // Métodos estático que sube la base de datos.
     public static Resultado SubirBaseDatos(Context context){
 
         UploadUploader subidor;

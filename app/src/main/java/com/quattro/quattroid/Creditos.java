@@ -86,7 +86,7 @@ public class Creditos extends Activity {
     // AL PULSAR UN BOTON
     public void botonPulsado(View view){
 
-        // Evaluar el view que ha llamado al método.
+        // Evaluar el view que ha llamado.
         switch (view.getId()){
             case R.id.bt_licencia:
                 grupoCreditos.setVisibility(View.GONE);

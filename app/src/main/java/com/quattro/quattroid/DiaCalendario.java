@@ -1116,7 +1116,7 @@ public class DiaCalendario extends Activity implements View.OnFocusChangeListene
                 datos.crearMes(mes, año);
                 datosDia2 = datos.servicioDia(dia, mes, año);
             }
-            // Replicamos el día, si está vacío. //TODO: Probar a sacar una función que clone los DatosDia.
+            // Replicamos el día, si está vacío.
             if (datosDia2.getCodigoIncidencia() == 0) {
                 datosDia2.setCodigoIncidencia(datosDia.getCodigoIncidencia());
                 datosDia2.setTextoIncidencia(datosDia.getTextoIncidencia());

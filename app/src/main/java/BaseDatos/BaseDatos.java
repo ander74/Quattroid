@@ -2220,11 +2220,6 @@ public class BaseDatos {
             // Definimos el path de la base de datos.
             String destino = context.getDatabasePath(BASE_NAME).getPath();
 
-            // Renombramos el archivo de base de datos, por si acaso. TODO: Comprobar
-//            File file1 = new File(destino);
-//            File file2 = new File(destino + ".OLD");
-//            file1.renameTo(file2);
-
             // Cerramos la base de datos para que este liberado el archivo
             close();
 
@@ -2238,20 +2233,6 @@ public class BaseDatos {
             } catch (IOException e) {
                 return false;
             }
-
-            //getWritableDatabase().close();
-
-            // Evaluamos si existe la tabla Opciones TODO: Comprobar
-//            Cursor c = getReadableDatabase().rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='Opciones';", null);
-//            int n = c.getCount();
-//            if (c.getCount() < 1){
-//                file1.delete();
-//                file2.renameTo(file1);
-//                Toast.makeText(context, "No se puede restaurar.\nCopia de seguridad no compatible.", Toast.LENGTH_LONG).show();
-//                getWritableDatabase().close();
-//                return false;
-//            }
-//
             // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
             getWritableDatabase().close();
 
