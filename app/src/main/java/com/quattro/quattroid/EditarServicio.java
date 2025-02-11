@@ -130,6 +130,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         if (id == -1){
             //SERVICIO NUEVO
             if (lineatext.equals("")) finish();
+            titulo.setText("NUEVO SERVICIO");
             serv = new Servicio();
             serv.setLinea(lineatext);
             servicio.setText("");
@@ -143,6 +144,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
             euros.setNextFocusDownId(R.id.et_servicio);
         } else {
             //EDITAR SERVICIO
+            titulo.setText("EDITAR SERVICIO");
             serv = datos.getServicio(id);
             servicio.setText(serv.getServicio());
             turno.setText(String.valueOf(serv.getTurno()));

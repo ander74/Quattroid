@@ -26,11 +26,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import BaseDatos.Incidencia;
 import BaseDatos.BaseDatos;
+import BaseDatos.Incidencia;
 
 public class Incidencias extends Activity implements AdapterView.OnItemClickListener{
 
@@ -46,6 +47,7 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
     boolean llamadaDesdeMenu = false;
 
     ListView listaIncidencias = null;
+    Button botonAddIncidencia = null;
 
 
     @Override
@@ -59,6 +61,7 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
         // Inicialización de los elementos
         context = this;
         listaIncidencias = findViewById(R.id.lw_Incidencias);
+        botonAddIncidencia = findViewById(R.id.bt_addIncidencia);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
@@ -79,6 +82,7 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
 
         // Establecemos el listener de item pulsado.
         listaIncidencias.setOnItemClickListener(this);
+        botonAddIncidencia.setOnClickListener(this::botonAddIncidenciaPulsado);
     }
 
     // CREAR EL MENÚ SUPERIOR.
@@ -94,10 +98,10 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
 
         int id = item.getItemId();
         switch (id){
-            case R.id.bt_nuevo:
-                Intent intent = new Intent(context, EditarIncidencia.class);
-                startActivityForResult(intent, ACCION_EDITA_INCIDENCIA);
-                return true;
+//            case R.id.bt_nuevo:
+//                Intent intent = new Intent(context, EditarIncidencia.class);
+//                startActivityForResult(intent, ACCION_EDITA_INCIDENCIA);
+//                return true;
             case R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -242,6 +246,9 @@ public class Incidencias extends Activity implements AdapterView.OnItemClickList
         c.close();
     }
 
-
+    private void botonAddIncidenciaPulsado(View view){
+        Intent intent = new Intent(context, EditarIncidencia.class);
+        startActivityForResult(intent, ACCION_EDITA_INCIDENCIA);
+    }
 
 }

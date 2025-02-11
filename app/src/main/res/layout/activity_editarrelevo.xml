@@ -228,5 +228,29 @@
 </LinearLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/botonLlamar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_llamar_telefono"
+            android:background="@drawable/fondo_llamar"
+            android:paddingHorizontal="60dp"
+            android:drawablePadding="5dp"
+            android:paddingVertical="10dp"
+            android:layout_marginHorizontal="20dp"
+            android:text="Llamar"/>
+
+
+
+    </LinearLayout>
+
 </LinearLayout>
 </ScrollView>

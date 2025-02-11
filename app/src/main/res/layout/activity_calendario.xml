@@ -22,114 +22,427 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+
+    <!-- BARRA INFERIOR -->
     <LinearLayout
-        android:id="@+id/ly_horas"
+        android:id="@+id/barraInferior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#202020"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@drawable/fondo_barra_inferior"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        android:elevation="5dp">
 
-        <!-- ACUMULADAS -->
-        <TextView
-            android:id="@+id/tv_acumuladas"
+        <Button
+            android:id="@+id/bt_barra_copiar"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_boton_copiar"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Copiar"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_pegar"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_boton_pegar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Pegar"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_franqueo_festivo"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_boton_franqueo_festivo"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Fra/Fes"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_ajenas"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_boton_ajenas"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Ajenas"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_recalcular"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_recalcular"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Recalc."
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_vaciar"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_boton_vaciar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Vaciar"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+    </LinearLayout>
+
+
+
+    <!-- BARRA HORAS -->
+    <LinearLayout
+        android:id="@+id/barraHoras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@drawable/fondo_barra_inferior"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="visible"
+        android:elevation="5dp">
+
+        <RelativeLayout
+            android:id="@+id/tablaAcumuladas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:onClick="horasPulsadas"
-            android:padding="8dp"
             android:clickable="true"
-            android:background="#000000"
-            android:textSize="20sp"/>
+            android:padding="12dp">
 
-        <!-- TITULO -->
-        <TextView
-            android:id="@+id/tv_titulo"
-            android:gravity="left"
+            <TextView
+                android:id="@+id/acumuladas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentStart="true"
+                android:textSize="20dp"
+                android:text="Acumuladas hasta mes:"/>
+
+            <TextView
+                android:id="@+id/valorAcumuladas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:layout_toEndOf="@id/acumuladas"
+                android:textSize="20dp"
+                android:text="0,00"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tablaHoras"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="Mes Actual"
-            android:textColor="#CACACA"
-            android:textSize="12sp"/>
+            android:visibility="visible"
+            android:onClick="horasPulsadas"
+            android:clickable="true"
+            android:padding="12dp">
 
-        <!-- ACUMLULADAS MES -->
-        <TextView
-            android:id="@+id/tv_acumuladasMes"
-            android:gravity="left"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:padding="4dp"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:textSize="20sp"
+                android:text="Resumen de este mes"/>
 
-        <!-- NOCTURNAS -->
-        <TextView
-            android:id="@+id/tv_nocturnas"
-            android:gravity="left"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:padding="4dp"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/acumuladasMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titulo"
+                android:layout_marginVertical="5dp"
+                android:textSize="18sp"
+                android:text="Horas acumuladas: "/>
 
-        <!-- TOMA DEJE -->
-        <TextView
-            android:id="@+id/tv_tomaDeje"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:padding="4dp"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/valorAcumuladasMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/acumuladasMes"
+                android:layout_below="@id/titulo"
+                android:layout_marginVertical="5dp"
+                android:textSize="18sp"
+                android:text="0,00"/>
 
-        <!-- EUROS -->
-        <TextView
-            android:id="@+id/tv_euros"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:padding="4dp"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/nocturnasMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/acumuladasMes"
+                android:layout_marginVertical="5dp"
+                android:textColor="#FF000099"
+                android:textSize="18sp"
+                android:text="Horas nocturnas: "/>
 
-        <!-- TRABAJADAS REALES -->
-        <TextView
-            android:id="@+id/tv_trabajadasReales"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:padding="4dp"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/valorNocturnasMes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/nocturnasMes"
+                android:layout_below="@id/acumuladasMes"
+                android:layout_marginVertical="5dp"
+                android:textColor="#FF000099"
+                android:textSize="18sp"
+                android:text="0,00"/>
 
-        <!-- TRABAJADAS CONVENIO -->
-        <TextView
-            android:id="@+id/tv_trabajadasConvenio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="8dp"
-            android:padding="4dp"
-            android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/tomaDeje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nocturnasMes"
+                android:layout_marginVertical="5dp"
+                android:textColor="#F44336"
+                android:textSize="18sp"
+                android:text="Toma y deje: "/>
+
+            <TextView
+                android:id="@+id/valorTomaDeje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nocturnasMes"
+                android:layout_toEndOf="@id/tomaDeje"
+                android:layout_marginVertical="5dp"
+                android:textColor="#F44336"
+                android:textSize="18sp"
+                android:text="0,00"/>
+
+            <TextView
+                android:id="@+id/euros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tomaDeje"
+                android:layout_marginVertical="5dp"
+                android:textColor="#9C27B0"
+                android:textSize="18sp"
+                android:text="Euros por servicio: "/>
+
+            <TextView
+                android:id="@+id/valorEuros"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tomaDeje"
+                android:layout_toEndOf="@id/euros"
+                android:layout_marginVertical="5dp"
+                android:textColor="#9C27B0"
+                android:textSize="18sp"
+                android:text="0,00"/>
+
+            <TextView
+                android:id="@+id/trabajadas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/euros"
+                android:layout_marginVertical="5dp"
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                android:text="Trabajadas reales: "/>
+
+            <TextView
+                android:id="@+id/valorTrabajadas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/euros"
+                android:layout_toEndOf="@id/trabajadas"
+                android:layout_marginVertical="5dp"
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                android:text="0,00"/>
+
+            <TextView
+                android:id="@+id/trabajadasConvenio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trabajadas"
+                android:layout_marginVertical="5dp"
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                android:text="Trabajadas por convenio: "/>
+
+            <TextView
+                android:id="@+id/valorTrabajadasConvenio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trabajadas"
+                android:layout_toEndOf="@id/trabajadasConvenio"
+                android:layout_marginVertical="5dp"
+                android:textColor="#2196F3"
+                android:textSize="18sp"
+                android:text="0,00"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
+
+
+
+    <!-- TABLA DE HORAS -->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/ly_horas"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="#202020"-->
+<!--        android:layout_alignParentBottom="true">-->
+
+<!--        &lt;!&ndash; ACUMULADAS &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_acumuladas"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:onClick="horasPulsadas"-->
+<!--            android:padding="8dp"-->
+<!--            android:clickable="true"-->
+<!--            android:background="#000000"-->
+<!--            android:textSize="20sp"/>-->
+
+<!--        &lt;!&ndash; TITULO &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_titulo"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="4dp"-->
+<!--            android:text="Mes Actual"-->
+<!--            android:textColor="#CACACA"-->
+<!--            android:textSize="12sp"/>-->
+
+<!--        &lt;!&ndash; ACUMLULADAS MES &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_acumuladasMes"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:textSize="18sp"/>-->
+
+<!--        &lt;!&ndash; NOCTURNAS &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_nocturnas"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:textSize="18sp"/>-->
+
+<!--        &lt;!&ndash; TOMA DEJE &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_tomaDeje"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:textSize="18sp"/>-->
+
+<!--        &lt;!&ndash; EUROS &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_euros"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:textSize="18sp"/>-->
+
+<!--        &lt;!&ndash; TRABAJADAS REALES &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_trabajadasReales"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:textSize="18sp"/>-->
+
+<!--        &lt;!&ndash; TRABAJADAS CONVENIO &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_trabajadasConvenio"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="left"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:textSize="18sp"/>-->
+
+<!--    </LinearLayout>-->
+
+
+    <!-- TABLA DE CALENDARIO -->
     <ListView
         android:id="@+id/lw_listaCalendario"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:background="#ffffff"
         android:divider="@null"
-        android:dividerHeight="0dp"
-        android:layout_above="@+id/ly_horas">
+        android:paddingBottom="120dp"
+        android:clipToPadding="false"
+        android:dividerHeight="0dp">
     </ListView>
 
 </RelativeLayout>

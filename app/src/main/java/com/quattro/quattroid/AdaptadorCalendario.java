@@ -69,6 +69,7 @@ public class AdaptadorCalendario extends CursorAdapter {
         TextView Nocturnas = view.findViewById(R.id.nocturnas);
         TextView Guion = view.findViewById(R.id.guion);
         TextView Acumuladas = view.findViewById(R.id.acumuladas);
+        LinearLayout SeparadorUltimoElemento = view.findViewById(R.id.separadorUltimoElemento);
 
         // Ocultar todas las imágenes.
         EsHuelga.setVisibility(View.GONE);
@@ -99,14 +100,27 @@ public class AdaptadorCalendario extends CursorAdapter {
 
         // Variables a usar.
         String s = "";
-        int i = 0;
+        int dia = 0;
+        int mes = 0;
+        int año = 0;
 
         // Rellenamos el dia
         int Dsemana = cursor.getInt(cursor.getColumnIndexOrThrow("DiaSemana"));
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
-        s = (i > 9) ? String.valueOf(i) : "0" + String.valueOf(i);
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
+        mes = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
+        año = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
+        s = (dia > 9) ? String.valueOf(dia) : "0" + String.valueOf(dia);
         Dia.setText(s);
         DiaSemana.setText(Hora.DIAS_SEMANA_ABREV[Dsemana]);
+
+        // Si es el último día del mes, se activa el separador.
+//        DateTime fecha = new DateTime(año, mes, dia, 0, 0);
+//        int diasMes = fecha.dayOfMonth().getMaximumValue();
+//        if (dia == diasMes) {
+//            SeparadorUltimoElemento.setVisibility(View.VISIBLE);
+//        } else{
+//            SeparadorUltimoElemento.setVisibility(View.GONE);
+//        }
 
         // Color si es un Franqueo o un Festivo
         Dia.setTextColor(Colores.NEGRO);
@@ -125,7 +139,7 @@ public class AdaptadorCalendario extends CursorAdapter {
         int tipo = cursor.getInt(cursor.getColumnIndexOrThrow("TipoIncidencia"));
         String ini = cursor.getString(cursor.getColumnIndexOrThrow("Inicio"));
         String fin = cursor.getString(cursor.getColumnIndexOrThrow("Final"));
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
         switch (tipo) {
             case 1:case 2:case 5:
                 String ser = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
@@ -134,15 +148,15 @@ public class AdaptadorCalendario extends CursorAdapter {
                 if (ser == null) ser = "";
                 if (lin == null) lin = "";
                 if (tex == null) tex = "";
-                if (!ser.trim().equals("") && !lin.trim().equals("") && !tex.trim().equals("") && i != 0) {
-                    s = ser + "/" + i + "-" + lin + ": " + tex;
+                if (!ser.trim().equals("") && !lin.trim().equals("") && !tex.trim().equals("") && dia != 0) {
+                    s = ser + "/" + dia + "-" + lin + ": " + tex;
                 } else {
-                    if (i != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
+                    if (dia != 0 && !ini.trim().equals("") && !fin.trim().equals("")) {
                         s = cursor.getString(cursor.getColumnIndexOrThrow("TextoIncidencia")) +
-                                " " + i;
+                                " " + dia;
                     } else {
                         s = "";
-                        if (i != 0) s = "Turno " + i;
+                        if (dia != 0) s = "Turno " + dia;
                     }
                 }
 
@@ -150,15 +164,15 @@ public class AdaptadorCalendario extends CursorAdapter {
                 break;
             case 3:case 4:case 6:
                 String inc = cursor.getString(cursor.getColumnIndexOrThrow("TextoIncidencia"));
-                if (i > 0){
-                    Servicio.setText(inc + " " + i);
+                if (dia > 0){
+                    Servicio.setText(inc + " " + dia);
                 } else{
                     Servicio.setText(inc + " ");
                 }
                 break;
             default:
-                if (i > 0){
-                    Servicio.setText("Turno " + i);
+                if (dia > 0){
+                    Servicio.setText("Turno " + dia);
                 } else {
                     Servicio.setText("Sin turno");
                 }
@@ -220,8 +234,8 @@ public class AdaptadorCalendario extends CursorAdapter {
         }
 
         // Activar icono si hay un compañero que nos hace o hacemos el dia o si hay huelga.
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("CodigoIncidencia"));
-        switch (i){
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("CodigoIncidencia"));
+        switch (dia){
             case 11:
                 HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.usuario_rojo));
                 HayCompañero.setVisibility(View.VISIBLE);
@@ -242,16 +256,16 @@ public class AdaptadorCalendario extends CursorAdapter {
         if (!cursor.getString(cursor.getColumnIndexOrThrow("Notas")).trim().equals("")) Notas.setVisibility(View.VISIBLE);
 
         // Activar icono de las dietas.
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("Desayuno"));
-        if (i > 0) Desayuno.setVisibility(View.VISIBLE);
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("Comida"));
-        if (i > 0) Comida.setVisibility(View.VISIBLE);
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("Cena"));
-        if (i > 0) Cena.setVisibility(View.VISIBLE);
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("Desayuno"));
+        if (dia > 0) Desayuno.setVisibility(View.VISIBLE);
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("Comida"));
+        if (dia > 0) Comida.setVisibility(View.VISIBLE);
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("Cena"));
+        if (dia > 0) Cena.setVisibility(View.VISIBLE);
 
         // Activar el icono de la calificación del relevo
-        i = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
-        switch (i){
+        dia = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
+        switch (dia){
             case 1:
                 Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.buenrelevo));
                 Calificacion.setVisibility(View.VISIBLE);

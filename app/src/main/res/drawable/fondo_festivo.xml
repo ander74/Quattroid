@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
@@ -16,20 +15,7 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    <item-->
-<!--        android:id="@+id/bt_porMatricula"-->
-<!--        android:title="Ordenar por matrícula"/>-->
-<!--    <item-->
-<!--        android:id="@+id/bt_porNombre"-->
-<!--        android:title="Ordenar por nombre"/>-->
-<!--    <item-->
-<!--        android:id="@+id/bt_porApellidos"-->
-<!--        android:title="Ordenar por apellidos"/>-->
-    <item
-        android:id="@+id/bt_borrar"
-        android:title="Borrar relevo"/>
-    <item
-        android:id="@+id/bt_relevoFijo"
-        android:title="Establecer como fijo"/>
-</menu>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FFDD0000"/>
+</shape>

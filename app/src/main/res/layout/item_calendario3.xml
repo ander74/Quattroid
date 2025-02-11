@@ -253,4 +253,13 @@
         android:background="#FFDDDDDD"
         android:layout_height="1dp"/>
 
+    <!-- Separador del último elemento -->
+    <LinearLayout
+        android:id="@+id/separadorUltimoElemento"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:layout_height="120dp"/>
+
 </LinearLayout>

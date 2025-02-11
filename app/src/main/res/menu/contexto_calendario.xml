@@ -17,48 +17,55 @@
   -->
 
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/bt_copiar"
-        android:icon="@drawable/copiar"
-        android:title="Copiar dia"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/bt_pegar"
-        android:icon="@drawable/pegar"
-        android:title="Pegar dia"
-        app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--        android:id="@+id/bt_copiar"-->
+<!--        android:icon="@drawable/copiar"-->
+<!--        android:title="Copiar dia"-->
+<!--        app:showAsAction="ifRoom" />-->
+<!--    <item-->
+<!--        android:id="@+id/bt_pegar"-->
+<!--        android:icon="@drawable/pegar"-->
+<!--        android:title="Pegar dia"-->
+<!--        app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/bt_repetirAnterior"
         android:title="Repite Día Anterior"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/bt_marcarFranqueo"
-        android:title="Franqueo"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/bt_marcarFestivo"
-        android:title="Festivo"
-        app:showAsAction="never" />
+        android:icon="@drawable/icono_repite_dia"
+        android:iconTint="#FFFFFFFF"
+        app:showAsAction="always" />
+    <!--    <item-->
+<!--        android:id="@+id/bt_marcarFranqueo"-->
+<!--        android:title="Franqueo"-->
+<!--        app:showAsAction="never" />-->
+<!--    <item-->
+<!--        android:id="@+id/bt_marcarFestivo"-->
+<!--        android:title="Festivo"-->
+<!--        app:showAsAction="never" />-->
     <item
         android:id="@+id/bt_guardarServicio"
         android:title="Guardar Servicio"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/bt_ajenas"
-        android:title="Añadir Horas Ajenas"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/bt_vaciar"
-        android:title="Vaciar día"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/bt_recalcular"
-        android:title="Recalcular día"
-        app:showAsAction="never" />
+        android:icon="@drawable/icono_guardar_servicio"
+        android:iconTint="#FFFFFFFF"
+        app:showAsAction="always" />
+<!--    <item-->
+<!--        android:id="@+id/bt_ajenas"-->
+<!--        android:title="Añadir Horas Ajenas"-->
+<!--        app:showAsAction="never" />-->
+<!--    <item-->
+<!--        android:id="@+id/bt_vaciar"-->
+<!--        android:title="Vaciar día"-->
+<!--        app:showAsAction="never" />-->
+<!--    <item-->
+<!--        android:id="@+id/bt_recalcular"-->
+<!--        android:title="Recalcular día"-->
+<!--        android:icon="@drawable/icono_recalcular"-->
+<!--        android:iconTint="#FFFFFFFF"-->
+<!--        app:showAsAction="never" />-->
     <item
         android:id="@+id/bt_verRelevo"
         android:title="Ver compañero/a"
-        app:showAsAction="never" />
+        android:icon="@drawable/icono_ver_relevo"
+        android:iconTint="#FFFFFFFF"
+        app:showAsAction="always" />
 </menu>

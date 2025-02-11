@@ -81,6 +81,7 @@
             android:paddingRight="25dp"
             android:onClick="botonPulsado"
             android:background="@drawable/bt_busquedas"
+            android:textColor="#CDDC39"
             android:textStyle="bold"
             android:text="Ver Licencia"/>
 

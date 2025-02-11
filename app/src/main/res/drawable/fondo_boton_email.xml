@@ -16,20 +16,18 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<!--    <item-->
-<!--        android:id="@+id/bt_porMatricula"-->
-<!--        android:title="Ordenar por matrícula"/>-->
-<!--    <item-->
-<!--        android:id="@+id/bt_porNombre"-->
-<!--        android:title="Ordenar por nombre"/>-->
-<!--    <item-->
-<!--        android:id="@+id/bt_porApellidos"-->
-<!--        android:title="Ordenar por apellidos"/>-->
-    <item
-        android:id="@+id/bt_borrar"
-        android:title="Borrar relevo"/>
-    <item
-        android:id="@+id/bt_relevoFijo"
-        android:title="Establecer como fijo"/>
-</menu>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true" android:state_focused="false" android:state_selected="false">
+        <shape>
+            <solid android:color="#89FF74"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#CCFFB6"/>
+        </shape>
+    </item>
+
+</selector>

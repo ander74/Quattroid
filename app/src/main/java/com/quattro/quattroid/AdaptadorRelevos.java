@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import BaseDatos.BaseDatos;
@@ -46,12 +46,13 @@ public class AdaptadorRelevos extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Instancias de los elementos del item.
-        LinearLayout item = view.findViewById(R.id.item);
+        RelativeLayout item = view.findViewById(R.id.item);
         TextView matricula = view.findViewById(R.id.tv_matricula);
         TextView nombre = view.findViewById(R.id.tv_nombre);
         TextView apellidos = view.findViewById(R.id.tv_apellidos);
         TextView deuda = view.findViewById(R.id.tv_deuda);
         ImageView calificacion = view.findViewById(R.id.im_calificacion);
+        ImageView iconoLlamar = view.findViewById(R.id.iconoLlamar);
 
         // Instanciamos la base de datos
         BaseDatos datos = new BaseDatos(context);
@@ -68,6 +69,14 @@ public class AdaptadorRelevos extends CursorAdapter {
         String n = cursor.getString(cursor.getColumnIndexOrThrow("Nombre"));
         String a = cursor.getString(cursor.getColumnIndexOrThrow("Apellidos"));
         String t = cursor.getString(cursor.getColumnIndexOrThrow("Telefono"));
+
+        // Si hay teléfono, mostramos el icono de llamar.
+        if (!t.equals("")){
+            iconoLlamar.setVisibility(View.VISIBLE);
+        } else {
+            iconoLlamar.setVisibility(View.GONE);
+        }
+
 
         // Extraemos la deuda de la base de datos
         int d = datos.deudaRelevo(m);

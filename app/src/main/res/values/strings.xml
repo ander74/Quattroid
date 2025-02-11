@@ -23,7 +23,7 @@
 
 
     <!-- ACTIVITY PRINCIPAL -->
-    <string name="nombreAplicacion">Quattroid 2.0</string>
+    <string name="nombreAplicacion">Quattroid 2.0.1</string>
     <string name="creditoPrincipal">A. Herrero</string>
     <string name="bt_quattrox">Quattro X</string>
     <string name="bt_calendario">Calendario</string>

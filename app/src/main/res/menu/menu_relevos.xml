@@ -18,12 +18,13 @@
 
 <menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/bt_nuevo"
-        android:title="Nuevo"
-        android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="always"
-        tools:ignore="AppCompatResource" />
+
+    <!--    <item-->
+<!--        android:id="@+id/bt_nuevo"-->
+<!--        android:title="Nuevo"-->
+<!--        android:orderInCategory="100"-->
+<!--        android:icon="@android:drawable/ic_menu_add"-->
+<!--        android:showAsAction="always"-->
+<!--        tools:ignore="AppCompatResource" />-->
 
 </menu>

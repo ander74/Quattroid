@@ -62,12 +62,14 @@ public class AdaptadorBusquedas extends CursorAdapter {
 
         // Instancias de los elementos del item.
         LinearLayout Item = view.findViewById(R.id.item);
-        //RelativeLayout TextoResto = view.findViewById(R.id.resto);
+        RelativeLayout TextoResto = view.findViewById(R.id.resto);
         LinearLayout EsFranqueo = view.findViewById(R.id.esFranqueo);
         RelativeLayout TextoDia = view.findViewById(R.id.textoDia);
         TextView Dia = view.findViewById(R.id.dia);
         TextView DiaSemana = view.findViewById(R.id.diaSemana);
+        ImageView EsHuelga = view.findViewById(R.id.esHuelga);
         ImageView HayCompañero = view.findViewById(R.id.hayCompañero);
+        ImageView Notas = view.findViewById(R.id.notas);
         TextView Servicio = view.findViewById(R.id.servicio);
         ImageView Desayuno = view.findViewById(R.id.desayuno);
         ImageView Comida = view.findViewById(R.id.comida);
@@ -79,6 +81,15 @@ public class AdaptadorBusquedas extends CursorAdapter {
         TextView Guion = view.findViewById(R.id.guion);
         TextView Acumuladas = view.findViewById(R.id.acumuladas);
         TextView CabeceraMes = view.findViewById(R.id.cabeceraMes);
+
+
+        // Ocultar todas las imágenes.
+        EsHuelga.setVisibility(View.GONE);
+        HayCompañero.setVisibility(View.GONE);
+        Notas.setVisibility(View.GONE);
+        Desayuno.setVisibility(View.GONE);
+        Comida.setVisibility(View.GONE);
+        Cena.setVisibility(View.GONE);
 
 
         // Decide si se necesita una cabecera o no.
@@ -118,32 +129,15 @@ public class AdaptadorBusquedas extends CursorAdapter {
             CabeceraMes.setVisibility(View.GONE);
         }
 
-        // Ocultar todas las imágenes.
-        HayCompañero.setVisibility(View.GONE);
-        Desayuno.setVisibility(View.GONE);
-        Comida.setVisibility(View.GONE);
-        Cena.setVisibility(View.GONE);
-
         // Establece los fondos.
+        Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
         //Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
         if ((cursor.getPosition() + 1) % 2 == 0) {
             Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
             EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
-//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-//            TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-//            Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-//            Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-//            Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-//            Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
         } else {
             Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
             EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
-//            TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-//            TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-//            Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-//            Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-//            Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-//            Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
         }
 
         // Variables a usar.
@@ -163,6 +157,9 @@ public class AdaptadorBusquedas extends CursorAdapter {
 
         if (cursor.getInt(cursor.getColumnIndexOrThrow("EsFranqueo")) == 1) {
             EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_franqueo));
+        }
+        if (cursor.getInt(cursor.getColumnIndexOrThrow("EsFestivo")) == 1) {
+            EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_festivo));
         }
         if (Dsemana == 1 || cursor.getInt(cursor.getColumnIndexOrThrow("EsFestivo")) == 1) {
             Dia.setTextColor(Colores.ROJO);
@@ -196,8 +193,10 @@ public class AdaptadorBusquedas extends CursorAdapter {
 
                 Servicio.setText(s);
                 break;
-            case 3:case 4:
+            case 3:case 4: case 6:
                 String inc = cursor.getString(cursor.getColumnIndexOrThrow("TextoIncidencia"));
+                i = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
+                if (i != 0) inc = inc + " " + i;
                 Servicio.setText(inc);
         }
 
@@ -267,8 +266,12 @@ public class AdaptadorBusquedas extends CursorAdapter {
                 HayCompañero.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_usuario_verde));
                 HayCompañero.setVisibility(View.VISIBLE);
                 break;
+            case 15:
+                EsHuelga.setVisibility(View.VISIBLE);
+                break;
             default:
                 HayCompañero.setVisibility(View.GONE);
+                EsHuelga.setVisibility(View.GONE);
         }
 
         // Activar icono de las dietas.

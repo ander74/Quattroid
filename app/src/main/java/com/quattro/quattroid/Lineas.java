@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -74,6 +75,9 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
     Boolean IgnorarRepetidos = false;
 
     ListView listaLineas = null;
+    Button botonAddLinea = null;
+    Button botonImportar = null;
+    Button botonExportar = null;
 
 
     @Override
@@ -88,6 +92,9 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         // Inicialización de los elementos
         context = this;
         listaLineas = findViewById(R.id.lw_lineas);
+        botonAddLinea = findViewById(R.id.bt_barra_addLinea);
+        botonImportar = findViewById(R.id.bt_barra_importar);
+        botonExportar = findViewById(R.id.bt_barra_exportar);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
@@ -102,6 +109,9 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
 
         // Establecemos el listener de item pulsado.
         listaLineas.setOnItemClickListener(this);
+        botonAddLinea.setOnClickListener(this::botonAddLineaPulsado);
+        botonImportar.setOnClickListener(this::botonImportarPulsado);
+        botonExportar.setOnClickListener(this::botonExportarPulsado);
     }
 
     // CREAR EL MENÚ SUPERIOR.
@@ -117,15 +127,15 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         Intent intent = null;
         int id = item.getItemId();
         switch (id) {
-            case R.id.bt_nuevo:
-                intent = new Intent(context, EditarLinea.class);
-                intent.putExtra("Id", -1);
-                startActivityForResult(intent, ACCION_EDITA_LINEA);
-                return true;
-            case R.id.bt_importar:
-                return importarLineas();
-            case R.id.bt_exportar:
-                return exportarLineas();
+//            case R.id.bt_nuevo:
+//                intent = new Intent(context, EditarLinea.class);
+//                intent.putExtra("Id", -1);
+//                startActivityForResult(intent, ACCION_EDITA_LINEA);
+//                return true;
+//            case R.id.bt_importar:
+//                return importarLineas();
+//            case R.id.bt_exportar:
+//                return exportarLineas();
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -258,7 +268,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         grupo.setOrientation(LinearLayout.VERTICAL);
         grupo.setLayoutParams(params);
         final RadioButton radioSobreescribir = new RadioButton(this);
-        radioSobreescribir.setId(R.id.tv_trabajadasConvenio);
+        radioSobreescribir.setId(R.id.valorTrabajadasConvenio);
         radioSobreescribir.setText("Sobreescribir");
         radioSobreescribir.setLayoutParams(params);
         radioSobreescribir.setChecked(true);
@@ -412,5 +422,21 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         }
         datos.guardarAllLineas(lineasLocales);
     }
+
+
+    private void botonAddLineaPulsado(View view) {
+        Intent intent = new Intent(context, EditarLinea.class);
+        intent.putExtra("Id", -1);
+        startActivityForResult(intent, ACCION_EDITA_LINEA);
+    }
+
+    private void botonImportarPulsado(View view) {
+        importarLineas();
+    }
+
+    private void botonExportarPulsado(View view) {
+        exportarLineas();
+    }
+
 
 }

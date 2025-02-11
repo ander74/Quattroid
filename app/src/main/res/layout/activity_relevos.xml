@@ -16,11 +16,122 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ListView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lw_relevos"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="@null"
-    android:dividerHeight="0dp"
-    android:background="#ffeeeeee"/>
+    android:background="@android:color/transparent">
+
+
+
+
+    <LinearLayout
+        android:id="@+id/barraInferior"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@drawable/fondo_barra_inferior"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:elevation="5dp">
+
+        <Button
+            android:id="@+id/bt_barra_addRelevo"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_sumar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Nuevo"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_ordenarMatricula"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_ordenar"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Matrícula"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_ordenarNombre"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_ordenar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Nombre"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_ordenarApellidos"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_ordenar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Apellidos"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+    </LinearLayout>
+
+
+
+
+    <ListView
+        android:id="@+id/lw_relevos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:paddingBottom="120dp"
+        android:clipToPadding="false"
+        android:background="#ffeeeeee"/>
+
+
+
+
+
+
+<!--        <Button-->
+<!--            android:id="@+id/bt_addRelevo"-->
+<!--            android:layout_width="64dp"-->
+<!--            android:layout_height="64dp"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginEnd="30dp"-->
+<!--            android:layout_marginBottom="50dp"-->
+<!--            android:background="@drawable/fondo_boton_redondo_add"-->
+<!--            android:textColor="#FF000099"-->
+<!--            android:textStyle="bold"-->
+<!--            android:elevation="5dp"-->
+<!--            android:textSize="36sp"/>-->
+
+
+
+</RelativeLayout>

@@ -19,11 +19,13 @@ package com.quattro.quattroid;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,6 +56,7 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
     RadioButton malo = null;
     RadioButton normal = null;
     RadioButton bueno = null;
+    Button botonLlamar = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
         malo = findViewById(R.id.rb_malo);
         normal = findViewById(R.id.rb_normal);
         bueno = findViewById(R.id.rb_bueno);
+        botonLlamar = findViewById(R.id.botonLlamar);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
@@ -84,6 +88,15 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
         // Registrar los listeners
         deuda.setOnFocusChangeListener(this);
         matricula.setOnFocusChangeListener(this);
+        botonLlamar.setOnClickListener(this::botonLlamarPulsado);
+        telefono.setOnKeyListener((x, y, z) -> {
+            if (telefono.getText().toString().isEmpty()){
+                botonLlamar.setVisibility(View.GONE);
+            } else {
+                botonLlamar.setVisibility(View.VISIBLE);
+            }
+            return false;
+        });
 
         // Definir si vamos a editar una incidencia o crear una nueva.
         data = getIntent().getExtras();
@@ -122,6 +135,13 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
             deudaRelevo = datos.deudaRelevo(data.getInt("Matricula", 0));
             escribeDeuda(deudaRelevo);
             deudaRelevo -= data.getInt("Deuda");
+        }
+
+        // Activar o no el botón llamar si hay un teléfono metido.
+        if (telefono.getText().toString().isEmpty()){
+            botonLlamar.setVisibility(View.GONE);
+        } else {
+            botonLlamar.setVisibility(View.VISIBLE);
         }
 
     }
@@ -266,6 +286,16 @@ public class EditarRelevo extends Activity implements View.OnFocusChangeListener
         } else {
             Toast.makeText(context, R.string.error_nuevoRelevo, Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private void botonLlamarPulsado(View v){
+        String telefono = data.getString("Telefono");
+        String uri = "tel:" + telefono ;
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(uri));
+        startActivity(intent);
+
     }
 
 

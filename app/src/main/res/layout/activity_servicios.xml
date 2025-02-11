@@ -15,13 +15,35 @@
   ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
-
-<ListView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lw_servicios"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:divider="@null"
-    android:dividerHeight="-1dp"
-    android:background="#ffeeeeee">
-</ListView>
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <ListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lw_servicios"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:divider="@null"
+        android:dividerHeight="-1dp"
+        android:background="#ffeeeeee">
+    </ListView>
+
+    <Button
+        android:id="@+id/bt_addServicio"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/fondo_boton_redondo_add"
+        android:textColor="#FF000099"
+        android:textStyle="bold"
+        android:elevation="5dp"
+        android:textSize="36sp"/>
+
+
+</RelativeLayout>

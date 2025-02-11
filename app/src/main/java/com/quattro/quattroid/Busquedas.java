@@ -201,6 +201,9 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 grupoVerListado.setVisibility(View.VISIBLE);
                 listaBusquedas.setVisibility(View.VISIBLE);
                 grupoBotones.setVisibility(View.GONE);
+                cursor = datos.cursorBusqueda("Dia=0");
+                adaptador.changeCursor(cursor);
+                adaptador.notifyDataSetChanged();
                 break;
             case R.id.bt_matricula:
                 grupoActivo = POR_MATRICULA;
@@ -210,6 +213,9 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 grupoVerListado.setVisibility(View.VISIBLE);
                 listaBusquedas.setVisibility(View.VISIBLE);
                 grupoBotones.setVisibility(View.GONE);
+                cursor = datos.cursorBusqueda("Dia=0");
+                adaptador.changeCursor(cursor);
+                adaptador.notifyDataSetChanged();
                 break;
             case R.id.bt_incidencia:
                 grupoActivo = POR_INCIDENCIA;
@@ -224,6 +230,9 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 grupoVerListado.setVisibility(View.VISIBLE);
                 listaBusquedas.setVisibility(View.VISIBLE);
                 grupoBotones.setVisibility(View.GONE);
+                cursor = datos.cursorBusqueda("Dia=0");
+                adaptador.changeCursor(cursor);
+                adaptador.notifyDataSetChanged();
                 break;
             case R.id.bt_notas:
                 grupoActivo = POR_NOTAS;
@@ -234,6 +243,9 @@ public class Busquedas extends Activity implements View.OnFocusChangeListener, V
                 grupoVerListado.setVisibility(View.VISIBLE);
                 listaBusquedas.setVisibility(View.VISIBLE);
                 grupoBotones.setVisibility(View.GONE);
+                cursor = datos.cursorBusqueda("Dia=0");
+                adaptador.changeCursor(cursor);
+                adaptador.notifyDataSetChanged();
                 break;
             case R.id.bt_verlistado:
                 verLista();

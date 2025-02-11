@@ -4,36 +4,52 @@
   ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <!-- Principal -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/item"
         android:background="@drawable/fondo_relevo_impar"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <!-- Matrícula -->
         <TextView
             android:id="@+id/tv_matricula"
             android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center|center_vertical"
             android:background="@android:color/transparent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:padding="4dp"
             android:textSize="20sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/iconoLlamar"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:layout_margin="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:foregroundTint="#FFFF0000"
+            android:src="@drawable/icono_llamar_telefono" />
+
         <!-- Contenido del relevo -->
         <LinearLayout
+            android:id="@+id/contenido"
             android:orientation="vertical"
+            android:layout_toEndOf="@id/tv_matricula"
+            android:layout_toStartOf="@id/iconoLlamar"
             android:padding="2dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <!-- Línea uno -->
@@ -98,7 +114,7 @@
         </LinearLayout>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <!-- Separador -->

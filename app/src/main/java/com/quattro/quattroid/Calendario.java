@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,11 +37,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.color.Color;
@@ -67,6 +72,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.annotation.Nullable;
 
 import BaseDatos.BaseDatos;
 import BaseDatos.DatosDia;
@@ -115,14 +122,34 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // ELEMENTOS DEL LAYOUT
     ListView listaCalendario = null;
-    TextView acumuladas = null;
-    TextView titulo = null;
+//    TextView acumuladas = null;
+//    TextView titulo = null;
+//    TextView acumuladasMes = null;
+//    TextView nocturnas = null;
+//    TextView tomaDeje = null;
+//    TextView euros = null;
+//    TextView trabajadasReales = null;
+//    TextView trabajadasConvenio = null;
+//    LinearLayout listadoHoras = null;
+    LinearLayout barraHoras = null;
+    TextView textoAcumuladasMes;
     TextView acumuladasMes = null;
     TextView nocturnas = null;
+    RelativeLayout tablaHoras = null;
+    RelativeLayout tablaAcumuladas = null;
+    TextView textoAcumuladas;
+    TextView acumuladas = null;
     TextView tomaDeje = null;
     TextView euros = null;
     TextView trabajadasReales = null;
     TextView trabajadasConvenio = null;
+    Button botonBarraCopiar = null;
+    LinearLayout barraInferior = null;
+    Button botonBarraPegar = null;
+    Button botonBarraFranqueoFestivo = null;
+    Button botonBarraAjenas = null;
+    Button botonBarraRecalcular = null;
+    Button botonBarraVaciar = null;
 
     // PERTENECE A MULTI-SELECCIÓN
     private final ArrayList<Integer> listaIds = new ArrayList<>();
@@ -138,22 +165,38 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         context = this;
         // Inicializar los elementos del view
         listaCalendario = findViewById(R.id.lw_listaCalendario);
-        acumuladas = findViewById(R.id.tv_acumuladas);
-        titulo = findViewById(R.id.tv_titulo);
-        acumuladasMes = findViewById(R.id.tv_acumuladasMes);
-        nocturnas = findViewById(R.id.tv_nocturnas);
-        tomaDeje = findViewById(R.id.tv_tomaDeje);
-        euros = findViewById(R.id.tv_euros);
-        trabajadasReales = findViewById(R.id.tv_trabajadasReales);
-        trabajadasConvenio = findViewById(R.id.tv_trabajadasConvenio);
+        acumuladas = findViewById(R.id.valorAcumuladas);
+        textoAcumuladas = findViewById(R.id.acumuladas);
+//        titulo = findViewById(R.id.tv_titulo);
+        barraHoras = findViewById(R.id.barraHoras);
+        acumuladasMes = findViewById(R.id.valorAcumuladasMes);
+        textoAcumuladasMes = findViewById(R.id.acumuladasMes);
+        nocturnas = findViewById(R.id.valorNocturnasMes);
+        tomaDeje = findViewById(R.id.valorTomaDeje);
+        euros = findViewById(R.id.valorEuros);
+        trabajadasReales = findViewById(R.id.valorTrabajadas);
+        trabajadasConvenio = findViewById(R.id.valorTrabajadasConvenio);
+        tablaHoras = findViewById(R.id.tablaHoras);
+        tablaAcumuladas = findViewById(R.id.tablaAcumuladas);
+//        listadoHoras = findViewById(R.id.ly_horas);
+        barraInferior = findViewById(R.id.barraInferior);
+        botonBarraCopiar = findViewById(R.id.bt_barra_copiar);
+        botonBarraPegar = findViewById(R.id.bt_barra_pegar);
+        botonBarraFranqueoFestivo = findViewById(R.id.bt_barra_franqueo_festivo);
+        botonBarraAjenas = findViewById(R.id.bt_barra_ajenas);
+        botonBarraRecalcular = findViewById(R.id.bt_barra_recalcular);
+        botonBarraVaciar = findViewById(R.id.bt_barra_vaciar);
+        tablaHoras = findViewById(R.id.tablaHoras);
         // Ocultar TomaDeje y Euros
-        titulo.setVisibility(View.GONE);
-        acumuladasMes.setVisibility(View.GONE);
-        nocturnas.setVisibility(View.GONE);
-        tomaDeje.setVisibility(View.GONE);
-        euros.setVisibility(View.GONE);
-        trabajadasReales.setVisibility(View.GONE);
-        trabajadasConvenio.setVisibility(View.GONE);
+        //titulo.setVisibility(View.GONE);
+        //acumuladasMes.setVisibility(View.GONE);
+        //nocturnas.setVisibility(View.GONE);
+        //tomaDeje.setVisibility(View.GONE);
+        //euros.setVisibility(View.GONE);
+        //trabajadasReales.setVisibility(View.GONE);
+        //trabajadasConvenio.setVisibility(View.GONE);
+        tablaAcumuladas.setVisibility(View.VISIBLE);
+        tablaHoras.setVisibility(View.GONE);
         // Inicializar las opciones y la base de datos
         opciones = PreferenceManager.getDefaultSharedPreferences(this);
         datos = new BaseDatos(context);
@@ -176,6 +219,14 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         listaCalendario.setDivider(null);
         listaCalendario.setDividerHeight(0);
         listaCalendario.setMultiChoiceModeListener(this);// MULTI-SELECCION
+        botonBarraCopiar.setOnClickListener(this::botonBarraCopiarPulsado);
+        botonBarraPegar.setOnClickListener(this::botonBarraPegarPulsado);
+        botonBarraFranqueoFestivo.setOnClickListener(this::botonBarraFranqueoFestivoPulsado);
+        botonBarraAjenas.setOnClickListener(this::botonBarraAjenasPulsado);
+        botonBarraRecalcular.setOnClickListener(this::botonBarraRecalcularPulsado);
+        botonBarraVaciar.setOnClickListener(this::botonBarraVaciarPulsado);
+
+        // Llenamos la lista de los días
         listaDias = datos.datosMes(mesActual, añoActual);
         if(listaDias.isEmpty()) {
             datos.crearMes(mesActual, añoActual);
@@ -328,19 +379,42 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         int checkedCount = listaCalendario.getCheckedItemCount();
         Menu menu = mode.getMenu();
         mode.setTitle(checkedCount + " Selec.");
+
+        //TODO: INICIO BARRA
+        barraHoras.setVisibility(View.GONE);
+        barraInferior.setVisibility(View.VISIBLE);
+
+        Drawable drawCopiar = botonBarraCopiar.getCompoundDrawables()[1];
+        Drawable drawAjenas = botonBarraAjenas.getCompoundDrawables()[1];
+
+        if (checkedCount == 1){
+            botonBarraCopiar.setEnabled(true);
+            botonBarraAjenas.setEnabled(true);
+            botonBarraCopiar.setTextColor(0XFF000099);
+            botonBarraAjenas.setTextColor(0XFF000099);
+            DrawableCompat.setTint(drawCopiar, 0XFF000099);
+            DrawableCompat.setTint(drawAjenas, 0XFF000099);
+        } else {
+            botonBarraCopiar.setEnabled(false);
+            botonBarraAjenas.setEnabled(false);
+            botonBarraCopiar.setTextColor(Colores.GRIS_OSCURO);
+            botonBarraAjenas.setTextColor(Colores.GRIS_OSCURO);
+            DrawableCompat.setTint(drawCopiar, Colores.GRIS_OSCURO);
+            DrawableCompat.setTint(drawAjenas, Colores.GRIS_OSCURO);
+        }
+
+        //TODO: FINAL BARRA
+
         if (checkedCount > 1){
             menu.findItem(R.id.bt_repetirAnterior).setVisible(false);
-            menu.findItem(R.id.bt_copiar).setVisible(false);
             menu.findItem(R.id.bt_guardarServicio).setVisible(false);
-            menu.findItem(R.id.bt_ajenas).setVisible(false);
             menu.findItem(R.id.bt_verRelevo).setVisible(false);
         } else {
             menu.findItem(R.id.bt_repetirAnterior).setVisible(true);
-            menu.findItem(R.id.bt_copiar).setVisible(true);
             menu.findItem(R.id.bt_guardarServicio).setVisible(true);
-            menu.findItem(R.id.bt_ajenas).setVisible(true);
             menu.findItem(R.id.bt_verRelevo).setVisible(true);
         }
+        //No cambiar nada de lo siguiente.
         if (checked){
             listaIds.add(position);
             listaDias.get(position).setSeleccionado(true);
@@ -375,112 +449,109 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 repiteDiaAnterior(listaDias.get(listaIds.get(0)));
                 escribeHoras();
                 return true;
-            case R.id.bt_marcarFranqueo:
-                for (int id : listaIds) {
-                    marcaFranqueo(listaDias.get(id));
-                }
-                return true;
-            case R.id.bt_marcarFestivo:
-                for (int id : listaIds) {
-                    marcarFestivo(listaDias.get(id));
-                }
-                return true;
-            case R.id.bt_copiar:
-                copiar(listaDias.get(listaIds.get(0)));
-                Toast.makeText(context, R.string.mensaje_diaCopiado, Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.bt_pegar:
-                if (portapapeles == null) return true;
-                for (int id : listaIds) {
-                    DatosDia dia = listaDias.get(id);
-                    dia.setCodigoIncidencia(portapapeles.getCodigoIncidencia());
-                    dia.setTextoIncidencia(portapapeles.getTextoIncidencia());
-                    dia.setTipoIncidencia(portapapeles.getTipoIncidencia());
-                    dia.setLinea(portapapeles.getLinea());
-                    dia.setServicio(portapapeles.getServicio());
-                    dia.setTurno(portapapeles.getTurno());
-                    dia.setTextoLinea(portapapeles.getTextoLinea());
-                    dia.setInicio(portapapeles.getInicio());
-                    dia.setLugarInicio(portapapeles.getLugarInicio());
-                    dia.setFinal(portapapeles.getFinal());
-                    dia.setLugarFinal(portapapeles.getLugarFinal());
-                    dia.setBus(portapapeles.getBus());
-                    dia.setTomaDeje(portapapeles.getTomaDeje());
-                    dia.setTomaDejeDecimal(portapapeles.getTomaDejeDecimal());
-                    dia.setEuros(portapapeles.getEuros());
-                    dia.setAcumuladas(portapapeles.getAcumuladas());
-                    dia.setNocturnas(portapapeles.getNocturnas());
-                    dia.setTrabajadas(portapapeles.getTrabajadas());
-                    dia.setMatricula(portapapeles.getMatricula());
-                    dia.setApellidos(portapapeles.getApellidos());
-                    dia.setMatriculaSusti(portapapeles.getMatriculaSusti());
-                    dia.setApellidosSusti(portapapeles.getApellidosSusti());
-                    dia.setCalificacion(portapapeles.getCalificacion());
-                    dia.setNotas(portapapeles.getNotas());
-                    datos.guardaDia(dia);
-                    // Copiamos los servicios del día
-                    datos.vaciarServiciosDia(dia.getDia(), mesActual, añoActual);
-                    Cursor cursor1 = datos.cursorServiciosDia(diaPortapapeles, mesPortapapeles, añoPortapapeles);
-                    if (cursor1.getCount() > 0) {
-                        while (cursor1.moveToNext()) {
-                            ServicioDia sd = new ServicioDia();
-                            sd.setDia(dia.getDia());
-                            sd.setMes(mesActual);
-                            sd.setAño(añoActual);
-                            sd.setLinea(cursor1.getString(cursor1.getColumnIndex("Linea")));
-                            sd.setServicio(cursor1.getString(cursor1.getColumnIndex("Servicio")));
-                            sd.setTurno(cursor1.getInt(cursor1.getColumnIndex("Turno")));
-                            sd.setInicio(cursor1.getString(cursor1.getColumnIndex("Inicio")));
-                            sd.setLugarInicio(cursor1.getString(cursor1.getColumnIndex("LugarInicio")));
-                            sd.setFinal(cursor1.getString(cursor1.getColumnIndex("Final")));
-                            sd.setLugarFinal(cursor1.getString(cursor1.getColumnIndex("LugarFinal")));
-                            datos.guardaServicioDia(sd);
-                        }
-                    }
-                    cursor1.close();
-                }
-                actualizaLista(false);
-                escribeHoras();
-	            return true;
-            case R.id.bt_ajenas:
-                DatosDia dia = listaDias.get(listaIds.get(0));
-                // Creamos un intent para devolver los datos de la incidencia
-                Intent intent = new Intent(context, EditarHorasAjenas.class);
-                intent.putExtra("Dia", dia.getDia());
-                intent.putExtra("Mes", dia.getMes());
-                intent.putExtra("Año", dia.getAño());
-                intent.putExtra("Nuevo", true);
-                startActivityForResult(intent, ACCION_EDITA_AJENA);
-                return true;
-            case R.id.bt_vaciar:
-                AlertDialog.Builder aviso = new AlertDialog.Builder(context);
-                aviso.setTitle("ATENCION");
-                aviso.setMessage("Vas a vaciar los días seleccionados\n\n¿Estás seguro?");
-                aviso.setPositiveButton("SI", (dialog, which) -> {
-                    Boolean vaciado = false;
-                    for (int id : listaIds) {
-                        vaciado = vaciarDia(listaDias.get(id));
-                    }
-                    if (vaciado) {
-                        Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
-                    }
-                    actualizaLista(false);
-                });
-                aviso.setNegativeButton("NO", (dialog, which) -> {});
-                aviso.show();
-                return true;
-            case R.id.bt_recalcular:
-                for (int id : listaIds) {
-                    DatosDia datosDia = listaDias.get(id);
-                    Cursor cursor = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
-                    DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
-                    datos.guardaDia(datosDia);
-                }
-                escribeHoras();
-                actualizaLista(false);
-                return true;
+//            case R.id.bt_marcarFranqueo:
+//                for (int id : listaIds) {
+//                    marcaFranqueo(listaDias.get(id));
+//                }
+//                return true;
+//            case R.id.bt_marcarFestivo:
+//                for (int id : listaIds) {
+//                    marcarFestivo(listaDias.get(id));
+//                }
+//                return true;
+
+//            case R.id.bt_pegar:
+//                if (portapapeles == null) return true;
+//                for (int id : listaIds) {
+//                    DatosDia dia = listaDias.get(id);
+//                    dia.setCodigoIncidencia(portapapeles.getCodigoIncidencia());
+//                    dia.setTextoIncidencia(portapapeles.getTextoIncidencia());
+//                    dia.setTipoIncidencia(portapapeles.getTipoIncidencia());
+//                    dia.setLinea(portapapeles.getLinea());
+//                    dia.setServicio(portapapeles.getServicio());
+//                    dia.setTurno(portapapeles.getTurno());
+//                    dia.setTextoLinea(portapapeles.getTextoLinea());
+//                    dia.setInicio(portapapeles.getInicio());
+//                    dia.setLugarInicio(portapapeles.getLugarInicio());
+//                    dia.setFinal(portapapeles.getFinal());
+//                    dia.setLugarFinal(portapapeles.getLugarFinal());
+//                    dia.setBus(portapapeles.getBus());
+//                    dia.setTomaDeje(portapapeles.getTomaDeje());
+//                    dia.setTomaDejeDecimal(portapapeles.getTomaDejeDecimal());
+//                    dia.setEuros(portapapeles.getEuros());
+//                    dia.setAcumuladas(portapapeles.getAcumuladas());
+//                    dia.setNocturnas(portapapeles.getNocturnas());
+//                    dia.setTrabajadas(portapapeles.getTrabajadas());
+//                    dia.setMatricula(portapapeles.getMatricula());
+//                    dia.setApellidos(portapapeles.getApellidos());
+//                    dia.setMatriculaSusti(portapapeles.getMatriculaSusti());
+//                    dia.setApellidosSusti(portapapeles.getApellidosSusti());
+//                    dia.setCalificacion(portapapeles.getCalificacion());
+//                    dia.setNotas(portapapeles.getNotas());
+//                    datos.guardaDia(dia);
+//                    // Copiamos los servicios del día
+//                    datos.vaciarServiciosDia(dia.getDia(), mesActual, añoActual);
+//                    Cursor cursor1 = datos.cursorServiciosDia(diaPortapapeles, mesPortapapeles, añoPortapapeles);
+//                    if (cursor1.getCount() > 0) {
+//                        while (cursor1.moveToNext()) {
+//                            ServicioDia sd = new ServicioDia();
+//                            sd.setDia(dia.getDia());
+//                            sd.setMes(mesActual);
+//                            sd.setAño(añoActual);
+//                            sd.setLinea(cursor1.getString(cursor1.getColumnIndex("Linea")));
+//                            sd.setServicio(cursor1.getString(cursor1.getColumnIndex("Servicio")));
+//                            sd.setTurno(cursor1.getInt(cursor1.getColumnIndex("Turno")));
+//                            sd.setInicio(cursor1.getString(cursor1.getColumnIndex("Inicio")));
+//                            sd.setLugarInicio(cursor1.getString(cursor1.getColumnIndex("LugarInicio")));
+//                            sd.setFinal(cursor1.getString(cursor1.getColumnIndex("Final")));
+//                            sd.setLugarFinal(cursor1.getString(cursor1.getColumnIndex("LugarFinal")));
+//                            datos.guardaServicioDia(sd);
+//                        }
+//                    }
+//                    cursor1.close();
+//                }
+//                actualizaLista(false);
+//                escribeHoras();
+//	            return true;
+//            case R.id.bt_ajenas:
+//                DatosDia dia = listaDias.get(listaIds.get(0));
+//                // Creamos un intent para devolver los datos de la incidencia
+//                Intent intent = new Intent(context, EditarHorasAjenas.class);
+//                intent.putExtra("Dia", dia.getDia());
+//                intent.putExtra("Mes", dia.getMes());
+//                intent.putExtra("Año", dia.getAño());
+//                intent.putExtra("Nuevo", true);
+//                startActivityForResult(intent, ACCION_EDITA_AJENA);
+//                return true;
+//            case R.id.bt_vaciar:
+//                AlertDialog.Builder aviso = new AlertDialog.Builder(context);
+//                aviso.setTitle("ATENCION");
+//                aviso.setMessage("Vas a vaciar los días seleccionados\n\n¿Estás seguro?");
+//                aviso.setPositiveButton("SI", (dialog, which) -> {
+//                    Boolean vaciado = false;
+//                    for (int id : listaIds) {
+//                        vaciado = vaciarDia(listaDias.get(id));
+//                    }
+//                    if (vaciado) {
+//                        Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
+//                    }
+//                    actualizaLista(false);
+//                });
+//                aviso.setNegativeButton("NO", (dialog, which) -> {});
+//                aviso.show();
+//                return true;
+//            case R.id.bt_recalcular:
+//                for (int id : listaIds) {
+//                    DatosDia datosDia = listaDias.get(id);
+//                    Cursor cursor = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
+//                    DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
+//                    datos.guardaDia(datosDia);
+//                }
+//                escribeHoras();
+//                actualizaLista(false);
+//                return true;
             case R.id.bt_verRelevo:
                 DatosDia datosD = listaDias.get(listaIds.get(0));
                 Relevo r = datos.getRelevo(datosD.getMatricula());
@@ -561,6 +632,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // MULTI-SELECCION: Al quitarse todos los días seleccionados.
     @Override
     public void onDestroyActionMode(ActionMode actionMode) {
+
+        //TODO: INICIO BARRA
+        barraInferior.setVisibility(View.GONE);
+        barraHoras.setVisibility(View.VISIBLE);
+
+        //TODO: FINAL BARRA
+
         //Refrescar la lista.
         for (DatosDia d : listaDias){
             d.setSeleccionado(false);
@@ -609,32 +687,31 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         // Escribimos las acumuladas, poniendo el color correspondiente.
         if (acumHastaMes > -0.01) {
             acumuladas.setTextColor(Colores.VERDE_OSCURO);
+            textoAcumuladas.setTextColor(Colores.VERDE_OSCURO);
         } else {
             acumuladas.setTextColor(Colores.ROJO);
+            textoAcumuladas.setTextColor(Colores.ROJO);
         }
-        acumuladas.setText("Acum. hasta mes : " + Hora.textoDecimal(acumHastaMes));
+        acumuladas.setText(Hora.textoDecimal(acumHastaMes));
         // Escribimos las acumuladas del mes
         if (acumMesActual > -0.01) {
             acumuladasMes.setTextColor(Colores.VERDE_OSCURO);
+            textoAcumuladasMes.setTextColor(Colores.VERDE_OSCURO);
         } else {
             acumuladasMes.setTextColor(Colores.ROJO);
+            textoAcumuladasMes.setTextColor(Colores.ROJO);
         }
-        acumuladasMes.setText("Horas Acumuladas : " + Hora.textoDecimal(acumMesActual));
+        acumuladasMes.setText(Hora.textoDecimal(acumMesActual));
         // Escribimos las nocturnas
-        nocturnas.setTextColor(Colores.AZUL_CLARO);
-        nocturnas.setText("Horas Nocturnas : " + Hora.textoDecimal(noctMes));
+        nocturnas.setText(Hora.textoDecimal(noctMes));
         // Escribimos las horas del toma y deje.
-        tomaDeje.setTextColor(Colores.MARRON_CLARO);
-        tomaDeje.setText("Toma y Deje : " + Hora.textoDecimal(tomaDejeMes));
+        tomaDeje.setText(Hora.textoDecimal(tomaDejeMes));
         // Escribimos los euros por servicio.
-        euros.setTextColor(Colores.VIOLETA);
-        euros.setText("Euros por Servicio : " + Hora.textoDecimal(eurosMes));
+        euros.setText(Hora.textoDecimal(eurosMes));
         // Escribimos las trabajadas reales.
-        trabajadasReales.setTextColor(Colores.AZUL_CLARO);
-        trabajadasReales.setText("Trabajadas : " + Hora.textoDecimal(trabMes));
+        trabajadasReales.setText(Hora.textoDecimal(trabMes));
         // Escribimos las trabajadas por convenio
-        trabajadasConvenio.setTextColor(Colores.AZUL_CLARO);
-        trabajadasConvenio.setText("Trabajadas Convenio : " + Hora.textoDecimal(trabConvMes));
+        trabajadasConvenio.setText(Hora.textoDecimal(trabConvMes));
     }
 
     // ACTUALIZA LA LISTA DEL CALENDARIO
@@ -649,22 +726,29 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // AL PULSAR EN LAS HORAS ACUMULADAS O NOCTURNAS TOTALES
     public void horasPulsadas(View view){
-        if (nocturnas.getVisibility() == View.GONE){
-            titulo.setVisibility(View.VISIBLE);
-            acumuladasMes.setVisibility(View.VISIBLE);
-            nocturnas.setVisibility(View.VISIBLE);
-            tomaDeje.setVisibility(View.VISIBLE);
-            euros.setVisibility(View.VISIBLE);
-            trabajadasReales.setVisibility(View.VISIBLE);
-            trabajadasConvenio.setVisibility(View.VISIBLE);
-        } else{
-            titulo.setVisibility(View.GONE);
-            acumuladasMes.setVisibility(View.GONE);
-            nocturnas.setVisibility(View.GONE);
-            tomaDeje.setVisibility(View.GONE);
-            euros.setVisibility(View.GONE);
-            trabajadasReales.setVisibility(View.GONE);
-            trabajadasConvenio.setVisibility(View.GONE);
+        if (tablaHoras.getVisibility() == View.GONE){
+
+            tablaAcumuladas.setVisibility(View.GONE);
+            tablaHoras.setVisibility(View.VISIBLE);
+//            titulo.setVisibility(View.VISIBLE);
+//            acumuladasMes.setVisibility(View.VISIBLE);
+//            nocturnas.setVisibility(View.VISIBLE);
+//            tomaDeje.setVisibility(View.VISIBLE);
+//            euros.setVisibility(View.VISIBLE);
+//            trabajadasReales.setVisibility(View.VISIBLE);
+//            trabajadasConvenio.setVisibility(View.VISIBLE);
+        } else {
+
+            tablaHoras.setVisibility(View.GONE);
+            tablaAcumuladas.setVisibility(View.VISIBLE);
+
+//            titulo.setVisibility(View.GONE);
+//            acumuladasMes.setVisibility(View.GONE);
+//            nocturnas.setVisibility(View.GONE);
+//            tomaDeje.setVisibility(View.GONE);
+//            euros.setVisibility(View.GONE);
+//            trabajadasReales.setVisibility(View.GONE);
+//            trabajadasConvenio.setVisibility(View.GONE);
         }
     }
 
@@ -1493,6 +1577,151 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         builder.setNeutralButton("Hoy", (dialogInterface, i) -> irAFecha(LocalDate.now().getMonthOfYear(), LocalDate.now().getYear()));
         builder.setNegativeButton("Cancelar", (dialogInterface, v) -> { });
         builder.create().show();
+    }
+
+    /*
+     * LISTENERS BOTONES BARRA INFERIOR
+     */
+
+    public void botonBarraCopiarPulsado(View view){
+
+        copiar(listaDias.get(listaIds.get(0)));
+        Toast.makeText(context, R.string.mensaje_diaCopiado, Toast.LENGTH_SHORT).show();
+    }
+
+    public void botonBarraPegarPulsado(View view){
+        if (portapapeles == null) return;
+        for (int id : listaIds) {
+            DatosDia dia = listaDias.get(id);
+            dia.setCodigoIncidencia(portapapeles.getCodigoIncidencia());
+            dia.setTextoIncidencia(portapapeles.getTextoIncidencia());
+            dia.setTipoIncidencia(portapapeles.getTipoIncidencia());
+            dia.setLinea(portapapeles.getLinea());
+            dia.setServicio(portapapeles.getServicio());
+            dia.setTurno(portapapeles.getTurno());
+            dia.setTextoLinea(portapapeles.getTextoLinea());
+            dia.setInicio(portapapeles.getInicio());
+            dia.setLugarInicio(portapapeles.getLugarInicio());
+            dia.setFinal(portapapeles.getFinal());
+            dia.setLugarFinal(portapapeles.getLugarFinal());
+            dia.setBus(portapapeles.getBus());
+            dia.setTomaDeje(portapapeles.getTomaDeje());
+            dia.setTomaDejeDecimal(portapapeles.getTomaDejeDecimal());
+            dia.setEuros(portapapeles.getEuros());
+            dia.setAcumuladas(portapapeles.getAcumuladas());
+            dia.setNocturnas(portapapeles.getNocturnas());
+            dia.setTrabajadas(portapapeles.getTrabajadas());
+            dia.setMatricula(portapapeles.getMatricula());
+            dia.setApellidos(portapapeles.getApellidos());
+            dia.setMatriculaSusti(portapapeles.getMatriculaSusti());
+            dia.setApellidosSusti(portapapeles.getApellidosSusti());
+            dia.setCalificacion(portapapeles.getCalificacion());
+            dia.setNotas(portapapeles.getNotas());
+            datos.guardaDia(dia);
+            // Copiamos los servicios del día
+            datos.vaciarServiciosDia(dia.getDia(), mesActual, añoActual);
+            Cursor cursor1 = datos.cursorServiciosDia(diaPortapapeles, mesPortapapeles, añoPortapapeles);
+            if (cursor1.getCount() > 0) {
+                while (cursor1.moveToNext()) {
+                    ServicioDia sd = new ServicioDia();
+                    sd.setDia(dia.getDia());
+                    sd.setMes(mesActual);
+                    sd.setAño(añoActual);
+                    sd.setLinea(cursor1.getString(cursor1.getColumnIndex("Linea")));
+                    sd.setServicio(cursor1.getString(cursor1.getColumnIndex("Servicio")));
+                    sd.setTurno(cursor1.getInt(cursor1.getColumnIndex("Turno")));
+                    sd.setInicio(cursor1.getString(cursor1.getColumnIndex("Inicio")));
+                    sd.setLugarInicio(cursor1.getString(cursor1.getColumnIndex("LugarInicio")));
+                    sd.setFinal(cursor1.getString(cursor1.getColumnIndex("Final")));
+                    sd.setLugarFinal(cursor1.getString(cursor1.getColumnIndex("LugarFinal")));
+                    datos.guardaServicioDia(sd);
+                }
+            }
+            cursor1.close();
+        }
+        actualizaLista(false);
+        escribeHoras();
+    }
+
+    public void botonBarraFranqueoFestivoPulsado(View view){
+        Incidencia incidenciaFranqueo = datos.getIncidencia(2);
+        Incidencia incidenciaFestivo = datos.getIncidencia(9);
+        for (int id : listaIds) {
+            DatosDia dia = listaDias.get(id);
+            if (!dia.isEsFranqueo() && !dia.isEsFestivo()){
+                if (dia.getCodigoIncidencia() == 0){
+                    setIncidenciaEnDia(dia, incidenciaFranqueo);
+                }
+                dia.setEsFranqueo(true);
+            } else if (dia.isEsFranqueo() && !dia.isEsFestivo()){
+                if (dia.getCodigoIncidencia() == 0 || dia.getCodigoIncidencia() == 2) {
+                    setIncidenciaEnDia(dia, incidenciaFestivo);
+                }
+                dia.setEsFranqueo(false);
+                dia.setEsFestivo(true);
+            } else if (!dia.isEsFranqueo() && dia.isEsFestivo()){
+                dia.setEsFestivo(false);
+                if (dia.getCodigoIncidencia() == 9) {
+                    setIncidenciaEnDia(dia, null);
+                }
+            }
+            datos.guardaDia(dia);
+            actualizaLista(false);
+        }
+    }
+
+    public void botonBarraAjenasPulsado(View view){
+        DatosDia dia = listaDias.get(listaIds.get(0));
+        // Creamos un intent para devolver los datos de la incidencia
+        Intent intent = new Intent(context, EditarHorasAjenas.class);
+        intent.putExtra("Dia", dia.getDia());
+        intent.putExtra("Mes", dia.getMes());
+        intent.putExtra("Año", dia.getAño());
+        intent.putExtra("Nuevo", true);
+        startActivityForResult(intent, ACCION_EDITA_AJENA);
+    }
+
+    public void botonBarraRecalcularPulsado(View view){
+        for (int id : listaIds) {
+            DatosDia datosDia = listaDias.get(id);
+            Cursor cursor = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
+            DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
+            datos.guardaDia(datosDia);
+        }
+        escribeHoras();
+        actualizaLista(false);
+    }
+
+    public void botonBarraVaciarPulsado(View view){
+        AlertDialog.Builder aviso = new AlertDialog.Builder(context);
+        aviso.setTitle("ATENCION");
+        aviso.setMessage("Vas a vaciar los días seleccionados\n\n¿Estás seguro?");
+        aviso.setPositiveButton("SI", (dialog, which) -> {
+            Boolean vaciado = false;
+            for (int id : listaIds) {
+                vaciado = vaciarDia(listaDias.get(id));
+            }
+            if (vaciado) {
+                Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
+            }
+            actualizaLista(false);
+        });
+        aviso.setNegativeButton("NO", (dialog, which) -> {});
+        aviso.show();
+    }
+
+    public void setIncidenciaEnDia(DatosDia dia, @Nullable Incidencia incidencia) {
+        if (incidencia == null) {
+            dia.setCodigoIncidencia(0);
+            dia.setTextoIncidencia("");
+            dia.setTipoIncidencia(0);
+        } else {
+            dia.setCodigoIncidencia(incidencia.getCodigo());
+            dia.setTextoIncidencia(incidencia.getTexto());
+            dia.setTipoIncidencia(incidencia.getTipo());
+        }
     }
 
 }

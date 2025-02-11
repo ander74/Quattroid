@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import BaseDatos.BaseDatos;
@@ -46,6 +47,10 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
 
     // ELEMENTOS DEL VIEW
     ListView listaRelevos = null;
+    Button botonAddRelevo = null;
+    Button botonOrdenarMatricula = null;
+    Button botonOrdenarNombre = null;
+    Button botonOrdenarApellidos = null;
 
 
     // AL CREAR LA ACTIVITY
@@ -61,6 +66,10 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
 
         // Instanciar los elementos
         listaRelevos = findViewById(R.id.lw_relevos);
+        botonAddRelevo = findViewById(R.id.bt_barra_addRelevo);
+        botonOrdenarMatricula = findViewById(R.id.bt_barra_ordenarMatricula);
+        botonOrdenarNombre = findViewById(R.id.bt_barra_ordenarNombre);
+        botonOrdenarApellidos = findViewById(R.id.bt_barra_ordenarApellidos);
 
         datos = new BaseDatos(context);
         cursor = datos.cursorRelevos(orden);
@@ -76,6 +85,10 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         // Registrar los listeners
         listaRelevos.setOnItemClickListener(this);
         registerForContextMenu(listaRelevos);
+        botonAddRelevo.setOnClickListener(this::botonAddRelevoPulsado);
+        botonOrdenarMatricula.setOnClickListener(this::botonOrdenarMatriculaPulsado);
+        botonOrdenarNombre.setOnClickListener(this::botonOrdenarNombrePulsado);
+        botonOrdenarApellidos.setOnClickListener(this::botonOrdenarApellidosPulsado);
 
     }
 
@@ -123,18 +136,18 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
 
         // Determinar la opción pulsada
         switch (item.getItemId()){
-            case R.id.bt_porMatricula:
-                orden = BaseDatos.RELEVOS_POR_MATRICULA;
-                actualizarCursor();
-                return true;
-            case R.id.bt_porNombre:
-                orden = BaseDatos.RELEVOS_POR_NOMRE;
-                actualizarCursor();
-                return true;
-            case R.id.bt_porApellidos:
-                orden = BaseDatos.RELEVOS_POR_APELLIDOS;
-                actualizarCursor();
-                return true;
+//            case R.id.bt_porMatricula:
+//                orden = BaseDatos.RELEVOS_POR_MATRICULA;
+//                actualizarCursor();
+//                return true;
+//            case R.id.bt_porNombre:
+//                orden = BaseDatos.RELEVOS_POR_NOMRE;
+//                actualizarCursor();
+//                return true;
+//            case R.id.bt_porApellidos:
+//                orden = BaseDatos.RELEVOS_POR_APELLIDOS;
+//                actualizarCursor();
+//                return true;
             case R.id.bt_borrar:
                 Cursor c = adaptador.getCursor();
                 datos.borrarRelevo(c.getInt(c.getColumnIndexOrThrow("Matricula")));
@@ -214,6 +227,26 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         cursor = datos.cursorRelevos(orden);
         adaptador.changeCursor(cursor);
         adaptador.notifyDataSetChanged();
+    }
+
+    private void botonAddRelevoPulsado(View view){
+        Intent intent = new Intent(this, EditarRelevo.class);
+        startActivityForResult(intent, ACCION_EDITA_RELEVO);
+    }
+
+    private void botonOrdenarMatriculaPulsado(View view){
+        orden = BaseDatos.RELEVOS_POR_MATRICULA;
+        actualizarCursor();
+    }
+
+    private void botonOrdenarNombrePulsado(View view){
+        orden = BaseDatos.RELEVOS_POR_NOMRE;
+        actualizarCursor();
+    }
+
+    private void botonOrdenarApellidosPulsado(View view){
+        orden = BaseDatos.RELEVOS_POR_APELLIDOS;
+        actualizarCursor();
     }
 
 }

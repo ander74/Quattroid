@@ -16,12 +16,85 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ListView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/lw_lineas"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:divider="@null"
-    android:dividerHeight="-1dp"
-    android:background="#ffeeeeee">
-</ListView>
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+
+    <LinearLayout
+    android:id="@+id/barraInferior"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:gravity="center"
+    android:background="@drawable/fondo_barra_inferior"
+    android:orientation="horizontal"
+    android:layout_margin="10dp"
+    android:elevation="5dp">
+
+        <Button
+            android:id="@+id/bt_barra_addLinea"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_sumar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Nueva"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_importar"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_importar"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Importar"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_exportar"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_exportar"
+            android:gravity="center"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF000099"
+            android:text="Exportar"
+            android:textColor="#FF000099"
+            android:textSize="10dp" />
+
+    </LinearLayout>
+
+
+
+
+    <ListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lw_lineas"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:divider="@null"
+        android:dividerHeight="-1dp"
+        android:paddingBottom="120dp"
+        android:clipToPadding="false"
+        android:background="#ffeeeeee">
+    </ListView>
+
+</RelativeLayout>

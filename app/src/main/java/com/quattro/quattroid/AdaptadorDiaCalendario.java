@@ -72,6 +72,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
             holder.Nocturnas = view.findViewById(R.id.nocturnas);
             holder.Guion = view.findViewById(R.id.guion);
             holder.Acumuladas = view.findViewById(R.id.acumuladas);
+            holder.SeparadorUltimoElemento = view.findViewById(R.id.separadorUltimoElemento);
 
             view.setTag(holder);
         } else {
@@ -132,13 +133,26 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         holder.Dia.setText(s);
         holder.DiaSemana.setText(Hora.DIAS_SEMANA_ABREV[Dsemana]);
 
+
+
+        // Si es el último día del mes, se activa el separador.
+//        DateTime fecha = new DateTime(dia.getAño(), dia.getMes(), dia.getDia(), 0, 0);
+//        int diasMes = fecha.dayOfMonth().getMaximumValue();
+//        if (dia.getDia() == diasMes) {
+//            holder.SeparadorUltimoElemento.setVisibility(View.VISIBLE);
+//        } else{
+//            holder.SeparadorUltimoElemento.setVisibility(View.GONE);
+//        }
+
         // Color si es un Franqueo o un Festivo
         holder.Dia.setTextColor(Colores.NEGRO);
         holder.DiaSemana.setTextColor(Colores.NEGRO);
 
         if (dia.isEsFranqueo()) {
             holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_franqueo));
-//            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_azulclaro_r));
+        }
+        if (dia.isEsFestivo()) {
+            holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_festivo));
         }
         if (Dsemana == 1 || dia.isEsFestivo()) {
             holder.Dia.setTextColor(Colores.ROJO);
@@ -303,7 +317,7 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         TextView Nocturnas;
         TextView Guion;
         TextView Acumuladas;
-
+        LinearLayout SeparadorUltimoElemento;
     }
 
 

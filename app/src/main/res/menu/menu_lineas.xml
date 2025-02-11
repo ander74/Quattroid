@@ -18,28 +18,28 @@
 
 <menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/bt_nuevo"
-        android:title="Nueva Línea"
-        android:orderInCategory="1"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="ifRoom"
-        tools:ignore="AppCompatResource" />
+<!--    <item-->
+<!--        android:id="@+id/bt_nuevo"-->
+<!--        android:title="Nueva Línea"-->
+<!--        android:orderInCategory="1"-->
+<!--        android:icon="@android:drawable/ic_menu_add"-->
+<!--        android:showAsAction="ifRoom"-->
+<!--        tools:ignore="AppCompatResource" />-->
 
-    <item
-        android:id="@+id/bt_importar"
-        android:title="Importar"
-        android:orderInCategory="2"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="never"
-        tools:ignore="AppCompatResource" />
+<!--    <item-->
+<!--        android:id="@+id/bt_importar"-->
+<!--        android:title="Importar"-->
+<!--        android:orderInCategory="2"-->
+<!--        android:icon="@android:drawable/ic_menu_add"-->
+<!--        android:showAsAction="never"-->
+<!--        tools:ignore="AppCompatResource" />-->
 
-    <item
-        android:id="@+id/bt_exportar"
-        android:title="Exportar"
-        android:orderInCategory="3"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="never"
-        tools:ignore="AppCompatResource" />
+<!--    <item-->
+<!--        android:id="@+id/bt_exportar"-->
+<!--        android:title="Exportar"-->
+<!--        android:orderInCategory="3"-->
+<!--        android:icon="@android:drawable/ic_menu_add"-->
+<!--        android:showAsAction="never"-->
+<!--        tools:ignore="AppCompatResource" />-->
 
 </menu>

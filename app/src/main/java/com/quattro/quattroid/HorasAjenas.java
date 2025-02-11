@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
 
     // ELEMENTOS DEL VIEW
     ListView listaAjenas = null;
+    Button botonAddHoraAjena = null;
 
 
     // AL CREAR LA ACTIVITY
@@ -60,6 +62,7 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
 
         // Instanciar los elementos
         listaAjenas = findViewById(R.id.lw_ajenas);
+        botonAddHoraAjena = findViewById(R.id.bt_addHoraAjena);
 
         datos = new BaseDatos(context);
         cursor = datos.cursorAjenas();
@@ -69,6 +72,7 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
         // Registrar los listeners
         listaAjenas.setOnItemClickListener(this);
         registerForContextMenu(listaAjenas);
+        botonAddHoraAjena.setOnClickListener(this::botonAddHoraAjenaPulsado);
 
     }
 
@@ -85,11 +89,11 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
         Intent intent = null;
         int id = item.getItemId();
         switch (id) {
-            case R.id.bt_nuevo:
-                intent = new Intent(context, EditarHorasAjenas.class);
-                intent.putExtra("Id", -1);
-                startActivityForResult(intent, ACCION_NUEVA_AJENA);
-                return true;
+//            case R.id.bt_nuevo:
+//                intent = new Intent(context, EditarHorasAjenas.class);
+//                intent.putExtra("Id", -1);
+//                startActivityForResult(intent, ACCION_NUEVA_AJENA);
+//                return true;
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -229,6 +233,12 @@ public class HorasAjenas extends Activity implements AdapterView.OnItemClickList
         cursor = datos.cursorAjenas();
         adaptador.changeCursor(cursor);
         adaptador.notifyDataSetChanged();
+    }
+
+    private void botonAddHoraAjenaPulsado(View view){
+        Intent intent = new Intent(context, EditarHorasAjenas.class);
+        intent.putExtra("Id", -1);
+        startActivityForResult(intent, ACCION_NUEVA_AJENA);
     }
 
 }
