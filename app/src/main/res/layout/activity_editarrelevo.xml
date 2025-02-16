@@ -16,241 +16,251 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<LinearLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#eeeeee"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:padding="5dp">
+    android:background="#eeeeee">
 
-    <!-- TITULO -->
-    <TextView
-        android:id="@+id/tv_titulo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="NUEVO RELEVO"/>
-<!--    <View-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="2dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:layout_marginRight="5dp"-->
-<!--        android:nextFocusDown="@+id/Et_linea"-->
-<!--        android:background="#000000"/>-->
+        android:layout_height="match_parent"
+        android:background="#eeeeee"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <!-- TITULO -->
+        <TextView
+            android:id="@+id/tv_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="NUEVO RELEVO"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+        <!--    <View-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="2dp"-->
+        <!--        android:layout_marginBottom="8dp"-->
+        <!--        android:layout_marginRight="5dp"-->
+        <!--        android:nextFocusDown="@+id/Et_linea"-->
+        <!--        android:background="#000000"/>-->
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout style="@style/horizontal">
+
+                    <!-- MATRICULA -->
+                    <LinearLayout
+                        style="@style/vertical"
+                        android:layout_width="wrap_content">
+
+                        <TextView
+                            style="@style/text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Matrícula" />
+
+                        <EditText
+                            android:id="@+id/et_matricula"
+                            style="@style/edit_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:minWidth="90dp"
+                            android:nextFocusDown="@+id/et_nombre" />
+                    </LinearLayout>
+
+                    <!-- NOMBRE -->
+                    <LinearLayout style="@style/vertical">
+
+                        <TextView
+                            style="@style/text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Nombre" />
+
+                        <EditText
+                            android:id="@+id/et_nombre"
+                            style="@style/edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapWords"
+                            android:nextFocusDown="@+id/et_apellidos" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- APELLIDOS -->
+                <TextView
+                    style="@style/text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Apellidos" />
+
+                <EditText
+                    android:id="@+id/et_apellidos"
+                    style="@style/edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/et_deuda" />
+
+                <LinearLayout style="@style/horizontal">
+
+                    <!-- DEUDA INICIAL -->
+                    <LinearLayout
+                        style="@style/vertical"
+                        android:layout_width="wrap_content">
+
+                        <TextView
+                            style="@style/text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Deuda Inicial" />
+
+                        <EditText
+                            android:id="@+id/et_deuda"
+                            style="@style/edit_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberSigned"
+                            android:minWidth="90dp"
+                            android:nextFocusDown="@+id/et_telefono" />
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/vertical">
+
+                        <TextView
+                            style="@style/text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Teléfono" />
+
+                        <EditText
+                            android:id="@+id/et_telefono"
+                            style="@style/edit_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberSigned"
+                            android:nextFocusDown="@+id/et_notas" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_deudaTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="16sp" />
+
+                <!-- CALIFICACION -->
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Calificación" />
+
+                    <RadioGroup
+                        android:id="@+id/rg_calificacion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rb_malo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:focusable="false"
+                            android:text="Malo" />
+
+                        <RadioButton
+                            android:id="@+id/rb_normal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:checked="true"
+                            android:focusable="false"
+                            android:text="Normal" />
+
+                        <RadioButton
+                            android:id="@+id/rb_bueno"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:text="Bueno" />
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <!-- NOTAS -->
+                <TextView
+                    style="@style/text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Notas" />
+
+                <EditText
+                    android:id="@+id/et_notas"
+                    style="@style/edit_text_multilinea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="8"
+                    android:nextFocusDown="@+id/et_matricula" />
+            </LinearLayout>
+        </ScrollView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        <LinearLayout
-        style="@style/horizontal">
-
-        <!-- MATRICULA -->
-        <LinearLayout
-            style="@style/vertical"
-            android:layout_width="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="8dp"
-                style="@style/text_view"
-                android:text="Matrícula"/>
-            <EditText
-                android:id="@+id/et_matricula"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="90dp"
-                android:inputType="number"
-                android:nextFocusDown="@+id/et_nombre"
-                style="@style/edit_text"/>
-        </LinearLayout>
-
-        <!-- NOMBRE -->
-        <LinearLayout
-            style="@style/vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="8dp"
-                style="@style/text_view"
-                android:text="Nombre"/>
-            <EditText
-                android:id="@+id/et_nombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:nextFocusDown="@+id/et_apellidos"
-                style="@style/edit_text"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- APELLIDOS -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dp"
-        style="@style/text_view"
-        android:text="Apellidos"/>
-    <EditText
-        android:id="@+id/et_apellidos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textCapWords"
-        android:nextFocusDown="@+id/et_deuda"
-        style="@style/edit_text"/>
-
-    <LinearLayout
-        style="@style/horizontal">
-
-        <!-- DEUDA INICIAL -->
-        <LinearLayout
-            style="@style/vertical"
-            android:layout_width="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="8dp"
-                style="@style/text_view"
-                android:text="Deuda Inicial"/>
-            <EditText
-                android:id="@+id/et_deuda"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="90dp"
-                android:inputType="numberSigned"
-                android:nextFocusDown="@+id/et_telefono"
-                style="@style/edit_text"/>
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="8dp"
-                style="@style/text_view"
-                android:text="Teléfono"/>
-            <EditText
-                android:id="@+id/et_telefono"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:nextFocusDown="@+id/et_notas"
-                style="@style/edit_text"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-            <TextView
-                android:id="@+id/tv_deudaTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textSize="16sp"/>
-
-    <!-- CALIFICACION -->
-    <LinearLayout
-        style="@style/vertical"
-        android:layout_width="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="8dp"
-            style="@style/text_view"
-            android:text="Calificación"/>
-        <RadioGroup
-            android:id="@+id/rg_calificacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_margin="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
             android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/rb_malo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:layout_marginRight="10dp"
-                    android:text="Malo"/>
-                <RadioButton
-                    android:id="@+id/rb_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:layout_marginRight="10dp"
-                    android:checked="true"
-                    android:text="Normal"/>
-                <RadioButton
-                    android:id="@+id/rb_bueno"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:text="Bueno"/>
-        </RadioGroup>
+            <Button
+                android:id="@+id/botonLlamar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/fondo_llamar"
+                android:drawableTop="@drawable/icono_llamar_telefono"
+                android:drawablePadding="5dp"
+                android:paddingHorizontal="60dp"
+                android:paddingVertical="10dp"
+                android:text="Llamar" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <!-- NOTAS -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dp"
-        style="@style/text_view"
-        android:text="Notas"/>
-    <EditText
-        android:id="@+id/et_notas"
-        style="@style/edit_text_multilinea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nextFocusDown="@+id/et_matricula"
-        android:minLines="8"/>
-</LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/botonLlamar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/icono_llamar_telefono"
-            android:background="@drawable/fondo_llamar"
-            android:paddingHorizontal="60dp"
-            android:drawablePadding="5dp"
-            android:paddingVertical="10dp"
-            android:layout_marginHorizontal="20dp"
-            android:text="Llamar"/>
-
-
-
-    </LinearLayout>
-
-</LinearLayout>
 </ScrollView>

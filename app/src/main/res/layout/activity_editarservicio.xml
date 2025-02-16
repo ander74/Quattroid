@@ -16,38 +16,43 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
 
-<LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="4dp"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
     android:background="#ffeeeeee">
 
-    <!-- TITULO -->
-    <TextView
-        android:id="@+id/titulo"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="8dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="CREAR SERVICIO"/>
+        android:layout_alignParentTop="true"
+        android:background="#ffeeeeee"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:padding="4dp">
 
-<!--    <View-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="2dp"-->
-<!--        android:background="#ff000000"/>-->
+        <!-- TITULO -->
+        <TextView
+            android:id="@+id/titulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="CREAR SERVICIO"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-    <!-- RESTO -->
-    <LinearLayout
+        <!--    <View-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="2dp"-->
+        <!--        android:background="#ff000000"/>-->
+
+        <!-- RESTO -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -62,194 +67,236 @@
                 <LinearLayout
                     style="@style/vertical"
                     android:layout_width="120dp">
+
                     <TextView
                         style="@style/text_view"
-                        android:layout_marginTop="8dp"
                         android:layout_marginLeft="8dp"
-                        android:text="Servicio"/>
+                        android:layout_marginTop="8dp"
+                        android:text="Servicio" />
+
                     <EditText
                         android:id="@+id/et_servicio"
                         style="@style/edit_text"
-                        android:gravity="center"
                         android:layout_width="match_parent"
-                        android:selectAllOnFocus="true"
-                        android:nextFocusDown="@+id/et_turno"/>
+                        android:gravity="center"
+                        android:nextFocusDown="@+id/et_turno"
+                        android:selectAllOnFocus="true" />
                 </LinearLayout>
 
                 <!-- TURNO -->
                 <LinearLayout
                     style="@style/vertical"
                     android:layout_width="120dp">
+
                     <TextView
                         style="@style/text_view"
-                        android:layout_marginTop="8dp"
                         android:layout_marginLeft="8dp"
-                        android:text="Turno"/>
+                        android:layout_marginTop="8dp"
+                        android:text="Turno" />
+
                     <EditText
                         android:id="@+id/et_turno"
                         style="@style/edit_text"
-                        android:inputType="numberDecimal"
-                        android:gravity="center"
                         android:layout_width="match_parent"
-                        android:selectAllOnFocus="true"
-                        android:nextFocusDown="@+id/et_inicio"/>
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/et_inicio"
+                        android:selectAllOnFocus="true" />
                 </LinearLayout>
 
             </LinearLayout>
 
-        <!-- INICIO -->
-        <LinearLayout
-            style="@style/horizontal"
-            android:padding="4dp">
-
+            <!-- INICIO -->
             <LinearLayout
-                style="@style/vertical"
-                android:layout_width="120dp">
-                <TextView
-                    style="@style/text_view"
-                    android:layout_marginLeft="8dp"
-                    android:text="Inicio"/>
-                <EditText
-                    android:id="@+id/et_inicio"
-                    style="@style/edit_text"
-                    android:inputType="numberDecimal"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:selectAllOnFocus="true"
-                    android:nextFocusDown="@+id/et_lugarInicio"/>
+                style="@style/horizontal"
+                android:padding="4dp">
+
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="120dp">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Inicio" />
+
+                    <EditText
+                        android:id="@+id/et_inicio"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/et_lugarInicio"
+                        android:selectAllOnFocus="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="match_parent">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Lugar de inicio" />
+
+                    <EditText
+                        android:id="@+id/et_lugarInicio"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:inputType="textCapWords"
+                        android:nextFocusDown="@+id/et_final"
+                        android:selectAllOnFocus="true" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- FINAL -->
+            <LinearLayout
+                style="@style/horizontal"
+                android:padding="4dp">
+
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="120dp">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Final" />
+
+                    <EditText
+                        android:id="@+id/et_final"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/et_lugarFinal"
+                        android:selectAllOnFocus="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="match_parent">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:text="Lugar de finalización" />
+
+                    <EditText
+                        android:id="@+id/et_lugarFinal"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:inputType="textCapWords"
+                        android:nextFocusDown="@+id/et_tomaDeje"
+                        android:selectAllOnFocus="true" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                style="@style/vertical"
-                android:layout_width="match_parent">
-                <TextView
-                    style="@style/text_view"
-                    android:layout_marginLeft="8dp"
-                    android:text="Lugar de inicio"/>
-                <EditText
-                    android:id="@+id/et_lugarInicio"
-                    style="@style/edit_text"
-                    android:layout_width="match_parent"
-                    android:inputType="textCapWords"
-                    android:selectAllOnFocus="true"
-                    android:nextFocusDown="@+id/et_final"/>
+                style="@style/horizontal"
+                android:padding="4dp">
+
+                <!-- TOMA Y DEJE -->
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="120dp">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Toma y Deje" />
+
+                    <EditText
+                        android:id="@+id/et_tomaDeje"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/et_euros"
+                        android:selectAllOnFocus="true" />
+                </LinearLayout>
+
+                <!-- EUROS -->
+                <LinearLayout
+                    style="@style/vertical"
+                    android:layout_width="120dp">
+
+                    <TextView
+                        style="@style/text_view"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="€/Serv." />
+
+                    <EditText
+                        android:id="@+id/et_euros"
+                        style="@style/edit_text"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:nextFocusDown="@+id/et_servicio"
+                        android:selectAllOnFocus="true" />
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
 
-        <!-- FINAL -->
-        <LinearLayout
-            style="@style/horizontal"
-            android:padding="4dp">
-
-            <LinearLayout
-                style="@style/vertical"
-                android:layout_width="120dp">
-                <TextView
-                    style="@style/text_view"
-                    android:layout_marginLeft="8dp"
-                    android:text="Final"/>
-                <EditText
-                    android:id="@+id/et_final"
-                    style="@style/edit_text"
-                    android:inputType="numberDecimal"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:selectAllOnFocus="true"
-                    android:nextFocusDown="@+id/et_lugarFinal"/>
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/vertical"
-                android:layout_width="match_parent">
-                <TextView
-                    style="@style/text_view"
-                    android:layout_marginLeft="8dp"
-                    android:text="Lugar de finalización"/>
-                <EditText
-                    android:id="@+id/et_lugarFinal"
-                    style="@style/edit_text"
-                    android:layout_width="match_parent"
-                    android:inputType="textCapWords"
-                    android:selectAllOnFocus="true"
-                    android:nextFocusDown="@+id/et_tomaDeje"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/horizontal"
-            android:padding="4dp">
-
-            <!-- TOMA Y DEJE -->
-            <LinearLayout
-                style="@style/vertical"
-                android:layout_width="120dp">
-                <TextView
-                    style="@style/text_view"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="Toma y Deje"/>
-                <EditText
-                    android:id="@+id/et_tomaDeje"
-                    style="@style/edit_text"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:inputType="numberDecimal"
-                    android:selectAllOnFocus="true"
-                    android:nextFocusDown="@+id/et_euros"/>
-            </LinearLayout>
-
-            <!-- EUROS -->
-            <LinearLayout
-                style="@style/vertical"
-                android:layout_width="120dp">
-                <TextView
-                    style="@style/text_view"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="€/Serv."/>
-                <EditText
-                    android:id="@+id/et_euros"
-                    style="@style/edit_text"
-                    android:inputType="numberDecimal"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:selectAllOnFocus="true"
-                    android:nextFocusDown="@+id/et_servicio"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-
-        <!-- SERVICIOS COMPLEMENTARIOS -->
+            <!-- SERVICIOS COMPLEMENTARIOS -->
             <LinearLayout
                 android:id="@+id/ly_auxiliares"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/tv_complementarios"
                     style="@style/text_view"
-                    android:text="Servicios Complementarios"/>
+                    android:text="Servicios Complementarios" />
 
                 <!-- TABLA CON LOS ENCABEZADOS -->
                 <ListView
+                    android:id="@+id/lw_listaServicios"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:divider="@null"
-                    android:dividerHeight="-1dp"
-                    android:id="@+id/lw_listaServicios">
-                </ListView>
+                    android:dividerHeight="-1dp" />
 
             </LinearLayout>
 
 
         </LinearLayout>
 
-</LinearLayout>
-</ScrollView>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/bt_addServicio"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/fondo_boton_redondo_add"
+        android:elevation="5dp" />
+
+    <Button
+        android:id="@+id/bt_borrarServicio"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/fondo_boton_redondo_borrar"
+        android:elevation="5dp"
+        android:visibility="gone" />
+
+</RelativeLayout>
+
+    <!--</ScrollView>-->

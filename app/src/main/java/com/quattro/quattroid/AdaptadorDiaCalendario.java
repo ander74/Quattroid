@@ -27,8 +27,8 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
 
     public AdaptadorDiaCalendario (@NonNull Context _context, ArrayList<DatosDia> lista) {
         super(_context, 0 , lista);
-            this.context = _context;
-            this.listaDias = lista;
+        this.context = _context;
+        this.listaDias = lista;
     }
 
     public int getCount() {
@@ -89,38 +89,16 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         holder.Comida.setVisibility(View.GONE);
         holder.Cena.setVisibility(View.GONE);
 
-        // Establece los fondos.
-        //holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_blanco_r));
-
         if(dia.isSeleccionado()){
            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
             holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
-//            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-//            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-//            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-//            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-//            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
-//            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_sel));
         } else if (dia.getDia() % 2 == 0) {
             holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
             holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_par));
-//            holder.TextoDia.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-//            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_pbr));
-//            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-//            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-//            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
-//            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_p));
         } else {
             holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
             holder.EsFranqueo.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_impar));
-//            holder.TextoResto.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_ibr));
-//            holder.Horario.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-//            holder.Nocturnas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-//            holder.Guion.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
-//            holder.Acumuladas.setBackground(context.getResources().getDrawable(R.drawable.fondo_calendario_i));
         }
-
-
 
         // Variables a usar.
         String s = "";
@@ -132,17 +110,6 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
         s = (i > 9) ? String.valueOf(i) : "0" + String.valueOf(i);
         holder.Dia.setText(s);
         holder.DiaSemana.setText(Hora.DIAS_SEMANA_ABREV[Dsemana]);
-
-
-
-        // Si es el último día del mes, se activa el separador.
-//        DateTime fecha = new DateTime(dia.getAño(), dia.getMes(), dia.getDia(), 0, 0);
-//        int diasMes = fecha.dayOfMonth().getMaximumValue();
-//        if (dia.getDia() == diasMes) {
-//            holder.SeparadorUltimoElemento.setVisibility(View.VISIBLE);
-//        } else{
-//            holder.SeparadorUltimoElemento.setVisibility(View.GONE);
-//        }
 
         // Color si es un Franqueo o un Festivo
         holder.Dia.setTextColor(Colores.NEGRO);
@@ -196,7 +163,6 @@ public class AdaptadorDiaCalendario extends ArrayAdapter <DatosDia> {
 
         // Rellenamos el relevo
         holder.Relevo.setText("");
-        //holder.Relevo.setTextColor(Colores.GRIS_OSCURO);
         int mat = dia.getMatricula();
         String ape = dia.getApellidos();
         if (mat != 0 && ape != null) {

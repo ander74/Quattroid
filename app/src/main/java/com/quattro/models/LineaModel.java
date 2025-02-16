@@ -15,6 +15,7 @@ public class LineaModel {
     public LineaModel() { }
 
     public LineaModel(Cursor cursor){
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
         Texto = cursor.getString(cursor.getColumnIndexOrThrow("Texto"));
     }
@@ -40,12 +41,14 @@ public class LineaModel {
 
     public BaseDatos.Linea ToLinea(){
         Linea linea = new Linea();
+        linea.setId(Id);
         linea.setLinea(Linea);
         linea.setTexto(Texto);
         return linea;
     }
 
     public void FromModel(LineaModel linea){
+        Id = linea.getId();
         Linea = linea.getLinea();
         Texto = linea.getTexto();
     }
@@ -59,6 +62,16 @@ public class LineaModel {
 
 
     //region PROPIEDADES
+
+    // ID
+    private int Id = 0;
+    public int getId() { return Id; }
+    public void setId(int id) {
+        if (Id != id) {
+            Id = id;
+            Modificado = true;
+        }
+    }
 
     // LÍNEA
     private String Linea = "";
@@ -77,6 +90,16 @@ public class LineaModel {
     public void setTexto(String texto) {
         if (!texto.equals(Texto)) {
             Texto = texto;
+            Modificado = true;
+        }
+    }
+
+    // SELECCIONADA
+    private boolean Seleccionada = false;
+    public boolean isSeleccionada() { return Seleccionada; }
+    public void setSeleccionada(boolean seleccionada) {
+        if (seleccionada != Seleccionada) {
+            Seleccionada = seleccionada;
             Modificado = true;
         }
     }

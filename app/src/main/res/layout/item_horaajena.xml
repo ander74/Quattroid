@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
   ~ Creado por A. Herrero en Enero de 2015
@@ -15,8 +14,7 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -25,19 +23,22 @@
         android:id="@+id/tv_dia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:background="@drawable/fondo_ajenas_titulo"
         android:textColor="#FF0000AA"
         android:padding="4dp"
         android:text="Esto es el dia"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/fondo_ajenas_p"
+        android:paddingStart="10dp"
+        android:background="@drawable/fondo_ajenas_contenido"
         android:layout_gravity="top|left">
+
         <TextView
             android:id="@+id/tv_horas"
             android:layout_width="wrap_content"
@@ -46,7 +47,8 @@
             android:padding="4dp"
             android:text="Hora"
             android:textStyle="bold"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
+
         <TextView
             android:id="@+id/tv_motivo"
             android:layout_width="wrap_content"
@@ -55,7 +57,7 @@
             android:text="Motivo"
             android:padding="4dp"
             android:textStyle="italic"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 

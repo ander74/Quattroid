@@ -1,87 +1,121 @@
 /*
- * Copyright 2015 - Quattroid 1.0
- *
- * Creado por A. Herrero en Enero de 2015
- * http://sites.google.com/site/qtroid
- * acumulador.admin@gmail.com
- *
- * Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
- * de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
- * ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
- *
- * Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
- * incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
- * Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+ * AnderSoft - Open Source Software
+ * Licencia GPL 3.0 - 2025
+ * Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
  */
 
 package com.quattro.quattroid;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+
+import BaseDatos.BaseDatos;
+import BaseDatos.HoraAjena;
 import Objetos.Colores;
 import Objetos.Hora;
 
-public class AdaptadorHorasAjenas extends CursorAdapter {
+public class AdaptadorHorasAjenas extends ArrayAdapter<HoraAjena> {
 
-    LayoutInflater inflater = null;
+    // Variables
+    private Context context;
+    private ArrayList<HoraAjena> listaAjenas;
 
-    public AdaptadorHorasAjenas(Context context, Cursor c) {
-        super(context, c, 0);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    public AdaptadorHorasAjenas(@NonNull Context context, ArrayList<HoraAjena> lista) {
+        super(context, 0, lista);
+        this.context = context;
+        this.listaAjenas = lista;
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_horaajena, parent, false);
+    // Métodos públicos
+    public int getCount() {
+        return listaAjenas.size();
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public HoraAjena getItem(int position) {
+        return listaAjenas.get(position);
+    }
 
-        // Instancias de los elementos del item.
-        TextView dia = view.findViewById(R.id.tv_dia);
-        TextView horas = view.findViewById(R.id.tv_horas);
-        TextView motivo = view.findViewById(R.id.tv_motivo);
+    public long getItemId(HoraAjena item) {
+        return listaAjenas.indexOf(item);
+    }
+
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+        final AdaptadorHorasAjenas.ViewHolder holder;
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_horaajena, null);
+            holder = new AdaptadorHorasAjenas.ViewHolder();
+            holder.Dia = view.findViewById(R.id.tv_dia);
+            holder.Horas = view.findViewById(R.id.tv_horas);
+            holder.Motivo = view.findViewById(R.id.tv_motivo);
+            holder.Item = view.findViewById(R.id.item);
+            view.setTag(holder);
+        } else {
+            holder = (AdaptadorHorasAjenas.ViewHolder) view.getTag();
+        }
+
+        // Instanciamos la base de datos
+        BaseDatos datos = new BaseDatos(context);
+
+        // Extraemos el relevo de la lista
+        HoraAjena horaAjena = listaAjenas.get(position);
 
         // Borrado de los textos anteriores.
-        dia.setText("");
-        horas.setText("");
-        motivo.setText("");
+        holder.Dia.setText("");
+        holder.Horas.setText("");
+        holder.Motivo.setText("");
 
-        // Extraemos los datos del cursor.
-        int d = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
-        int m = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
-        int a = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
-        double h = cursor.getDouble(cursor.getColumnIndexOrThrow("Horas"));
-        String mot = cursor.getString(cursor.getColumnIndexOrThrow("Motivo"));
+        String fechaActual = ((horaAjena.getDia() > 9) ? String.valueOf(horaAjena.getDia()) : "0" + String.valueOf(horaAjena.getDia()))
+                + " de " + Hora.MESES_MIN[horaAjena.getMes()] + " de " + String.valueOf(horaAjena.getAño());
+        holder.Dia.setText(fechaActual);
 
-        // Ponemos el fondo del día fijo
-        dia.setBackgroundColor(Colores.VIOLETA);
-
-        // Poner la fecha
-        String fechaActual = (d > 9) ? String.valueOf(d) : "0" + String.valueOf(d);
-        fechaActual += " de " + Hora.MESES_MIN[m] + " de " + String.valueOf(a);
-        dia.setText(fechaActual);
-
-        // Color del texto
-        if (h < 0){
-            horas.setTextColor(Colores.ROJO);
-        } else if (h > 0){
-            horas.setTextColor(Colores.VERDE_OSCURO);
+        // Color del fondo
+        if (horaAjena.isSeleccionada()) {
+            holder.Dia.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
         } else {
-            horas.setTextColor(Colores.AZUL_OSCURO);
+            holder.Dia.setBackground(context.getResources().getDrawable(R.drawable.fondo_ajenas_titulo));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_ajenas_contenido));
         }
 
         // Escribimos los datos.
-        horas.setText(Hora.textoDecimal(h));
-        motivo.setText(mot);
 
+        // Color del texto
+        if (horaAjena.getHoras() < 0) {
+            holder.Horas.setTextColor(Colores.ROJO);
+        } else if (horaAjena.getHoras() > 0) {
+            holder.Horas.setTextColor(Colores.VERDE_OSCURO);
+        } else {
+            holder.Horas.setTextColor(Colores.AZUL_OSCURO);
+        }
+
+        // Escribimos los datos.
+        holder.Horas.setText(Hora.textoDecimal(horaAjena.getHoras()));
+        holder.Motivo.setText(horaAjena.getMotivo());
+
+
+        return view;
+    }
+
+
+    public static class ViewHolder {
+        LinearLayout Item;
+        TextView Dia;
+        TextView Horas;
+        TextView Motivo;
     }
 
 

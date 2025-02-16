@@ -1,79 +1,109 @@
 /*
- * Copyright 2015 - Quattroid 1.0
- *
- * Creado por A. Herrero en Enero de 2015
- * http://sites.google.com/site/qtroid
- * acumulador.admin@gmail.com
- *
- * Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
- * de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
- * ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
- *
- * Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
- * incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
- * Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+ * AnderSoft - Open Source Software
+ * Licencia GPL 3.0 - 2025
+ * Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
  */
 
 package com.quattro.quattroid;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+
+import BaseDatos.BaseDatos;
+import BaseDatos.Incidencia;
 import Objetos.Colores;
 
-public class AdaptadorIncidencia extends CursorAdapter {
+public class AdaptadorIncidencia extends ArrayAdapter<Incidencia> {
 
-    LayoutInflater inflater = null;
+    // Variables
+    private Context context;
+    private ArrayList<Incidencia> listaIncidencias;
 
-    public AdaptadorIncidencia(Context context, Cursor c) {
-        super(context, c, 0);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    public AdaptadorIncidencia(@NonNull Context context, ArrayList<Incidencia> lista) {
+        super(context, 0, lista);
+        this.context = context;
+        this.listaIncidencias = lista;
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_incidencia2, parent, false);
+    // Métodos públicos
+    public int getCount() {
+        return listaIncidencias.size();
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public Incidencia getItem(int position) {
+        return listaIncidencias.get(position);
+    }
 
-        // Instancias de los elementos del item.
-        TextView codigo = view.findViewById(R.id.codigo);
-        TextView incidencia = view.findViewById(R.id.incidencia);
-        LinearLayout item = view.findViewById(R.id.item);
+    public long getItemId(Incidencia item) {
+        return listaIncidencias.indexOf(item);
+    }
+
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+        final AdaptadorIncidencia.ViewHolder holder;
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_incidencia2, null);
+            holder = new AdaptadorIncidencia.ViewHolder();
+            holder.Item = view.findViewById(R.id.item);
+            holder.Codigo = view.findViewById(R.id.codigo);
+            holder.Incidencia = view.findViewById(R.id.incidencia);
+            view.setTag(holder);
+        } else {
+            holder = (AdaptadorIncidencia.ViewHolder) view.getTag();
+        }
+
+        // Instanciamos la base de datos
+        BaseDatos datos = new BaseDatos(context);
+
+        // Extraemos el relevo de la lista
+        Incidencia incidencia = listaIncidencias.get(position);
 
         // Borrado de los textos anteriores.
-        codigo.setText("");
-        incidencia.setText("");
-
-        // Extraemos los datos del cursor.
-        int cod = cursor.getInt(cursor.getColumnIndexOrThrow("Codigo"));
-        String inc = cursor.getString(cursor.getColumnIndexOrThrow("Incidencia"));
+        holder.Codigo.setText("");
+        holder.Incidencia.setText("");
 
         // Color del fondo
-        if (cod % 2 == 0) {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_incidencias_p));
+        if (incidencia.isSeleccionada()) {
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
+        } else if ((position + 1) % 2 == 0) {
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_incidencia_par));
         } else {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_incidencias_i));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_incidencia_impar));
         }
 
         // Si la incidencia es protegida, se pone el código en rojo.
-        if (cod > 16) {
-            codigo.setTextColor(Colores.NEGRO);
+        if (incidencia.getCodigo() > 16) {
+            holder.Codigo.setTextColor(Colores.NEGRO);
         } else {
-            codigo.setTextColor(Colores.ROJO_OSCURO);
+            holder.Codigo.setTextColor(Colores.ROJO_OSCURO);
         }
 
         // Escribimos los datos.
-        codigo.setText((cod > 9) ? String.valueOf(cod) : "0" + String.valueOf(cod));
-        incidencia.setText(inc);
+        holder.Codigo.setText((incidencia.getCodigo() > 9) ? String.valueOf(incidencia.getCodigo()) : "0" + String.valueOf(incidencia.getCodigo()));
+        holder.Incidencia.setText(incidencia.getTexto());
 
+        return view;
     }
+
+
+    public static class ViewHolder {
+        LinearLayout Item;
+        TextView Codigo;
+        TextView Incidencia;
+    }
+
+
 }

@@ -16,15 +16,37 @@
  */
 package BaseDatos;
 
+import android.database.Cursor;
+
 public class HoraAjena {
 
+    private int Id = 0;
     private int Dia;
     private int Mes;
     private int Año;
     private double Horas;
     private String Motivo;
+    private boolean Seleccionada = false;
+
+
+    public HoraAjena() {
+    }
+
+    public HoraAjena(Cursor cursor) {
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        Dia = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
+        Mes = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
+        Año = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
+        Horas = cursor.getDouble(cursor.getColumnIndexOrThrow("Horas"));
+        Motivo = cursor.getString(cursor.getColumnIndexOrThrow("Motivo"));
+    }
+
 
     //region GETTERS
+
+    public int getId() {
+        return Id;
+    }
 
     public int getDia() {
         return Dia;
@@ -46,10 +68,18 @@ public class HoraAjena {
         return Motivo;
     }
 
+    public boolean isSeleccionada() {
+        return Seleccionada;
+    }
+
 
     //endregion
 
     //region SETTERS
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public void setDia(int dia) {
         Dia = dia;
@@ -69,6 +99,10 @@ public class HoraAjena {
 
     public void setMotivo(String motivo) {
         Motivo = motivo;
+    }
+
+    public void setSeleccionada(boolean seleccionada) {
+        Seleccionada = seleccionada;
     }
 
 

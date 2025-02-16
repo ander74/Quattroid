@@ -40,10 +40,19 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/fondo_boton_redondo_add"
-        android:textColor="#FF000099"
-        android:textStyle="bold"
-        android:elevation="5dp"
-        android:textSize="36sp"/>
+        android:elevation="5dp"/>
+
+    <Button
+        android:id="@+id/bt_borrarServicio"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/fondo_boton_redondo_borrar"
+        android:visibility="gone"
+        android:elevation="5dp"/>
 
 
 </RelativeLayout>

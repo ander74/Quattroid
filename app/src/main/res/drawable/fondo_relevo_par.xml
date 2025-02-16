@@ -20,7 +20,7 @@
 
     <item android:state_pressed="true" android:state_focused="false" android:state_selected="false">
         <shape>
-            <solid android:color="#FFFFCC88"/>
+            <solid android:color="#FF8585"/>
         </shape>
     </item>
 

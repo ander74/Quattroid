@@ -20,19 +20,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.text.InputType;
-import android.view.ContextMenu;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +42,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,24 +60,28 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import BaseDatos.BaseDatos;
+import Objetos.Colores;
 import Objetos.Utils;
 
-public class Lineas extends Activity implements AdapterView.OnItemClickListener {
+public class Lineas extends Activity implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener {
 
     // CONSTANTES
     final static int ACCION_EDITA_LINEA = 1;
     final static int ACCION_PIDE_ARCHIVO = 2;
+    private final ArrayList<Integer> listaIds = new ArrayList<>();
 
     // VARIABLES
     Context context = null;
-    Cursor cursor = null;
     BaseDatos datos = null;
     AdaptadorLinea adaptador = null;
+    ArrayList<LineaModel> lineas = null;
     String NombreArchivo = "Lineas";
     Boolean IgnorarRepetidos = false;
 
     ListView listaLineas = null;
     Button botonAddLinea = null;
+    Button botonEditarLinea = null;
+    Button botonBorrarLinea = null;
     Button botonImportar = null;
     Button botonExportar = null;
 
@@ -93,6 +99,8 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         context = this;
         listaLineas = findViewById(R.id.lw_lineas);
         botonAddLinea = findViewById(R.id.bt_barra_addLinea);
+        botonEditarLinea = findViewById(R.id.bt_barra_editarLinea);
+        botonBorrarLinea = findViewById(R.id.bt_barra_borrarLinea);
         botonImportar = findViewById(R.id.bt_barra_importar);
         botonExportar = findViewById(R.id.bt_barra_exportar);
 
@@ -103,22 +111,21 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         registerForContextMenu(listaLineas);
 
         // Llenado de la lista
-        cursor = datos.cursorLineas();
-        adaptador = new AdaptadorLinea(this, cursor);
+        lineas = datos.getAllLineas();
+        adaptador = new AdaptadorLinea(this, lineas);
         listaLineas.setAdapter(adaptador);
 
         // Establecemos el listener de item pulsado.
+        listaLineas.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listaLineas.setDivider(null);
+        listaLineas.setDividerHeight(0);
+        listaLineas.setMultiChoiceModeListener(this);// MULTI-SELECCION
         listaLineas.setOnItemClickListener(this);
         botonAddLinea.setOnClickListener(this::botonAddLineaPulsado);
+        botonEditarLinea.setOnClickListener(this::botonEditarLineaPulsado);
+        botonBorrarLinea.setOnClickListener(this::botonBorrarLineaPulsado);
         botonImportar.setOnClickListener(this::botonImportarPulsado);
         botonExportar.setOnClickListener(this::botonExportarPulsado);
-    }
-
-    // CREAR EL MENÚ SUPERIOR.
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_lineas, menu);
-        return true;
     }
 
     // AL PULSAR UNA OPCION DEL MENÚ SUPERIOR.
@@ -127,15 +134,6 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         Intent intent = null;
         int id = item.getItemId();
         switch (id) {
-//            case R.id.bt_nuevo:
-//                intent = new Intent(context, EditarLinea.class);
-//                intent.putExtra("Id", -1);
-//                startActivityForResult(intent, ACCION_EDITA_LINEA);
-//                return true;
-//            case R.id.bt_importar:
-//                return importarLineas();
-//            case R.id.bt_exportar:
-//                return exportarLineas();
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -144,51 +142,16 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         return super.onOptionsItemSelected(item);
     }
 
-    // CREAR MENU CONTEXTUAL
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.contexto_lineas, menu);
-    }
-
-    // AL PULSAR UNA OPCION DEL MENU CONTEXTUAL
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-
-        // Guardar el elemento que ha provocado el menu contextual
-        AdapterView.AdapterContextMenuInfo acmi =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int elementoPulsado = acmi.position;
-
-        Cursor c = null;
-        // Determinar la opción pulsada
-        switch (item.getItemId()) {
-            case R.id.bt_editar:
-                Intent intent = new Intent(context, EditarLinea.class);
-                c = adaptador.getCursor();
-                intent.putExtra("Id", c.getInt(c.getColumnIndexOrThrow("_id")));
-                startActivityForResult(intent, ACCION_EDITA_LINEA);
-                return true;
-            case R.id.bt_borrar:
-                c = adaptador.getCursor();
-                datos.borrarLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
-                actualizarCursor();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
     // AL PULSAR UN ÍTEM DEL LISTVIEW
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
         // Extraemos los datos del cursor
-        Cursor c = adaptador.getCursor();
+        LineaModel lineaPulsada = lineas.get(position);
 
         // Creamos un intent para enviar la línea pulsada.
         Intent intent = new Intent(context, Servicios.class);
-        intent.putExtra("Linea", c.getString(c.getColumnIndexOrThrow("Linea")));
+        intent.putExtra("Linea", lineaPulsada.getLinea());
         startActivity(intent);
 
     }
@@ -218,7 +181,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         switch (requestCode) {
             case ACCION_EDITA_LINEA:
                 if (resultCode == RESULT_OK) {
-                    actualizarCursor();
+                    actualizarLista();
                 }
                 break;
             case ACCION_PIDE_ARCHIVO:
@@ -238,7 +201,7 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
                         } catch (Exception e){
                             Toast.makeText(this, "Archivo no válido", Toast.LENGTH_SHORT).show();
                         }
-                        actualizarCursor();
+                        actualizarLista();
                     }
                 }
                 break;
@@ -247,10 +210,88 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         }
     }
 
+
+    //******************************************************************************************
+    //region Multi selección
+
+    // MULTI-SELECCION: Al seleccionar un día del calendario.
+    @Override
+    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked){
+        int checkedCount = listaLineas.getCheckedItemCount();
+        mode.setTitle(checkedCount + " Selec.");
+
+        if (checked){
+            listaIds.add(position);
+            lineas.get(position).setSeleccionada(true);
+        } else {
+            Integer pos = position;
+            listaIds.remove(pos);
+            lineas.get(position).setSeleccionada(false);
+        }
+
+        if (checkedCount > 0){
+            activarBoton(botonBorrarLinea);
+            desactivarBoton(botonAddLinea);
+            desactivarBoton(botonImportar);
+            desactivarBoton(botonExportar);
+        } else {
+            desactivarBoton(botonBorrarLinea);
+            activarBoton(botonAddLinea);
+            activarBoton(botonImportar);
+            activarBoton(botonExportar);
+        }
+
+        if (checkedCount == 1){
+            activarBoton(botonEditarLinea);
+        } else {
+            desactivarBoton(botonEditarLinea);
+        }
+        adaptador.notifyDataSetChanged();
+    }
+
+    // MULTI-SELECCION: Al crearse el menú para los días seleccionados.
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        return true;
+    }
+
+    // MULTI-SELECCION: Al prepararse el menú para los días seleccionados.
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    // MULTI-SELECCION: Al hacer click en un elemento del menú para los días seleccionados.
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+        return true;
+    }
+
+    // MULTI-SELECCION: Al quitarse todos los días seleccionados.
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        activarBoton(botonAddLinea);
+        activarBoton(botonExportar);
+        activarBoton(botonImportar);
+        desactivarBoton(botonEditarLinea);
+        desactivarBoton(botonBorrarLinea);
+        //Refrescar la lista.
+        for (LineaModel d : lineas){
+            d.setSeleccionada(false);
+        }
+        listaIds.clear();
+        adaptador.notifyDataSetChanged();
+    }
+
+    //endregion
+    // ******************************************************************************************
+
+
     // ACTUALIZA LA LISTA
-    private void actualizarCursor() {
-        cursor = datos.cursorLineas();
-        adaptador.changeCursor(cursor);
+    private void actualizarLista() {
+        lineas = datos.getAllLineas();
+        adaptador = new AdaptadorLinea(this, lineas);
+        listaLineas.setAdapter(adaptador);
         adaptador.notifyDataSetChanged();
     }
 
@@ -430,12 +471,55 @@ public class Lineas extends Activity implements AdapterView.OnItemClickListener 
         startActivityForResult(intent, ACCION_EDITA_LINEA);
     }
 
+
+    private void botonEditarLineaPulsado(View view) {
+        LineaModel lineaSeleccionada = lineas.get(listaIds.get(0));
+        Intent intent = new Intent(context, EditarLinea.class);
+        intent.putExtra("Id", lineaSeleccionada.getId());
+        startActivityForResult(intent, ACCION_EDITA_LINEA);
+    }
+
+
+    private void botonBorrarLineaPulsado(View view) {
+        AlertDialog.Builder aviso = new AlertDialog.Builder(context);
+        aviso.setTitle("ATENCION");
+        aviso.setMessage("Vas a borrar las líneas seleccionadas\n\n¿Estás seguro?");
+        aviso.setPositiveButton("SI", (dialog, which) -> {
+            ArrayList<Integer> ids = new ArrayList<>();
+            ids.addAll(listaIds);
+            for (int id : ids) {
+                LineaModel lineaSeleccionada = lineas.get(id);
+                listaLineas.setItemChecked(lineas.indexOf(lineaSeleccionada), false);
+                datos.borrarLinea(lineaSeleccionada.getLinea());
+            }
+            actualizarLista();
+        });
+        aviso.setNegativeButton("NO", (dialog, which) -> {});
+        aviso.show();
+    }
+
+
     private void botonImportarPulsado(View view) {
         importarLineas();
     }
 
+
     private void botonExportarPulsado(View view) {
         exportarLineas();
+    }
+
+
+    private void activarBoton(Button boton){
+        boton.setEnabled(true);
+        boton.setTextColor(0XFF000099);
+        DrawableCompat.setTint(boton.getCompoundDrawables()[1], 0XFF000099);
+    }
+
+
+    private void desactivarBoton(Button boton){
+        boton.setEnabled(false);
+        boton.setTextColor(Colores.GRIS_OSCURO);
+        DrawableCompat.setTint(boton.getCompoundDrawables()[1], Colores.GRIS_OSCURO);
     }
 
 

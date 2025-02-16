@@ -16,42 +16,57 @@
 package com.quattro.quattroid;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.ContextMenu;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import BaseDatos.BaseDatos;
+import androidx.core.graphics.drawable.DrawableCompat;
 
-public class Relevos extends Activity implements AdapterView.OnItemClickListener {
+import java.util.ArrayList;
+
+import BaseDatos.BaseDatos;
+import BaseDatos.Relevo;
+import Objetos.Colores;
+
+public class Relevos extends Activity implements AdapterView.OnItemClickListener, AbsListView.MultiChoiceModeListener{
 
     // CONSTANTES
     final static int ACCION_EDITA_RELEVO = 1;
+    private final ArrayList<Integer> listaIds = new ArrayList<>();
 
     // VARIABLES
     Context context;
-    Cursor cursor = null;
+    ArrayList<Relevo> relevos = null;
     AdaptadorRelevos adaptador = null;
     BaseDatos datos = null;
     int orden = BaseDatos.RELEVOS_POR_MATRICULA;
+    int ordenRelevos = BaseDatos.RELEVOS_POR_MATRICULA;
     Bundle datosIntent = null;
     boolean llamadaDesdeMenu = false;
+
 
     // ELEMENTOS DEL VIEW
     ListView listaRelevos = null;
     Button botonAddRelevo = null;
-    Button botonOrdenarMatricula = null;
-    Button botonOrdenarNombre = null;
-    Button botonOrdenarApellidos = null;
+    Button botonOrdenar = null;
+    Button botonBorrarRelevo = null;
+    Button botonRelevoFijo = null;
+    Button botonLlamar = null;
 
+
+    //******************************************************************************************
+    //region Métodos oveeride
 
     // AL CREAR LA ACTIVITY
     @Override
@@ -67,13 +82,20 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         // Instanciar los elementos
         listaRelevos = findViewById(R.id.lw_relevos);
         botonAddRelevo = findViewById(R.id.bt_barra_addRelevo);
-        botonOrdenarMatricula = findViewById(R.id.bt_barra_ordenarMatricula);
-        botonOrdenarNombre = findViewById(R.id.bt_barra_ordenarNombre);
-        botonOrdenarApellidos = findViewById(R.id.bt_barra_ordenarApellidos);
+        botonOrdenar = findViewById(R.id.bt_barra_ordenar);
+        botonBorrarRelevo = findViewById(R.id.bt_barra_borrar_relevo);
+        botonRelevoFijo = findViewById(R.id.bt_barra_relevo_fijo);
+        botonLlamar = findViewById(R.id.bt_barra_llamar);
 
+        // Poner el nombre del botón ordenar
+        botonOrdenar.setText("Matrícula");
+
+        // Instanciar la base de datos
         datos = new BaseDatos(context);
-        cursor = datos.cursorRelevos(orden);
-        adaptador = new AdaptadorRelevos(context, cursor);
+
+        // Llenar la lista de los relevos
+        relevos = datos.getRelevos(ordenRelevos);
+        adaptador = new AdaptadorRelevos(context, relevos);
         listaRelevos.setAdapter(adaptador);
 
         // Recogemos el intent, si existe
@@ -83,20 +105,18 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         }
 
         // Registrar los listeners
+        listaRelevos.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listaRelevos.setDivider(null);
+        listaRelevos.setDividerHeight(0);
+        listaRelevos.setMultiChoiceModeListener(this);// MULTI-SELECCION
         listaRelevos.setOnItemClickListener(this);
         registerForContextMenu(listaRelevos);
         botonAddRelevo.setOnClickListener(this::botonAddRelevoPulsado);
-        botonOrdenarMatricula.setOnClickListener(this::botonOrdenarMatriculaPulsado);
-        botonOrdenarNombre.setOnClickListener(this::botonOrdenarNombrePulsado);
-        botonOrdenarApellidos.setOnClickListener(this::botonOrdenarApellidosPulsado);
+        botonOrdenar.setOnClickListener(this::botonOrdenarPulsado);
+        botonBorrarRelevo.setOnClickListener(this::botonBorrarRelevoPulsado);
+        botonRelevoFijo.setOnClickListener(this::botonRelevoFijoPulsado);
+        botonLlamar.setOnClickListener(this::botonLlamarPulsado);
 
-    }
-
-    // AL CREAR EL MENU SUPERIOR
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_relevos, menu);
-        return true;
     }
 
     // AL PULSAR EN EL MENU SUPERIOR
@@ -104,11 +124,6 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()){
-            case R.id.bt_nuevo:
-                // Crear nuevo relevo.
-                intent = new Intent(this, EditarRelevo.class);
-                startActivityForResult(intent, ACCION_EDITA_RELEVO);
-                return true;
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
@@ -118,72 +133,28 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         }
     }
 
-    // CREAR MENU CONTEXTUAL
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.contexto_relevos, menu);
-    }
-
-    // AL PULSAR UNA OPCION DEL MENU CONTEXTUAL
-    @Override
-    public boolean onContextItemSelected(MenuItem item){
-
-        // Guardar el elemento que ha provocado el menu contextual
-        AdapterView.AdapterContextMenuInfo acmi =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int elementoPulsado = acmi.position;
-
-        // Determinar la opción pulsada
-        switch (item.getItemId()){
-//            case R.id.bt_porMatricula:
-//                orden = BaseDatos.RELEVOS_POR_MATRICULA;
-//                actualizarCursor();
-//                return true;
-//            case R.id.bt_porNombre:
-//                orden = BaseDatos.RELEVOS_POR_NOMRE;
-//                actualizarCursor();
-//                return true;
-//            case R.id.bt_porApellidos:
-//                orden = BaseDatos.RELEVOS_POR_APELLIDOS;
-//                actualizarCursor();
-//                return true;
-            case R.id.bt_borrar:
-                Cursor c = adaptador.getCursor();
-                datos.borrarRelevo(c.getInt(c.getColumnIndexOrThrow("Matricula")));
-                actualizarCursor();
-                return true;
-            case R.id.bt_relevoFijo:
-                c = adaptador.getCursor();
-                datos.opciones.setRelevoFijo(c.getInt(c.getColumnIndexOrThrow("Matricula")));
-                datos.guardarOpciones();
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
     // AL PULSAR UN ÍTEM DEL LISTVIEW
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id){
 
-        // Extraemos los datos del cursor
-        Cursor c = adaptador.getCursor();
+        // Extraemos el relevo pulsado
+        Relevo relevoPulsado = relevos.get(position);
 
         if (llamadaDesdeMenu) {
             // Creamos un intent para devolver los datos de la incidencia
             Intent intent = new Intent(context, EditarRelevo.class);
-            intent.putExtra("Matricula", c.getInt(c.getColumnIndexOrThrow("Matricula")));
-            intent.putExtra("Deuda", c.getInt(c.getColumnIndexOrThrow("Deuda")));
-            intent.putExtra("Calificacion", c.getInt(c.getColumnIndexOrThrow("Calificacion")));
-            intent.putExtra("Nombre", c.getString(c.getColumnIndexOrThrow("Nombre")));
-            intent.putExtra("Apellidos", c.getString(c.getColumnIndexOrThrow("Apellidos")));
-            intent.putExtra("Telefono", c.getString(c.getColumnIndexOrThrow("Telefono")));
-            intent.putExtra("Notas", c.getString(c.getColumnIndexOrThrow("Notas")));
+            intent.putExtra("Matricula", relevoPulsado.getMatricula());
+            intent.putExtra("Deuda", relevoPulsado.getDeuda());
+            intent.putExtra("Calificacion", relevoPulsado.getCalificacion());
+            intent.putExtra("Nombre", relevoPulsado.getNombre());
+            intent.putExtra("Apellidos", relevoPulsado.getApellidos());
+            intent.putExtra("Telefono", relevoPulsado.getTelefono());
+            intent.putExtra("Notas", relevoPulsado.getNotas());
             startActivityForResult(intent, ACCION_EDITA_RELEVO);
         } else {
             Intent intent = new Intent(context, Relevos.class);
-            intent.putExtra("Matricula", c.getInt(c.getColumnIndexOrThrow("Matricula")));
-            intent.putExtra("Apellidos", c.getString(c.getColumnIndexOrThrow("Apellidos")));
+            intent.putExtra("Matricula", relevoPulsado.getMatricula());
+            intent.putExtra("Apellidos", relevoPulsado.getApellidos());
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -197,7 +168,7 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         switch (requestCode){
             case ACCION_EDITA_RELEVO:
                 if (resultCode == RESULT_OK){
-                    actualizarCursor();
+                    actualizarLista(true);
                 }
                 break;
             default:
@@ -222,31 +193,183 @@ public class Relevos extends Activity implements AdapterView.OnItemClickListener
         super.onDestroy();
     }
 
-    // ACTUALIZA LA LISTA
-    private void actualizarCursor(){
-        cursor = datos.cursorRelevos(orden);
-        adaptador.changeCursor(cursor);
+    //endregion
+    // ******************************************************************************************
+
+
+    //******************************************************************************************
+    //region Multi selección
+
+    // MULTI-SELECCION: Al seleccionar un día del calendario.
+    @Override
+    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked){
+        int checkedCount = listaRelevos.getCheckedItemCount();
+        mode.setTitle(checkedCount + " Selec.");
+
+        if (checked){
+            listaIds.add(position);
+            relevos.get(position).setSeleccionado(true);
+        } else {
+            Integer pos = position;
+            listaIds.remove(pos);
+            relevos.get(position).setSeleccionado(false);
+        }
+
+        if (checkedCount > 0){
+            activarBoton(botonBorrarRelevo);
+            desactivarBoton(botonAddRelevo);
+            desactivarBoton(botonOrdenar);
+        } else {
+            desactivarBoton(botonBorrarRelevo);
+            activarBoton(botonAddRelevo);
+            activarBoton(botonOrdenar);
+        }
+
+        if (checkedCount == 1){
+            activarBoton(botonRelevoFijo);
+            Relevo relevoSeleccionado = relevos.get(listaIds.get(0));
+            if (!relevoSeleccionado.getTelefono().isEmpty()) {
+                activarBoton(botonLlamar);
+            }
+        } else {
+            desactivarBoton(botonRelevoFijo);
+            desactivarBoton(botonLlamar);
+        }
         adaptador.notifyDataSetChanged();
     }
 
+    // MULTI-SELECCION: Al crearse el menú para los días seleccionados.
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        return true;
+    }
+
+    // MULTI-SELECCION: Al prepararse el menú para los días seleccionados.
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    // MULTI-SELECCION: Al hacer click en un elemento del menú para los días seleccionados.
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+        return true;
+    }
+
+    // MULTI-SELECCION: Al quitarse todos los días seleccionados.
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        activarBoton(botonAddRelevo);
+        activarBoton(botonOrdenar);
+        desactivarBoton(botonBorrarRelevo);
+        desactivarBoton(botonRelevoFijo);
+        desactivarBoton(botonLlamar);
+        //Refrescar la lista.
+        for (Relevo d : relevos){
+            d.setSeleccionado(false);
+        }
+        listaIds.clear();
+        adaptador.notifyDataSetChanged();
+    }
+
+    //endregion
+    // ******************************************************************************************
+
+
+    //******************************************************************************************
+    //region Métodos privados
+
+    // ACTUALIZA LA LISTA
+    private void actualizarLista(boolean completo){
+        if (completo){
+            relevos = datos.getRelevos(ordenRelevos);
+            adaptador = new AdaptadorRelevos(this, relevos);
+            listaRelevos.setAdapter(adaptador);
+        }
+        adaptador.notifyDataSetChanged();
+    }
+
+    // Al pulsar el botón de añadir relevo
     private void botonAddRelevoPulsado(View view){
         Intent intent = new Intent(this, EditarRelevo.class);
         startActivityForResult(intent, ACCION_EDITA_RELEVO);
     }
 
-    private void botonOrdenarMatriculaPulsado(View view){
-        orden = BaseDatos.RELEVOS_POR_MATRICULA;
-        actualizarCursor();
+    // Al pulsar el botón de ordenar
+    private void botonOrdenarPulsado(View view){
+        ordenRelevos++;
+        if (ordenRelevos == 7) ordenRelevos = 1;
+        ponerTextoBotonOrdenar();
+        orden = ordenRelevos;
+        actualizarLista(true);
     }
 
-    private void botonOrdenarNombrePulsado(View view){
-        orden = BaseDatos.RELEVOS_POR_NOMRE;
-        actualizarCursor();
+    // Al pulsar el botón de borrar relevo
+    private void botonBorrarRelevoPulsado(View view){
+        AlertDialog.Builder aviso = new AlertDialog.Builder(context);
+        aviso.setTitle("ATENCION");
+        aviso.setMessage("Vas a borrar a los compañeros seleccionados\n\n¿Estás seguro?");
+        aviso.setPositiveButton("SI", (dialog, which) -> {
+            ArrayList<Integer> ids = new ArrayList<>();
+            ids.addAll(listaIds);
+            for (int id : ids) {
+                Relevo relevoSeleccionado = relevos.get(id);
+                listaRelevos.setItemChecked(relevos.indexOf(relevoSeleccionado), false);
+                datos.borrarRelevo(relevoSeleccionado.getMatricula());
+            }
+            actualizarLista(true);        });
+        aviso.setNegativeButton("NO", (dialog, which) -> {});
+        aviso.show();
     }
 
-    private void botonOrdenarApellidosPulsado(View view){
-        orden = BaseDatos.RELEVOS_POR_APELLIDOS;
-        actualizarCursor();
+    // Al pulsar el botón de relevo fijo
+    private void botonRelevoFijoPulsado(View view){
+        Relevo relevoSeleccionado = relevos.get(listaIds.get(0));
+        datos.opciones.setRelevoFijo(relevoSeleccionado.getMatricula());
+        datos.guardarOpciones();
     }
 
+    // Poner el texto del boton ordenar.
+    private void ponerTextoBotonOrdenar(){
+        switch (ordenRelevos){
+            case BaseDatos.RELEVOS_POR_MATRICULA:
+            case BaseDatos.RELEVOS_POR_MATRICULA_DESC:
+                botonOrdenar.setText("Matrícula");
+                break;
+            case BaseDatos.RELEVOS_POR_NOMBRE:
+            case BaseDatos.RELEVOS_POR_NOMBRE_DESC:
+                botonOrdenar.setText("Nombre");
+                break;
+            case BaseDatos.RELEVOS_POR_APELLIDOS:
+            case BaseDatos.RELEVOS_POR_APELLIDOS_DESC:
+                botonOrdenar.setText("Apellidos");
+        }
+    }
+
+    private void botonLlamarPulsado(View view){
+        Relevo relevoSeleccionado = relevos.get(listaIds.get(0));
+        String telefono = relevoSeleccionado.getTelefono();
+        String uri = "tel:" + telefono ;
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(uri));
+        startActivity(intent);
+    }
+
+
+    private void activarBoton(Button boton){
+        boton.setEnabled(true);
+        boton.setTextColor(0XFF000099);
+        DrawableCompat.setTint(boton.getCompoundDrawables()[1], 0XFF000099);
+    }
+
+    private void desactivarBoton(Button boton){
+        boton.setEnabled(false);
+        boton.setTextColor(Colores.GRIS_OSCURO);
+        DrawableCompat.setTint(boton.getCompoundDrawables()[1], Colores.GRIS_OSCURO);
+    }
+
+
+
+    //endregion
+    //******************************************************************************************
 }

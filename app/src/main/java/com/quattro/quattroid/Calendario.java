@@ -26,7 +26,6 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -46,10 +45,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.preference.PreferenceManager;
 
-import com.itextpdf.io.font.FontConstants;
-import com.itextpdf.kernel.color.Color;
-import com.itextpdf.kernel.color.DeviceRgb;
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
@@ -57,13 +57,14 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
-import com.itextpdf.layout.border.Border;
-import com.itextpdf.layout.border.SolidBorder;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.layout.property.VerticalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
+import com.itextpdf.layout.properties.VerticalAlignment;
 import com.quattro.helpers.DiaHelper;
 
 import org.joda.time.LocalDate;
@@ -73,10 +74,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import javax.annotation.Nullable;
-
 import BaseDatos.BaseDatos;
 import BaseDatos.DatosDia;
+import BaseDatos.Helpers;
 import BaseDatos.HoraAjena;
 import BaseDatos.Incidencia;
 import BaseDatos.Linea;
@@ -94,12 +94,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // AUTOCLASE
     @SuppressLint("StaticFieldLeak")
     public static Activity activityCalendario;
-
-    // PORTAPAPELES
-    private DatosDia portapapeles;
-    private int diaPortapapeles;
-    private int mesPortapapeles;
-    private int añoPortapapeles;
 
     // CONSTANTES
     public static final int ACCION_DIA_CALENDARIO = 1;
@@ -122,15 +116,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // ELEMENTOS DEL LAYOUT
     ListView listaCalendario = null;
-//    TextView acumuladas = null;
-//    TextView titulo = null;
-//    TextView acumuladasMes = null;
-//    TextView nocturnas = null;
-//    TextView tomaDeje = null;
-//    TextView euros = null;
-//    TextView trabajadasReales = null;
-//    TextView trabajadasConvenio = null;
-//    LinearLayout listadoHoras = null;
     LinearLayout barraHoras = null;
     TextView textoAcumuladasMes;
     TextView acumuladasMes = null;
@@ -187,14 +172,6 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         botonBarraRecalcular = findViewById(R.id.bt_barra_recalcular);
         botonBarraVaciar = findViewById(R.id.bt_barra_vaciar);
         tablaHoras = findViewById(R.id.tablaHoras);
-        // Ocultar TomaDeje y Euros
-        //titulo.setVisibility(View.GONE);
-        //acumuladasMes.setVisibility(View.GONE);
-        //nocturnas.setVisibility(View.GONE);
-        //tomaDeje.setVisibility(View.GONE);
-        //euros.setVisibility(View.GONE);
-        //trabajadasReales.setVisibility(View.GONE);
-        //trabajadasConvenio.setVisibility(View.GONE);
         tablaAcumuladas.setVisibility(View.VISIBLE);
         tablaHoras.setVisibility(View.GONE);
         // Inicializar las opciones y la base de datos
@@ -206,7 +183,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         fecha = Calendar.getInstance();
         primerAño = datos.opciones.getPrimerAño();
         primerMes = datos.opciones.getPrimerMes();
-        if ( datos.opciones.isVerMesActual()){
+        if (datos.opciones.isVerMesActual()) {
             mesActual = fecha.get(Calendar.MONTH) + 1;
             añoActual = fecha.get(Calendar.YEAR);
         } else {
@@ -228,7 +205,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
         // Llenamos la lista de los días
         listaDias = datos.datosMes(mesActual, añoActual);
-        if(listaDias.isEmpty()) {
+        if (listaDias.isEmpty()) {
             datos.crearMes(mesActual, añoActual);
             listaDias = datos.datosMes(mesActual, añoActual);
         }
@@ -256,7 +233,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // AL PULSAR EN EL MENU SUPERIOR
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.bt_anterior:
                 retrocedeMes();
                 return true;
@@ -275,9 +252,9 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // AL PULSAR UNA TECLA
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Al pulsar la tecla retroceso
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             finish();
             return true;
         }
@@ -286,7 +263,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // AL PULSAR UN ÍTEM DEL LISTVIEW
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id){
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         DatosDia dia = listaDias.get(position);
         // Creamos el intent con los datos de la fecha.
         Intent intent = new Intent(context, DiaCalendario.class);
@@ -295,21 +272,21 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         intent.putExtra("Año", dia.getAño());
         intent.putExtra("Posicion", position);
         // Guardamos la posición de la lista
-	    opciones.edit().putInt("PosicionCalendario", listaCalendario.getFirstVisiblePosition()).apply();
-	    // Lanzamos la activity
+        opciones.edit().putInt("PosicionCalendario", listaCalendario.getFirstVisiblePosition()).apply();
+        // Lanzamos la activity
         startActivityForResult(intent, ACCION_DIA_CALENDARIO);
     }
 
     // AL TERMINAR EL PROCESO DE LA ACTIVITY.
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         datos.close();
         super.onDestroy();
     }
 
     // AL PAUSARSE LA APLICACION
     @Override
-    public void onPause(){
+    public void onPause() {
         opciones.edit().putInt("PosicionCalendario", listaCalendario.getFirstVisiblePosition()).apply();
         opciones.edit().putInt("UltimoMesMostrado", mesActual).apply();
         opciones.edit().putInt("UltimoAñoMostrado", añoActual).apply();
@@ -318,24 +295,24 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
 
     // AL VOLVER DE UNA PAUSA
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         primerAño = datos.opciones.getPrimerAño();
         primerMes = datos.opciones.getPrimerMes();
         datos = new BaseDatos(context);
         escribeHoras();
         actualizaLista(false);
-	    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
+        listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
     }
 
     // AL VOLVER DE UNA SUBACTIVITY
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Evaluamos el codigo de petición.
-        switch (requestCode){
+        switch (requestCode) {
             case ACCION_DIA_CALENDARIO:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     int posicion = data != null ? data.getIntExtra("Posicion", -1) : -1;
                     if (posicion > -1) {
                         DatosDia diaActual = listaDias.get(posicion);
@@ -343,12 +320,12 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                         diaActual.copiarDe(diaNuevo);
                     }
                     actualizaLista(true);
-	                listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
+                    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
                     escribeHoras();
                 }
                 break;
             case ACCION_EDITA_AJENA:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     HoraAjena horaAjena = new HoraAjena();
                     horaAjena.setDia(data.getIntExtra("Dia", 0));
                     horaAjena.setMes(data.getIntExtra("Mes", 0));
@@ -361,33 +338,32 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 }
                 break;
             case ACCION_EDITA_RELEVO:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     int matricula = data != null ? data.getIntExtra("Matricula", -1) : -1;
                     String apellidos = data != null ? data.getStringExtra("Apellidos") : "";
-                    for (DatosDia dia : listaDias){
-                        if(dia.getMatricula() == matricula) dia.setApellidos(apellidos);
+                    for (DatosDia dia : listaDias) {
+                        if (dia.getMatricula() == matricula) dia.setApellidos(apellidos);
                     }
                     actualizaLista(true);
-	                listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
+                    listaCalendario.setSelection(opciones.getInt("PosicionCalendario", 0));
                 }
         }
     }
 
     // MULTI-SELECCION: Al seleccionar un día del calendario.
     @Override
-    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked){
+    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         int checkedCount = listaCalendario.getCheckedItemCount();
         Menu menu = mode.getMenu();
         mode.setTitle(checkedCount + " Selec.");
 
-        //TODO: INICIO BARRA
         barraHoras.setVisibility(View.GONE);
         barraInferior.setVisibility(View.VISIBLE);
 
         Drawable drawCopiar = botonBarraCopiar.getCompoundDrawables()[1];
         Drawable drawAjenas = botonBarraAjenas.getCompoundDrawables()[1];
 
-        if (checkedCount == 1){
+        if (checkedCount == 1) {
             botonBarraCopiar.setEnabled(true);
             botonBarraAjenas.setEnabled(true);
             botonBarraCopiar.setTextColor(0XFF000099);
@@ -403,9 +379,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             DrawableCompat.setTint(drawAjenas, Colores.GRIS_OSCURO);
         }
 
-        //TODO: FINAL BARRA
-
-        if (checkedCount > 1){
+        if (checkedCount > 1) {
             menu.findItem(R.id.bt_repetirAnterior).setVisible(false);
             menu.findItem(R.id.bt_guardarServicio).setVisible(false);
             menu.findItem(R.id.bt_verRelevo).setVisible(false);
@@ -415,7 +389,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             menu.findItem(R.id.bt_verRelevo).setVisible(true);
         }
         //No cambiar nada de lo siguiente.
-        if (checked){
+        if (checked) {
             listaIds.add(position);
             listaDias.get(position).setSeleccionado(true);
         } else {
@@ -444,114 +418,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
         int itemId = menuItem.getItemId();
-        switch (itemId){
+        switch (itemId) {
             case R.id.bt_repetirAnterior:
                 repiteDiaAnterior(listaDias.get(listaIds.get(0)));
                 escribeHoras();
                 return true;
-//            case R.id.bt_marcarFranqueo:
-//                for (int id : listaIds) {
-//                    marcaFranqueo(listaDias.get(id));
-//                }
-//                return true;
-//            case R.id.bt_marcarFestivo:
-//                for (int id : listaIds) {
-//                    marcarFestivo(listaDias.get(id));
-//                }
-//                return true;
-
-//            case R.id.bt_pegar:
-//                if (portapapeles == null) return true;
-//                for (int id : listaIds) {
-//                    DatosDia dia = listaDias.get(id);
-//                    dia.setCodigoIncidencia(portapapeles.getCodigoIncidencia());
-//                    dia.setTextoIncidencia(portapapeles.getTextoIncidencia());
-//                    dia.setTipoIncidencia(portapapeles.getTipoIncidencia());
-//                    dia.setLinea(portapapeles.getLinea());
-//                    dia.setServicio(portapapeles.getServicio());
-//                    dia.setTurno(portapapeles.getTurno());
-//                    dia.setTextoLinea(portapapeles.getTextoLinea());
-//                    dia.setInicio(portapapeles.getInicio());
-//                    dia.setLugarInicio(portapapeles.getLugarInicio());
-//                    dia.setFinal(portapapeles.getFinal());
-//                    dia.setLugarFinal(portapapeles.getLugarFinal());
-//                    dia.setBus(portapapeles.getBus());
-//                    dia.setTomaDeje(portapapeles.getTomaDeje());
-//                    dia.setTomaDejeDecimal(portapapeles.getTomaDejeDecimal());
-//                    dia.setEuros(portapapeles.getEuros());
-//                    dia.setAcumuladas(portapapeles.getAcumuladas());
-//                    dia.setNocturnas(portapapeles.getNocturnas());
-//                    dia.setTrabajadas(portapapeles.getTrabajadas());
-//                    dia.setMatricula(portapapeles.getMatricula());
-//                    dia.setApellidos(portapapeles.getApellidos());
-//                    dia.setMatriculaSusti(portapapeles.getMatriculaSusti());
-//                    dia.setApellidosSusti(portapapeles.getApellidosSusti());
-//                    dia.setCalificacion(portapapeles.getCalificacion());
-//                    dia.setNotas(portapapeles.getNotas());
-//                    datos.guardaDia(dia);
-//                    // Copiamos los servicios del día
-//                    datos.vaciarServiciosDia(dia.getDia(), mesActual, añoActual);
-//                    Cursor cursor1 = datos.cursorServiciosDia(diaPortapapeles, mesPortapapeles, añoPortapapeles);
-//                    if (cursor1.getCount() > 0) {
-//                        while (cursor1.moveToNext()) {
-//                            ServicioDia sd = new ServicioDia();
-//                            sd.setDia(dia.getDia());
-//                            sd.setMes(mesActual);
-//                            sd.setAño(añoActual);
-//                            sd.setLinea(cursor1.getString(cursor1.getColumnIndex("Linea")));
-//                            sd.setServicio(cursor1.getString(cursor1.getColumnIndex("Servicio")));
-//                            sd.setTurno(cursor1.getInt(cursor1.getColumnIndex("Turno")));
-//                            sd.setInicio(cursor1.getString(cursor1.getColumnIndex("Inicio")));
-//                            sd.setLugarInicio(cursor1.getString(cursor1.getColumnIndex("LugarInicio")));
-//                            sd.setFinal(cursor1.getString(cursor1.getColumnIndex("Final")));
-//                            sd.setLugarFinal(cursor1.getString(cursor1.getColumnIndex("LugarFinal")));
-//                            datos.guardaServicioDia(sd);
-//                        }
-//                    }
-//                    cursor1.close();
-//                }
-//                actualizaLista(false);
-//                escribeHoras();
-//	            return true;
-//            case R.id.bt_ajenas:
-//                DatosDia dia = listaDias.get(listaIds.get(0));
-//                // Creamos un intent para devolver los datos de la incidencia
-//                Intent intent = new Intent(context, EditarHorasAjenas.class);
-//                intent.putExtra("Dia", dia.getDia());
-//                intent.putExtra("Mes", dia.getMes());
-//                intent.putExtra("Año", dia.getAño());
-//                intent.putExtra("Nuevo", true);
-//                startActivityForResult(intent, ACCION_EDITA_AJENA);
-//                return true;
-//            case R.id.bt_vaciar:
-//                AlertDialog.Builder aviso = new AlertDialog.Builder(context);
-//                aviso.setTitle("ATENCION");
-//                aviso.setMessage("Vas a vaciar los días seleccionados\n\n¿Estás seguro?");
-//                aviso.setPositiveButton("SI", (dialog, which) -> {
-//                    Boolean vaciado = false;
-//                    for (int id : listaIds) {
-//                        vaciado = vaciarDia(listaDias.get(id));
-//                    }
-//                    if (vaciado) {
-//                        Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
-//                    }
-//                    actualizaLista(false);
-//                });
-//                aviso.setNegativeButton("NO", (dialog, which) -> {});
-//                aviso.show();
-//                return true;
-//            case R.id.bt_recalcular:
-//                for (int id : listaIds) {
-//                    DatosDia datosDia = listaDias.get(id);
-//                    Cursor cursor = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
-//                    DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
-//                    datos.guardaDia(datosDia);
-//                }
-//                escribeHoras();
-//                actualizaLista(false);
-//                return true;
             case R.id.bt_verRelevo:
                 DatosDia datosD = listaDias.get(listaIds.get(0));
                 Relevo r = datos.getRelevo(datosD.getMatricula());
@@ -568,11 +439,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 return true;
             case R.id.bt_guardarServicio:
                 DatosDia datosDia = listaDias.get(listaIds.get(0));
-                if (datosDia.getLinea().equals("") ||
-                        datosDia.getServicio().equals("") ||
-                        datosDia.getTurno() == 0 ||
-                        datosDia.getInicio().equals("") ||
-                        datosDia.getFinal().equals("")) {
+                if (datosDia.getLinea().isEmpty() || datosDia.getServicio().isEmpty() || datosDia.getTurno() == 0 || datosDia.getInicio().isEmpty() || datosDia.getFinal().isEmpty()) {
                     Toast.makeText(context, "Servicio Incompleto", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -584,7 +451,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 }
                 // Si la línea no existe, se crea.
                 Linea linea = datos.getLinea(datosDia.getLinea());
-                if (linea == null){
+                if (linea == null) {
                     linea = new Linea();
                     linea.setLinea(datosDia.getLinea());
                     linea.setTexto("Sin descripción");
@@ -606,8 +473,8 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                 // Si hay servicios auxiliares, se copian.
                 datos.vaciarServiciosAuxiliares(datosDia.getLinea(), datosDia.getServicio(), datosDia.getTurno());
                 Cursor cur = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
-                if (cur.getCount() > 0){
-                    while (cur.moveToNext()){
+                if (cur.getCount() > 0) {
+                    while (cur.moveToNext()) {
                         ServicioAuxiliar sa = new ServicioAuxiliar();
                         sa.setLinea(datosDia.getLinea());
                         sa.setServicio(datosDia.getServicio());
@@ -632,15 +499,11 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     // MULTI-SELECCION: Al quitarse todos los días seleccionados.
     @Override
     public void onDestroyActionMode(ActionMode actionMode) {
-
-        //TODO: INICIO BARRA
         barraInferior.setVisibility(View.GONE);
         barraHoras.setVisibility(View.VISIBLE);
 
-        //TODO: FINAL BARRA
-
         //Refrescar la lista.
-        for (DatosDia d : listaDias){
+        for (DatosDia d : listaDias) {
             d.setSeleccionado(false);
         }
         listaIds.clear();
@@ -648,13 +511,13 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // ESCRIBE EL TÍTULO DEL MENÚ SUPERIOR, PONIENDO MES Y AÑO ACTUALES.
-    private void escribeTitulo(){
+    private void escribeTitulo() {
         getActionBar().setTitle(Hora.MESES_MAY[mesActual]);
         getActionBar().setSubtitle(String.valueOf(añoActual));
     }
 
     // ESCRIBE LAS HORAS ACUMULADAS Y NOCTURNAS DEL MES
-    private void escribeHoras(){
+    private void escribeHoras() {
         /*
             DEFINIMOS ACUMULADAS HASTA MES
          */
@@ -715,47 +578,31 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // ACTUALIZA LA LISTA DEL CALENDARIO
-    private void actualizaLista(boolean completo){
-	    if (completo){
+    private void actualizaLista(boolean completo) {
+        if (completo) {
             listaDias = datos.datosMes(mesActual, añoActual);
             adaptador = new AdaptadorDiaCalendario(this, listaDias);
             listaCalendario.setAdapter(adaptador);
         }
-	    adaptador.notifyDataSetChanged();
+        adaptador.notifyDataSetChanged();
     }
 
     // AL PULSAR EN LAS HORAS ACUMULADAS O NOCTURNAS TOTALES
-    public void horasPulsadas(View view){
-        if (tablaHoras.getVisibility() == View.GONE){
+    public void horasPulsadas(View view) {
+        if (tablaHoras.getVisibility() == View.GONE) {
 
             tablaAcumuladas.setVisibility(View.GONE);
             tablaHoras.setVisibility(View.VISIBLE);
-//            titulo.setVisibility(View.VISIBLE);
-//            acumuladasMes.setVisibility(View.VISIBLE);
-//            nocturnas.setVisibility(View.VISIBLE);
-//            tomaDeje.setVisibility(View.VISIBLE);
-//            euros.setVisibility(View.VISIBLE);
-//            trabajadasReales.setVisibility(View.VISIBLE);
-//            trabajadasConvenio.setVisibility(View.VISIBLE);
         } else {
-
             tablaHoras.setVisibility(View.GONE);
             tablaAcumuladas.setVisibility(View.VISIBLE);
-
-//            titulo.setVisibility(View.GONE);
-//            acumuladasMes.setVisibility(View.GONE);
-//            nocturnas.setVisibility(View.GONE);
-//            tomaDeje.setVisibility(View.GONE);
-//            euros.setVisibility(View.GONE);
-//            trabajadasReales.setVisibility(View.GONE);
-//            trabajadasConvenio.setVisibility(View.GONE);
         }
     }
 
     // AVANZAR EL CALENDARIO EN UN MES.
-    private void avanzaMes(){
+    private void avanzaMes() {
         mesActual++;
-        if (mesActual == 13){
+        if (mesActual == 13) {
             mesActual = 1;
             añoActual++;
         }
@@ -775,19 +622,19 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // RETROCEDER EL CALENDARIO EN UN MES.
-    private void retrocedeMes(){
+    private void retrocedeMes() {
         if (añoActual == primerAño && mesActual == primerMes) {
             Toast.makeText(this, getResources().getText(R.string.error_fechaLimite), Toast.LENGTH_SHORT).show();
             return;
         }
         mesActual--;
-        if (mesActual == 0){
+        if (mesActual == 0) {
             mesActual = 12;
             añoActual--;
         }
         listaDias.clear();
         listaDias = datos.datosMes(mesActual, añoActual);
-        if(listaDias.isEmpty()) {
+        if (listaDias.isEmpty()) {
             datos.crearMes(mesActual, añoActual);
             listaDias = datos.datosMes(mesActual, añoActual);
         }
@@ -801,7 +648,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // VA A UNA FECHA DETERMINADA
-    private void irAFecha(int mes, int año){
+    private void irAFecha(int mes, int año) {
         if (año < primerAño || (año == primerAño && mes < primerMes)) {
             Toast.makeText(this, getResources().getText(R.string.error_fechaInvalida), Toast.LENGTH_SHORT).show();
             return;
@@ -811,7 +658,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         añoActual = año;
         listaDias.clear();
         listaDias = datos.datosMes(mesActual, añoActual);
-        if(listaDias.isEmpty()) {
+        if (listaDias.isEmpty()) {
             datos.crearMes(mesActual, añoActual);
             listaDias = datos.datosMes(mesActual, añoActual);
         }
@@ -825,24 +672,24 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // REPITE DÍA ANTERIOR
-    private void repiteDiaAnterior(DatosDia dia){
+    private void repiteDiaAnterior(DatosDia dia) {
         int day;
         int mes;
         int año;
         // Evaluamos que el día no sea el primer día que se muestra.
-        if (dia.getDia() == 1 && dia.getMes() == primerMes && dia.getAño() == primerAño){
+        if (dia.getDia() == 1 && dia.getMes() == primerMes && dia.getAño() == primerAño) {
             Toast.makeText(this, R.string.mensaje_primerDia, Toast.LENGTH_SHORT).show();
             return;
         } else {
             Calendar fecha = Calendar.getInstance();
-            fecha.set(dia.getAño(), dia.getMes()-1, dia.getDia());
+            fecha.set(dia.getAño(), dia.getMes() - 1, dia.getDia());
             fecha.add(Calendar.DAY_OF_MONTH, -1);
             day = fecha.get(Calendar.DAY_OF_MONTH);
             mes = fecha.get(Calendar.MONTH) + 1;
             año = fecha.get(Calendar.YEAR);
         }
         DatosDia datosDia = datos.servicioDia(day, mes, año);
-        if (datosDia.getDia() == 0){
+        if (datosDia.getDia() == 0) {
             Toast.makeText(this, R.string.mensaje_mesNoExiste, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -875,8 +722,8 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         // Copiamos los servicios del día
         datos.vaciarServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());
         Cursor c = datos.cursorServiciosDia(day, mes, año);
-        if (c.getCount() > 0){
-            while (c.moveToNext()){
+        if (c.getCount() > 0) {
+            while (c.moveToNext()) {
                 ServicioDia sd = new ServicioDia();
                 sd.setDia(dia.getDia());
                 sd.setMes(dia.getMes());
@@ -893,123 +740,54 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         actualizaLista(false);
     }
 
-    // MARCAR/DESMARCAR DIA COMO FRANQUEO
-    private void marcaFranqueo(DatosDia dia){
-        if (dia.isEsFranqueo()){
-            dia.setEsFranqueo(false);
-            if (dia.getCodigoIncidencia() == 2) {
-                datos.guardaDia(dia);
-                actualizaLista(false);
-                return;
-            }
-        } else {
-            dia.setEsFranqueo(true);
-            if (dia.getCodigoIncidencia() == 0) {
-                Incidencia i = datos.getIncidencia(2);
-                dia.setCodigoIncidencia(2);
-                dia.setTextoIncidencia(i.getTexto());
-                dia.setTipoIncidencia(4);
-            }
-        }
-        datos.guardaDia(dia);
-        actualizaLista(false);
-    }
-
-    // MARCAR/DESMARCAR DIA COMO FESTIVO
-    private void marcarFestivo(DatosDia dia){
-        dia.setEsFestivo(!dia.isEsFestivo());
-        datos.guardaDia(dia);
-        actualizaLista(false);
-    }
-
-    // VACIAR DIA
-    public Boolean vaciarDia(DatosDia dia){
-        dia.setCodigoIncidencia(0);
-        dia.setTextoIncidencia("");
-        dia.setTipoIncidencia(0);
-        dia.setEsFranqueo(false);
-        dia.setEsFestivo(false);
-        dia.setLinea("");
-        dia.setServicio("");
-        dia.setTurno(0);
-        dia.setTextoLinea("");
-        dia.setInicio("");
-        dia.setLugarInicio("");
-        dia.setFinal("");
-        dia.setLugarFinal("");
-        dia.setBus("");
-        dia.setTomaDeje("");
-        dia.setTomaDejeDecimal(0d);
-        dia.setEuros(0d);
-        dia.setAcumuladas(0d);
-        dia.setNocturnas(0d);
-        dia.setTrabajadas(0d);
-        dia.setDesayuno(false);
-        dia.setComida(false);
-        dia.setCena(false);
-        dia.setMatricula(0);
-        dia.setApellidos("");
-        dia.setMatriculaSusti(0);
-        dia.setApellidosSusti("");
-        dia.setCalificacion(0);
-        dia.setNotas("");
-        if (datos.guardaDia(dia)){
-            datos.vaciarServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());
-            setResult(RESULT_OK, null);
-            escribeHoras();
-            return true;
-        }
-        return false;
-    }
-
     // COPIAR EN EL PORTAPAPELES
-    public void copiar(DatosDia datosDia){
-        diaPortapapeles = datosDia.getDia();
-        mesPortapapeles = datosDia.getMes();
-        añoPortapapeles = datosDia.getAño();
-        portapapeles = new DatosDia();
-        portapapeles.setCodigoIncidencia(datosDia.getCodigoIncidencia());
-        portapapeles.setTextoIncidencia(datosDia.getTextoIncidencia());
-        portapapeles.setTipoIncidencia(datosDia.getTipoIncidencia());
-        portapapeles.setServicio(datosDia.getServicio());
-        portapapeles.setTurno(datosDia.getTurno());
-        portapapeles.setLinea(datosDia.getLinea());
-        portapapeles.setTextoLinea(datosDia.getTextoLinea());
-        portapapeles.setInicio(datosDia.getInicio());
-        portapapeles.setLugarInicio(datosDia.getLugarInicio());
-        portapapeles.setFinal(datosDia.getFinal());
-        portapapeles.setLugarFinal(datosDia.getLugarFinal());
-        portapapeles.setAcumuladas(datosDia.getAcumuladas());
-        portapapeles.setNocturnas(datosDia.getNocturnas());
-        portapapeles.setTrabajadas(datosDia.getTrabajadas());
-        portapapeles.setDesayuno(datosDia.isDesayuno());
-        portapapeles.setComida(datosDia.isComida());
-        portapapeles.setCena(datosDia.isCena());
-        portapapeles.setTomaDeje(datosDia.getTomaDeje());
-        portapapeles.setTomaDejeDecimal(datosDia.getTomaDejeDecimal());
-        portapapeles.setEuros(datosDia.getEuros());
-        portapapeles.setMatricula(datosDia.getMatricula());
-        portapapeles.setApellidos(datosDia.getApellidos());
-        portapapeles.setCalificacion(datosDia.getCalificacion());
-        portapapeles.setMatriculaSusti(datosDia.getMatriculaSusti());
-        portapapeles.setApellidosSusti(datosDia.getApellidosSusti());
-        portapapeles.setBus(datosDia.getBus());
-        portapapeles.setNotas(datosDia.getNotas());
+    public void copiar(DatosDia datosDia) {
+        DiaHelper.DiaPortapapeles = datosDia.getDia();
+        DiaHelper.MesPortapapeles = datosDia.getMes();
+        DiaHelper.AñoPortapapeles = datosDia.getAño();
+        DiaHelper.DiaEnPortapapeles = new DatosDia();
+        DiaHelper.DiaEnPortapapeles.setCodigoIncidencia(datosDia.getCodigoIncidencia());
+        DiaHelper.DiaEnPortapapeles.setTextoIncidencia(datosDia.getTextoIncidencia());
+        DiaHelper.DiaEnPortapapeles.setTipoIncidencia(datosDia.getTipoIncidencia());
+        DiaHelper.DiaEnPortapapeles.setServicio(datosDia.getServicio());
+        DiaHelper.DiaEnPortapapeles.setTurno(datosDia.getTurno());
+        DiaHelper.DiaEnPortapapeles.setLinea(datosDia.getLinea());
+        DiaHelper.DiaEnPortapapeles.setTextoLinea(datosDia.getTextoLinea());
+        DiaHelper.DiaEnPortapapeles.setInicio(datosDia.getInicio());
+        DiaHelper.DiaEnPortapapeles.setLugarInicio(datosDia.getLugarInicio());
+        DiaHelper.DiaEnPortapapeles.setFinal(datosDia.getFinal());
+        DiaHelper.DiaEnPortapapeles.setLugarFinal(datosDia.getLugarFinal());
+        DiaHelper.DiaEnPortapapeles.setAcumuladas(datosDia.getAcumuladas());
+        DiaHelper.DiaEnPortapapeles.setNocturnas(datosDia.getNocturnas());
+        DiaHelper.DiaEnPortapapeles.setTrabajadas(datosDia.getTrabajadas());
+        DiaHelper.DiaEnPortapapeles.setDesayuno(datosDia.isDesayuno());
+        DiaHelper.DiaEnPortapapeles.setComida(datosDia.isComida());
+        DiaHelper.DiaEnPortapapeles.setCena(datosDia.isCena());
+        DiaHelper.DiaEnPortapapeles.setTomaDeje(datosDia.getTomaDeje());
+        DiaHelper.DiaEnPortapapeles.setTomaDejeDecimal(datosDia.getTomaDejeDecimal());
+        DiaHelper.DiaEnPortapapeles.setEuros(datosDia.getEuros());
+        DiaHelper.DiaEnPortapapeles.setMatricula(datosDia.getMatricula());
+        DiaHelper.DiaEnPortapapeles.setApellidos(datosDia.getApellidos());
+        DiaHelper.DiaEnPortapapeles.setCalificacion(datosDia.getCalificacion());
+        DiaHelper.DiaEnPortapapeles.setMatriculaSusti(datosDia.getMatriculaSusti());
+        DiaHelper.DiaEnPortapapeles.setApellidosSusti(datosDia.getApellidosSusti());
+        DiaHelper.DiaEnPortapapeles.setBus(datosDia.getBus());
+        DiaHelper.DiaEnPortapapeles.setNotas(datosDia.getNotas());
     }
 
     // CREAR PDF DEL CALENDARIO.
-    public void crearPDF(){
+    public void crearPDF() {
         if (listaDias.isEmpty()) return;
         String estadoSD = Environment.getExternalStorageState();
-        if(!Environment.MEDIA_MOUNTED.equals(estadoSD)) return;
+        if (!Environment.MEDIA_MOUNTED.equals(estadoSD)) return;
         // Definimos el path de destino y lo creamos si no existe.
         String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid/PDF";
         File d = new File(destino);
-        if (!d.exists()){
+        if (!d.exists()) {
             d.mkdirs();
         }
-        String Ruta = destino + "/" + añoActual + "-" + String.format("%02d",mesActual) + " - Calendario " + Hora.MESES_MIN[mesActual] + ".pdf";
+        String Ruta = destino + "/" + añoActual + "-" + String.format("%02d", mesActual) + " - Calendario " + Hora.MESES_MIN[mesActual] + ".pdf";
         Document doc = null;
         try {
             PdfWriter writer = new PdfWriter(Ruta);
@@ -1020,80 +798,50 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
             } else {
                 doc = new Document(pdf, PageSize.A4);
             }
-            doc.setMargins(25,25,25,25);
+            doc.setMargins(25, 25, 25, 25);
             // Insertamos la tabla del calendario.
             doc.add(crearTablaCalendario(horizontal));
             // Insertamos la tabla del resumen.
             doc.add(crearTablaResumen());
-        } catch (IOException ex){
+        } catch (IOException ex) {
             Toast.makeText(this, "Se produjo un error al crear el PDF.\n", Toast.LENGTH_LONG).show();
             return;
         } finally {
             if (doc != null) doc.close();
-            MediaScannerConnection.scanFile(this, new String[] { Ruta }, null, null);
+            MediaScannerConnection.scanFile(this, new String[]{Ruta}, null, null);
         }
         Toast.makeText(this, "Se ha creado " + añoActual + "-" + Hora.MESES_MIN[mesActual] + ".pdf" + ".", Toast.LENGTH_SHORT).show();
     }
 
     // CREAR LA TABLA DEL PDF USANDO EL CURSOR ACTUAL
-    public Table crearTablaCalendario(boolean horizontal) throws IOException{
+    public Table crearTablaCalendario(boolean horizontal) throws IOException {
         // FUENTE VERDANA
-        PdfFont Fuente = PdfFontFactory.createFont(FontConstants.TIMES);
+        PdfFont Fuente = PdfFontFactory.createFont(StandardFonts.HELVETICA);
         // ESTILO TABLA
-        Style estiloTabla = new Style()
-                .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setMargins(0,0,0,0)
-                .setPaddings(0,0,0,0)
-                .setWidth(UnitValue.createPercentValue(100))
-                .setKeepTogether(true)
-                .setFont(Fuente)
-                .setFontSize(9);
+        Style estiloTabla = new Style().setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE).setMargins(0, 0, 0, 0).setPaddings(0, 0, 0, 0).setWidth(UnitValue.createPercentValue(100)).setKeepTogether(true).setFont(Fuente).setFontSize(9);
         // ESTILO TÍTULO
-        Style estiloTitulo = new Style()
-                .setBorder(Border.NO_BORDER)
-                .setFontSize(16);
+        Style estiloTitulo = new Style().setBorder(Border.NO_BORDER).setFontSize(16);
         // ESTILO CABECERA
-        Style estiloCabecera = new Style()
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setFontColor(Color.BLACK)
-                .setMarginBottom(1)
-                .setBold()
-                .setBorderTop(new SolidBorder(1))
-                .setBorderBottom(new SolidBorder(1))
-                .setBackgroundColor(new DeviceRgb(169,208,142));
+        Style estiloCabecera = new Style().setVerticalAlignment(VerticalAlignment.MIDDLE).setFontColor(ColorConstants.BLACK).setMarginBottom(1).setBold().setBorderTop(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)).setBackgroundColor(new DeviceRgb(169, 208, 142));
         // ESTILO CELDAS
-        Style estiloCeldas = new Style()
-                .setKeepTogether(true)
-                .setMarginTop(1)
-                .setPadding(2)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setBorder(new SolidBorder(0.5f))
-                .setBackgroundColor(Color.WHITE);
+        Style estiloCeldas = new Style().setKeepTogether(true).setMarginTop(1).setPadding(2).setVerticalAlignment(VerticalAlignment.MIDDLE).setBorder(new SolidBorder(0.5f)).setBackgroundColor(ColorConstants.WHITE);
         // ESTILO NOTAS
-        Style estiloNotas = new Style()
-                .setPaddingLeft(15)
-                .setPaddingRight(15)
-                .setTextAlignment(TextAlignment.LEFT);
+        Style estiloNotas = new Style().setPaddingLeft(15).setPaddingRight(15).setTextAlignment(TextAlignment.LEFT);
         // ESTILO CELDAS PARES
-        Style estiloCeldasPares = new Style()
-                .setBackgroundColor(new DeviceRgb(226,239,218));
+        Style estiloCeldasPares = new Style().setBackgroundColor(new DeviceRgb(226, 239, 218));
         // ESTILO FRANQUEOS
-        Style estiloFranqueos = new Style()
-                .setFontColor(Color.BLUE);
+        Style estiloFranqueos = new Style().setFontColor(ColorConstants.BLUE);
         // ESTILO SÁBADOS
-        Style estiloSabados = new Style()
-                .setFontColor(new DeviceRgb(237,125,49));
+        Style estiloSabados = new Style().setFontColor(new DeviceRgb(237, 125, 49));
         // ESTILO FESTIVOS
-        Style estiloFestivos = new Style()
-                .setFontColor(Color.RED);
+        Style estiloFestivos = new Style().setFontColor(ColorConstants.RED);
         // ESTILOS BORDES
         Style estiloBordeSup = new Style().setBorderTop(new SolidBorder(1));
         Style estiloBordeDer = new Style().setBorderRight(new SolidBorder(1));
         Style estiloBordeVer = new Style().setBorderLeft(new SolidBorder(1)).setBorderRight(new SolidBorder(1));
         // CREAMOS LA TABLA
         Table tabla;
-        if (horizontal){
+        if (horizontal) {
             tabla = new Table(new float[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}); // 17 columnas
         } else {
             tabla = new Table(new float[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}); // 14 columnas
@@ -1101,59 +849,60 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         tabla.addStyle(estiloTabla);
         // AÑADIMOS LOS TÍTULOS
         int colSpan = horizontal ? 9 : 7;
-        Cell celda = new Cell(1,colSpan);
-        celda.add(getString(R.string.nombreAplicacion)).addStyle(estiloTitulo).setTextAlignment(TextAlignment.LEFT);
+        Cell celda = new Cell(1, colSpan);
+        celda.add(new Paragraph(getString(R.string.nombreAplicacion))).addStyle(estiloTitulo).setTextAlignment(TextAlignment.LEFT);
         tabla.addHeaderCell(celda);
         if (horizontal) colSpan -= 1;
-        celda = new Cell(1,colSpan);
-        celda.add(Hora.MESES_MIN[mesActual] + " - " + añoActual).addStyle(estiloTitulo).setTextAlignment(TextAlignment.RIGHT);
+        celda = new Cell(1, colSpan);
+        celda.add(new Paragraph(Hora.MESES_MIN[mesActual] + " - " + añoActual)).addStyle(estiloTitulo).setTextAlignment(TextAlignment.RIGHT);
         tabla.addHeaderCell(celda);
         // AÑADIMOS LOS ENCABEZADOS
-        tabla.addHeaderCell(new Cell().add("Día").addStyle(estiloCabecera).addStyle(estiloBordeVer));
-        tabla.addHeaderCell(new Cell().add("Incidencia").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Línea").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Servicio").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Turno").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Inicio").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Final").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Trab.").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Acum.").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Noct.").addStyle(estiloCabecera));
-        if (horizontal){
-            tabla.addHeaderCell(new Cell().add("Des.").addStyle(estiloCabecera));
-            tabla.addHeaderCell(new Cell().add("Com.").addStyle(estiloCabecera));
-            tabla.addHeaderCell(new Cell().add("Cena").addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Día")).addStyle(estiloCabecera).addStyle(estiloBordeVer));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Incidencia")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Línea")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Servicio")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Turno")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Inicio")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Final")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Trab.")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Acum.")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Noct.")).addStyle(estiloCabecera));
+        if (horizontal) {
+            tabla.addHeaderCell(new Cell().add(new Paragraph("Des.")).addStyle(estiloCabecera));
+            tabla.addHeaderCell(new Cell().add(new Paragraph("Com.")).addStyle(estiloCabecera));
+            tabla.addHeaderCell(new Cell().add(new Paragraph("Cena")).addStyle(estiloCabecera));
         }
-        tabla.addHeaderCell(new Cell().add("T.Deje").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Euros").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Relevo").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Bus").addStyle(estiloCabecera).addStyle(estiloBordeDer));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("T.Deje")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Euros")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Relevo")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Bus")).addStyle(estiloCabecera).addStyle(estiloBordeDer));
         // RECORREMOS EL CURSOR DE LOS DÍAS
-        if (!listaDias.isEmpty()){
+        if (!listaDias.isEmpty()) {
             int fila = 1;
             for (DatosDia dia : listaDias) {
                 // Inicializamos las filas que ocupa el día
                 int filas = 1;
                 Cursor servicios = datos.cursorServiciosDia(dia.getDia(), dia.getMes(), dia.getAño());
                 // Añadimos filas al día en función de las opciones.
-                if (!dia.getNotas().trim().equals("") && datos.opciones.isPdfIncluirNotas()) filas ++;
+                if (!dia.getNotas().trim().isEmpty() && datos.opciones.isPdfIncluirNotas())
+                    filas++;
                 if (datos.opciones.isPdfIncluirServicios()) filas += servicios.getCount();
                 // Celda Día.
-                celda = new Cell(filas,1).addStyle(estiloCeldas).addStyle(estiloBordeVer).addStyle(estiloBordeSup);
+                celda = new Cell(filas, 1).addStyle(estiloCeldas).addStyle(estiloBordeVer).addStyle(estiloBordeSup);
                 celda.setKeepTogether(true);
                 celda.setFontSize(11).setBold();
-                if(fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                celda.add(String.format("%02d", dia.getDia()));
+                if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
+                if (dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
+                if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                celda.add(new Paragraph(String.format("%02d", dia.getDia())));
                 tabla.addCell(celda);
                 // Celda Incidencia
-                celda = new Cell(filas,1).addStyle(estiloCeldas).addStyle(estiloBordeSup);
-                if(fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                celda.add(dia.getTextoIncidencia());
+                celda = new Cell(filas, 1).addStyle(estiloCeldas).addStyle(estiloBordeSup);
+                if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
+                if (dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
+                if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                celda.add(new Paragraph(dia.getTextoIncidencia()));
                 tabla.addCell(celda);
                 // SI EL CÓDIGO DE LA INCIDENCIA ES DE TRABAJO, SE RELLENAN LOS CAMPOS.
                 if (dia.getTipoIncidencia() == 1 || dia.getTipoIncidencia() == 2 || dia.getTipoIncidencia() == 5) {
@@ -1162,100 +911,100 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(dia.getLinea());
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(dia.getLinea()));
                     tabla.addCell(celda);
                     // Celda Servicio
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(dia.getServicio());
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(dia.getServicio()));
                     tabla.addCell(celda);
                     // Celda Turno.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(String.valueOf(dia.getTurno()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(String.valueOf(dia.getTurno())));
                     tabla.addCell(celda);
                     // Celda Inicio
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(dia.getInicio());
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(dia.getInicio()));
                     tabla.addCell(celda);
                     // Celda Final
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(dia.getFinal());
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(dia.getFinal()));
                     tabla.addCell(celda);
                     // Celda Trabajadas.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(redondeaDecimales(dia.getTrabajadas()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(redondeaDecimales(dia.getTrabajadas())));
                     tabla.addCell(celda);
                     // Celda Acumuladas.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(redondeaDecimales(dia.getAcumuladas()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(redondeaDecimales(dia.getAcumuladas())));
                     tabla.addCell(celda);
                     // Celda Nocturnas.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(redondeaDecimales(dia.getNocturnas()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(redondeaDecimales(dia.getNocturnas())));
                     tabla.addCell(celda);
-                    if (horizontal){
+                    if (horizontal) {
                         // Celda Desayuno.
                         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                         if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                         if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                             celda.addStyle(estiloFestivos);
-                        if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                        if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                        celda.add(dia.isDesayuno() ? "1" : "0");
+                        if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                        if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                        celda.add(new Paragraph(dia.isDesayuno() ? "1" : "0"));
                         tabla.addCell(celda);
                         // Celda Comida.
                         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                         if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                         if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                             celda.addStyle(estiloFestivos);
-                        if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                        if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                        celda.add(dia.isComida() ? "1" : "0");
+                        if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                        if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                        celda.add(new Paragraph(dia.isComida() ? "1" : "0"));
                         tabla.addCell(celda);
                         // Celda Cena.
                         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                         if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                         if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                             celda.addStyle(estiloFestivos);
-                        if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                        if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                        celda.add(dia.isCena() ? "1" : "0");
+                        if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                        if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                        celda.add(new Paragraph(dia.isCena() ? "1" : "0"));
                         tabla.addCell(celda);
                     }
                     // Celda Toma Deje
@@ -1263,44 +1012,44 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(dia.getTomaDeje());
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(dia.getTomaDeje()));
                     tabla.addCell(celda);
                     // Celda Euros.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(redondeaDecimales(dia.getEuros()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(redondeaDecimales(dia.getEuros())));
                     tabla.addCell(celda);
                     // Celda Relevo.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(String.format("%04d", dia.getMatricula()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(String.format("%04d", dia.getMatricula())));
                     tabla.addCell(celda);
                     // Celda Bus.
                     celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeDer).addStyle(estiloBordeSup);
                     if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
                     if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
                         celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    celda.add(String.valueOf(dia.getBus()));
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    celda.add(new Paragraph(String.valueOf(dia.getBus())));
                     tabla.addCell(celda);
                 } else {
                     colSpan = horizontal ? 15 : 12;
-                    for (int i=1; i <= colSpan; i++) {
+                    for (int i = 1; i <= colSpan; i++) {
                         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeSup);
                         if (i == colSpan) celda.addStyle(estiloBordeDer);
                         if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                        celda.add("\n");
+                        celda.add(new Paragraph("\n"));
                         tabla.addCell(celda);
                     }
                 }
@@ -1311,46 +1060,51 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                             // Celda Línea
                             celda = new Cell().addStyle(estiloCeldas).setItalic();
                             if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                            if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                            if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                            if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                            celda.add(servicios.getString(servicios.getColumnIndex("Linea")));
+                            if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
+                                celda.addStyle(estiloFestivos);
+                            if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                            if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                            celda.add(new Paragraph(servicios.getString(servicios.getColumnIndex("Linea"))));
                             tabla.addCell(celda);
                             // Celda Servicio
                             celda = new Cell().addStyle(estiloCeldas).setItalic();
                             if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                            if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                            if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                            if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                            celda.add(servicios.getString(servicios.getColumnIndex("Servicio")));
+                            if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
+                                celda.addStyle(estiloFestivos);
+                            if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                            if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                            celda.add(new Paragraph(servicios.getString(servicios.getColumnIndex("Servicio"))));
                             tabla.addCell(celda);
                             // Celda Turno.
                             celda = new Cell().addStyle(estiloCeldas).setItalic();
                             if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                            if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                            if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                            if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                            celda.add(String.valueOf(servicios.getInt(servicios.getColumnIndex("Turno"))));
+                            if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
+                                celda.addStyle(estiloFestivos);
+                            if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                            if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                            celda.add(new Paragraph(String.valueOf(servicios.getInt(servicios.getColumnIndex("Turno")))));
                             tabla.addCell(celda);
                             // Celda Inicio
                             celda = new Cell().addStyle(estiloCeldas).setItalic();
                             if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                            if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                            if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                            if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                            celda.add(servicios.getString(servicios.getColumnIndex("Inicio")));
+                            if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
+                                celda.addStyle(estiloFestivos);
+                            if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                            if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                            celda.add(new Paragraph(servicios.getString(servicios.getColumnIndex("Inicio"))));
                             tabla.addCell(celda);
                             // Celda Final
                             celda = new Cell().addStyle(estiloCeldas).setItalic();
                             if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                            if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                            if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                            if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                            celda.add(servicios.getString(servicios.getColumnIndex("Final")));
+                            if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
+                                celda.addStyle(estiloFestivos);
+                            if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                            if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                            celda.add(new Paragraph(servicios.getString(servicios.getColumnIndex("Final"))));
                             tabla.addCell(celda);
                             // Celdas restantes
                             colSpan = horizontal ? 10 : 7;
-                            for (int i=1; i <= colSpan; i++) {
+                            for (int i = 1; i <= colSpan; i++) {
                                 celda = new Cell().addStyle(estiloCeldas).setItalic();
                                 if (i == colSpan) celda.addStyle(estiloBordeDer);
                                 if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
@@ -1360,22 +1114,23 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
                     }
                 }
                 // SI HAY NOTAS SE AÑADEN
-                if(!dia.getNotas().trim().equals("") && datos.opciones.isPdfIncluirNotas()){
+                if (!dia.getNotas().trim().isEmpty() && datos.opciones.isPdfIncluirNotas()) {
                     colSpan = horizontal ? 15 : 12;
-                    celda = new Cell(1,colSpan).addStyle(estiloCeldas).addStyle(estiloNotas).addStyle(estiloBordeDer).setItalic();
-                    if(fila % 2 == 0) celda.addStyle(estiloCeldasPares);
-                    if(dia.isEsFestivo() || dia.getDiaSemana() == 1) celda.addStyle(estiloFestivos);
-                    if(dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
-                    if(dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
-                    if (datos.opciones.isPdfAgruparNotas()){
+                    celda = new Cell(1, colSpan).addStyle(estiloCeldas).addStyle(estiloNotas).addStyle(estiloBordeDer).setItalic();
+                    if (fila % 2 == 0) celda.addStyle(estiloCeldasPares);
+                    if (dia.isEsFestivo() || dia.getDiaSemana() == 1)
+                        celda.addStyle(estiloFestivos);
+                    if (dia.getDiaSemana() == 7) celda.addStyle(estiloSabados);
+                    if (dia.isEsFranqueo()) celda.addStyle(estiloFranqueos);
+                    if (datos.opciones.isPdfAgruparNotas()) {
                         dia.setNotas(dia.getNotas().replace("\n\n", " "));
                         dia.setNotas(dia.getNotas().replace("\n", " "));
                     }
-                    celda.add(dia.getNotas());
+                    celda.add(new Paragraph(dia.getNotas()));
                     tabla.addCell(celda);
                 }
                 // Incrementamos el número de línea
-                fila ++;
+                fila++;
             }
         }
         tabla.setBorderBottom(new SolidBorder(1));
@@ -1385,98 +1140,75 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
     }
 
     // CREAR LA TABLA RESUMEN
-    public Table crearTablaResumen() throws IOException{
+    public Table crearTablaResumen() throws IOException {
         // FUENTE VERDANA
-        PdfFont Fuente = PdfFontFactory.createFont(FontConstants.HELVETICA);
+        PdfFont Fuente = PdfFontFactory.createFont(StandardFonts.HELVETICA);
         // ESTILO TABLA
-        Style estiloTabla = new Style()
-                .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setMargins(5,0,0,0)
-                .setPaddings(0,0,0,0)
-                .setWidth(UnitValue.createPercentValue(100))
-                .setKeepTogether(true)
-                .setFont(Fuente)
-                .setFontSize(9);
+        Style estiloTabla = new Style().setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE).setMargins(5, 0, 0, 0).setPaddings(0, 0, 0, 0).setWidth(UnitValue.createPercentValue(100)).setKeepTogether(true).setFont(Fuente).setFontSize(9);
         // ESTILO CABECERA
-        Style estiloCabecera = new Style()
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setFontColor(Color.BLACK)
-                .setMarginBottom(1)
-                .setBold()
-                .setBorderTop(new SolidBorder(1))
-                .setBorderBottom(new SolidBorder(1))
-                .setBackgroundColor(new DeviceRgb(169,208,142));
+        Style estiloCabecera = new Style().setVerticalAlignment(VerticalAlignment.MIDDLE).setFontColor(ColorConstants.BLACK).setMarginBottom(1).setBold().setBorderTop(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)).setBackgroundColor(new DeviceRgb(169, 208, 142));
         // ESTILO CELDAS
-        Style estiloCeldas = new Style()
-                .setKeepTogether(true)
-                .setMarginTop(1)
-                .setPadding(2)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setBorder(new SolidBorder(0.5f))
-                .setBackgroundColor(Color.WHITE);
+        Style estiloCeldas = new Style().setKeepTogether(true).setMarginTop(1).setPadding(2).setVerticalAlignment(VerticalAlignment.MIDDLE).setBorder(new SolidBorder(0.5f)).setBackgroundColor(ColorConstants.WHITE);
         // ESTILO NEGATIVAS
-        Style estiloNegativas = new Style()
-                .setFontColor(Color.RED);
+        Style estiloNegativas = new Style().setFontColor(ColorConstants.RED);
         // ESTILO POSITIVAS
-        Style estiloPositivas = new Style()
-                .setFontColor(new DeviceRgb(0,144,81));
+        Style estiloPositivas = new Style().setFontColor(new DeviceRgb(0, 144, 81));
         // ESTILOS BORDES
         Style estiloBordeIzq = new Style().setBorderLeft(new SolidBorder(1));
         Style estiloBordeInf = new Style().setBorderBottom(new SolidBorder(1));
         Style estiloBordeDer = new Style().setBorderRight(new SolidBorder(1));
         // CREAMOS LA TABLA
-        Table tabla = new Table(new float[]{1,1,1,1,1,1,1,1,1}); // 9 columnas
+        Table tabla = new Table(new float[]{1, 1, 1, 1, 1, 1, 1, 1, 1}); // 9 columnas
         tabla.addStyle(estiloTabla);
         // AÑADIMOS LOS ENCABEZADOS
-        tabla.addHeaderCell(new Cell().add("Trabajadas").addStyle(estiloCabecera).addStyle(estiloBordeIzq));
-        tabla.addHeaderCell(new Cell().add("Acumuladas").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Nocturnas").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Desayunos").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Comidas").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Cenas").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Toma Deje").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Euros").addStyle(estiloCabecera));
-        tabla.addHeaderCell(new Cell().add("Acum. Hasta Mes").addStyle(estiloCabecera).addStyle(estiloBordeDer));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Trabajadas")).addStyle(estiloCabecera).addStyle(estiloBordeIzq));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Acumuladas")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Nocturnas")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Desayunos")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Comidas")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Cenas")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Toma Deje")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Euros")).addStyle(estiloCabecera));
+        tabla.addHeaderCell(new Cell().add(new Paragraph("Acum. Hasta Mes")).addStyle(estiloCabecera).addStyle(estiloBordeDer));
         // TRABAJADAS
         Cell celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeIzq).addStyle(estiloBordeInf);
         double horas = datos.trabajadasMes(mesActual, añoActual);
-        celda.add(redondeaDecimales(horas));
+        celda.add(new Paragraph(redondeaDecimales(horas)));
         tabla.addCell(celda);
         // ACUMULADAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.acumuladasMes(mesActual, añoActual);
-        celda.add(redondeaDecimales(horas));
+        celda.add(new Paragraph(redondeaDecimales(horas)));
         tabla.addCell(celda);
         // NOCTURNAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.nocturnasMes(mesActual, añoActual);
-        celda.add(redondeaDecimales(horas));
+        celda.add(new Paragraph(redondeaDecimales(horas)));
         tabla.addCell(celda);
         // DESAYUNOS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         int dietas = datos.DesayunosMes(mesActual, añoActual);
-        celda.add(String.format("%02d", dietas));
+        celda.add(new Paragraph(String.format("%02d", dietas)));
         tabla.addCell(celda);
         // COMIDAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         dietas = datos.ComidasMes(mesActual, añoActual);
-        celda.add(String.format("%02d", dietas));
+        celda.add(new Paragraph(String.format("%02d", dietas)));
         tabla.addCell(celda);
         // CENAS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         dietas = datos.CenasMes(mesActual, añoActual);
-        celda.add(String.format("%02d", dietas));
+        celda.add(new Paragraph(String.format("%02d", dietas)));
         tabla.addCell(celda);
         // TOMA DEJES
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.tomaDejeMes(mesActual, añoActual);
-        celda.add(redondeaDecimales(horas));
+        celda.add(new Paragraph(redondeaDecimales(horas)));
         tabla.addCell(celda);
         // EUROS
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf);
         horas = datos.eurosMes(mesActual, añoActual);
-        celda.add(redondeaDecimales(horas));
+        celda.add(new Paragraph(redondeaDecimales(horas)));
         tabla.addCell(celda);
         // ACUMULADAS HASTA MES
         horas = datos.acumuladasHastaMes(mesActual, añoActual);
@@ -1485,7 +1217,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         // Sumamos las horas ajenas al servicio anteriores.
         horas += datos.ajenasHastaMes(mesActual, añoActual);
         // Sumamos las horas del toma y deje si la opcion lo dice
-        if (datos.opciones.isSumarTomaDeje()){
+        if (datos.opciones.isSumarTomaDeje()) {
             horas += datos.tomaDejeHastaMes(mesActual, añoActual);
         }
         celda = new Cell().addStyle(estiloCeldas).addStyle(estiloBordeInf).addStyle(estiloBordeDer);
@@ -1494,21 +1226,21 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         } else {
             celda.addStyle(estiloNegativas);
         }
-        celda.add(redondeaDecimales(horas));
+        celda.add(new Paragraph(redondeaDecimales(horas)));
         tabla.addCell(celda);
         // DEVOLVEMOS LA TABLA
         return tabla;
     }
 
     // REDONDEA EL NUMERO A DOS DECIMALES Y LO DEVUELVE COMO UN STRING
-    private String redondeaDecimales(double horas){
+    private String redondeaDecimales(double horas) {
         if (horas < 0 && horas > -0.01) return "0,00";
         return String.format("%.2f", horas);
     }
 
     // INFIERE EL TURNO DE LA LISTA EN FUNCIÓN DEL DIA BASE ESTABLECIDO
-    private void inferirTurnos () {
-        if (datos.opciones.isInferirTurnos()){
+    private void inferirTurnos() {
+        if (datos.opciones.isInferirTurnos()) {
             int dia = datos.opciones.getDiaBaseTurnos();
             int mes = datos.opciones.getMesBaseTurnos();
             int año = datos.opciones.getAñoBaseTurnos();
@@ -1536,8 +1268,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         maxDate.set(Calendar.MONTH, 11);
         maxDate.set(Calendar.YEAR, 2099);
         // Creamos los parámetros que van a guardarse en los pickers.
-        NumberPicker.LayoutParams pickerParams =
-                new NumberPicker.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        NumberPicker.LayoutParams pickerParams = new NumberPicker.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         pickerParams.setMargins(20, 10, 20, 10);
         // Creamos el linear layout que albergará los spinners.
         LinearLayout linearLayout = new LinearLayout(this);
@@ -1575,7 +1306,8 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         builder.setView(linearLayout);
         builder.setPositiveButton("Aceptar", (s, v) -> irAFecha(mesesPicker.getValue() + 1, añosPicker.getValue()));
         builder.setNeutralButton("Hoy", (dialogInterface, i) -> irAFecha(LocalDate.now().getMonthOfYear(), LocalDate.now().getYear()));
-        builder.setNegativeButton("Cancelar", (dialogInterface, v) -> { });
+        builder.setNegativeButton("Cancelar", (dialogInterface, v) -> {
+        });
         builder.create().show();
     }
 
@@ -1583,44 +1315,44 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
      * LISTENERS BOTONES BARRA INFERIOR
      */
 
-    public void botonBarraCopiarPulsado(View view){
+    public void botonBarraCopiarPulsado(View view) {
 
         copiar(listaDias.get(listaIds.get(0)));
         Toast.makeText(context, R.string.mensaje_diaCopiado, Toast.LENGTH_SHORT).show();
     }
 
-    public void botonBarraPegarPulsado(View view){
-        if (portapapeles == null) return;
+    public void botonBarraPegarPulsado(View view) {
+        if (DiaHelper.DiaEnPortapapeles == null) return;
         for (int id : listaIds) {
             DatosDia dia = listaDias.get(id);
-            dia.setCodigoIncidencia(portapapeles.getCodigoIncidencia());
-            dia.setTextoIncidencia(portapapeles.getTextoIncidencia());
-            dia.setTipoIncidencia(portapapeles.getTipoIncidencia());
-            dia.setLinea(portapapeles.getLinea());
-            dia.setServicio(portapapeles.getServicio());
-            dia.setTurno(portapapeles.getTurno());
-            dia.setTextoLinea(portapapeles.getTextoLinea());
-            dia.setInicio(portapapeles.getInicio());
-            dia.setLugarInicio(portapapeles.getLugarInicio());
-            dia.setFinal(portapapeles.getFinal());
-            dia.setLugarFinal(portapapeles.getLugarFinal());
-            dia.setBus(portapapeles.getBus());
-            dia.setTomaDeje(portapapeles.getTomaDeje());
-            dia.setTomaDejeDecimal(portapapeles.getTomaDejeDecimal());
-            dia.setEuros(portapapeles.getEuros());
-            dia.setAcumuladas(portapapeles.getAcumuladas());
-            dia.setNocturnas(portapapeles.getNocturnas());
-            dia.setTrabajadas(portapapeles.getTrabajadas());
-            dia.setMatricula(portapapeles.getMatricula());
-            dia.setApellidos(portapapeles.getApellidos());
-            dia.setMatriculaSusti(portapapeles.getMatriculaSusti());
-            dia.setApellidosSusti(portapapeles.getApellidosSusti());
-            dia.setCalificacion(portapapeles.getCalificacion());
-            dia.setNotas(portapapeles.getNotas());
+            dia.setCodigoIncidencia(DiaHelper.DiaEnPortapapeles.getCodigoIncidencia());
+            dia.setTextoIncidencia(DiaHelper.DiaEnPortapapeles.getTextoIncidencia());
+            dia.setTipoIncidencia(DiaHelper.DiaEnPortapapeles.getTipoIncidencia());
+            dia.setLinea(DiaHelper.DiaEnPortapapeles.getLinea());
+            dia.setServicio(DiaHelper.DiaEnPortapapeles.getServicio());
+            dia.setTurno(DiaHelper.DiaEnPortapapeles.getTurno());
+            dia.setTextoLinea(DiaHelper.DiaEnPortapapeles.getTextoLinea());
+            dia.setInicio(DiaHelper.DiaEnPortapapeles.getInicio());
+            dia.setLugarInicio(DiaHelper.DiaEnPortapapeles.getLugarInicio());
+            dia.setFinal(DiaHelper.DiaEnPortapapeles.getFinal());
+            dia.setLugarFinal(DiaHelper.DiaEnPortapapeles.getLugarFinal());
+            dia.setBus(DiaHelper.DiaEnPortapapeles.getBus());
+            dia.setTomaDeje(DiaHelper.DiaEnPortapapeles.getTomaDeje());
+            dia.setTomaDejeDecimal(DiaHelper.DiaEnPortapapeles.getTomaDejeDecimal());
+            dia.setEuros(DiaHelper.DiaEnPortapapeles.getEuros());
+            dia.setAcumuladas(DiaHelper.DiaEnPortapapeles.getAcumuladas());
+            dia.setNocturnas(DiaHelper.DiaEnPortapapeles.getNocturnas());
+            dia.setTrabajadas(DiaHelper.DiaEnPortapapeles.getTrabajadas());
+            dia.setMatricula(DiaHelper.DiaEnPortapapeles.getMatricula());
+            dia.setApellidos(DiaHelper.DiaEnPortapapeles.getApellidos());
+            dia.setMatriculaSusti(DiaHelper.DiaEnPortapapeles.getMatriculaSusti());
+            dia.setApellidosSusti(DiaHelper.DiaEnPortapapeles.getApellidosSusti());
+            dia.setCalificacion(DiaHelper.DiaEnPortapapeles.getCalificacion());
+            dia.setNotas(DiaHelper.DiaEnPortapapeles.getNotas());
             datos.guardaDia(dia);
             // Copiamos los servicios del día
             datos.vaciarServiciosDia(dia.getDia(), mesActual, añoActual);
-            Cursor cursor1 = datos.cursorServiciosDia(diaPortapapeles, mesPortapapeles, añoPortapapeles);
+            Cursor cursor1 = datos.cursorServiciosDia(DiaHelper.DiaPortapapeles, DiaHelper.MesPortapapeles, DiaHelper.AñoPortapapeles);
             if (cursor1.getCount() > 0) {
                 while (cursor1.moveToNext()) {
                     ServicioDia sd = new ServicioDia();
@@ -1643,26 +1375,26 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         escribeHoras();
     }
 
-    public void botonBarraFranqueoFestivoPulsado(View view){
+    public void botonBarraFranqueoFestivoPulsado(View view) {
         Incidencia incidenciaFranqueo = datos.getIncidencia(2);
         Incidencia incidenciaFestivo = datos.getIncidencia(9);
         for (int id : listaIds) {
             DatosDia dia = listaDias.get(id);
-            if (!dia.isEsFranqueo() && !dia.isEsFestivo()){
-                if (dia.getCodigoIncidencia() == 0){
-                    setIncidenciaEnDia(dia, incidenciaFranqueo);
+            if (!dia.isEsFranqueo() && !dia.isEsFestivo()) {
+                if (dia.getCodigoIncidencia() == 0) {
+                    Helpers.SetIncidenciaEnDia(dia, incidenciaFranqueo);
                 }
                 dia.setEsFranqueo(true);
-            } else if (dia.isEsFranqueo() && !dia.isEsFestivo()){
+            } else if (dia.isEsFranqueo() && !dia.isEsFestivo()) {
                 if (dia.getCodigoIncidencia() == 0 || dia.getCodigoIncidencia() == 2) {
-                    setIncidenciaEnDia(dia, incidenciaFestivo);
+                    Helpers.SetIncidenciaEnDia(dia, incidenciaFestivo);
                 }
                 dia.setEsFranqueo(false);
                 dia.setEsFestivo(true);
-            } else if (!dia.isEsFranqueo() && dia.isEsFestivo()){
+            } else if (!dia.isEsFranqueo() && dia.isEsFestivo()) {
                 dia.setEsFestivo(false);
                 if (dia.getCodigoIncidencia() == 9) {
-                    setIncidenciaEnDia(dia, null);
+                    Helpers.SetIncidenciaEnDia(dia, null);
                 }
             }
             datos.guardaDia(dia);
@@ -1670,7 +1402,7 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         }
     }
 
-    public void botonBarraAjenasPulsado(View view){
+    public void botonBarraAjenasPulsado(View view) {
         DatosDia dia = listaDias.get(listaIds.get(0));
         // Creamos un intent para devolver los datos de la incidencia
         Intent intent = new Intent(context, EditarHorasAjenas.class);
@@ -1681,47 +1413,31 @@ public class Calendario extends Activity implements AdapterView.OnItemClickListe
         startActivityForResult(intent, ACCION_EDITA_AJENA);
     }
 
-    public void botonBarraRecalcularPulsado(View view){
+    public void botonBarraRecalcularPulsado(View view) {
         for (int id : listaIds) {
             DatosDia datosDia = listaDias.get(id);
-            Cursor cursor = datos.cursorServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
-            DiaHelper.CalcularHorasDia(datosDia, cursor, datos);
+            ArrayList<ServicioDia> servicios = datos.getServiciosDia(datosDia.getDia(), datosDia.getMes(), datosDia.getAño());
+            DiaHelper.CalcularHorasDia(datosDia, servicios, datos);
             datos.guardaDia(datosDia);
         }
         escribeHoras();
         actualizaLista(false);
     }
 
-    public void botonBarraVaciarPulsado(View view){
+    public void botonBarraVaciarPulsado(View view) {
         AlertDialog.Builder aviso = new AlertDialog.Builder(context);
         aviso.setTitle("ATENCION");
         aviso.setMessage("Vas a vaciar los días seleccionados\n\n¿Estás seguro?");
         aviso.setPositiveButton("SI", (dialog, which) -> {
-            Boolean vaciado = false;
             for (int id : listaIds) {
-                vaciado = vaciarDia(listaDias.get(id));
+                Helpers.VaciarDia(listaDias.get(id), datos);
             }
-            if (vaciado) {
-                Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, R.string.error_diaVaciado, Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(context, R.string.mensaje_diaVaciado, Toast.LENGTH_SHORT).show();
             actualizaLista(false);
         });
-        aviso.setNegativeButton("NO", (dialog, which) -> {});
+        aviso.setNegativeButton("NO", (dialog, which) -> {
+        });
         aviso.show();
-    }
-
-    public void setIncidenciaEnDia(DatosDia dia, @Nullable Incidencia incidencia) {
-        if (incidencia == null) {
-            dia.setCodigoIncidencia(0);
-            dia.setTextoIncidencia("");
-            dia.setTipoIncidencia(0);
-        } else {
-            dia.setCodigoIncidencia(incidencia.getCodigo());
-            dia.setTextoIncidencia(incidencia.getTexto());
-            dia.setTipoIncidencia(incidencia.getTipo());
-        }
     }
 
 }

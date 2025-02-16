@@ -16,6 +16,8 @@
  */
 package BaseDatos;
 
+import android.database.Cursor;
+
 public class Relevo {
 
     private int Matricula = 0;
@@ -25,6 +27,27 @@ public class Relevo {
     private int Calificacion = 0;
     private int Deuda = 0;
     private String Notas = "";
+
+    private boolean Seleccionado = false;
+
+
+    //region CONSTRUCTOR
+
+    public Relevo(){}
+
+
+    public Relevo(Cursor cursor){
+        Matricula = cursor.getInt(cursor.getColumnIndexOrThrow("Matricula"));
+        Nombre = cursor.getString(cursor.getColumnIndexOrThrow("Nombre"));
+        Apellidos = cursor.getString(cursor.getColumnIndexOrThrow("Apellidos"));
+        Telefono = cursor.getString(cursor.getColumnIndexOrThrow("Telefono"));
+        Calificacion = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
+        Deuda = cursor.getInt(cursor.getColumnIndexOrThrow("Deuda"));
+        Notas = cursor.getString(cursor.getColumnIndexOrThrow("Notas"));
+    }
+
+
+    //endregion
 
 
     //region GETTERS
@@ -55,6 +78,10 @@ public class Relevo {
 
     public String getNotas() {
         return Notas;
+    }
+
+    public boolean isSeleccionado(){
+        return Seleccionado;
     }
 
 
@@ -88,6 +115,10 @@ public class Relevo {
 
     public void setNotas(String notas) {
         Notas = notas;
+    }
+
+    public void setSeleccionado(boolean seleccionado){
+        Seleccionado = seleccionado;
     }
 
 

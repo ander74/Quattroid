@@ -51,8 +51,11 @@ public class BaseDatos {
     // TIPOS DE ORDEN
     public static final int SIN_ORDEN = 0;
     public static final int RELEVOS_POR_MATRICULA = 1;
-    public static final int RELEVOS_POR_NOMRE = 2;
-    public static final int RELEVOS_POR_APELLIDOS = 3;
+    public static final int RELEVOS_POR_MATRICULA_DESC = 2;
+    public static final int RELEVOS_POR_NOMBRE = 3;
+    public static final int RELEVOS_POR_NOMBRE_DESC = 4;
+    public static final int RELEVOS_POR_APELLIDOS = 5;
+    public static final int RELEVOS_POR_APELLIDOS_DESC = 6;
 
 
     // NOMBRE DE LA BASE DE DATOS
@@ -352,6 +355,18 @@ public class BaseDatos {
         return lista;
     }
 
+
+    public DatosDia getDia(int año, int mes, int dia) {
+        String[] args = {String.valueOf(dia), String.valueOf(mes), String.valueOf(año)};
+        String where = "Dia=? AND Mes=? AND Año=?";
+        Cursor cursor = baseDatos.query(TABLA_CALENDARIO, null, where, args, null, null, null);
+        if (cursor.moveToFirst()) {
+            return new DatosDia(cursor);
+        }
+        return null;
+    }
+
+
     /**
      * @param dia Dia a devolver.
      * @param mes Mes del día a devolver.
@@ -519,6 +534,21 @@ public class BaseDatos {
         String orderby = "Codigo ASC";
         return baseDatos.query(TABLA_INCIDENCIAS, null, null, null, null, null, orderby);
     }
+
+
+    public ArrayList<Incidencia> getIncidencias() {
+        ArrayList<Incidencia> lista = new ArrayList<>();
+        String orderby = "Codigo ASC";
+        Cursor cursor = baseDatos.query(TABLA_INCIDENCIAS, null, null, null, null, null, orderby);
+        if (cursor.moveToFirst()) {
+            do {
+                Incidencia incidencia = new Incidencia(cursor);
+                lista.add(incidencia);
+            } while (cursor.moveToNext());
+        }
+        return lista;
+    }
+
 
     /**
      * @param codigo Codigo de la incidencia a devolver.
@@ -1341,6 +1371,23 @@ public class BaseDatos {
         return baseDatos.query(TABLA_SERVICIOS_DIA, null, where, args, null, null, orderby);
     }
 
+
+    public ArrayList<ServicioDia> getServiciosDia(int dia, int mes, int año) {
+        ArrayList<ServicioDia> lista = new ArrayList<>();
+        String[] args = {String.valueOf(dia), String.valueOf(mes), String.valueOf(año)};
+        String where = "Dia=? AND Mes=? AND Año=?";
+        String orderby = "Servicio ASC, Turno ASC, Linea ASC";
+        Cursor cursor = baseDatos.query(TABLA_SERVICIOS_DIA, null, where, args, null, null, orderby);
+        if (cursor.moveToFirst()) {
+            do {
+                ServicioDia servDia = new ServicioDia(cursor);
+                lista.add(servDia);
+            } while (cursor.moveToNext());
+        }
+        return lista;
+    }
+
+
     /**
      * @param dia Dia del que se quieren vaciar los servicios.
      * @param mes Mes del día del que se quieren vaciar los servicios.
@@ -1397,6 +1444,22 @@ public class BaseDatos {
         String orderBy = "Año ASC, Mes ASC, Dia ASC";
         return baseDatos.query(TABLA_HORAS_AJENAS, null, null, null, null, null, orderBy);
     }
+
+
+    public ArrayList<HoraAjena> getHorasAjenas() {
+        ArrayList<HoraAjena> lista = new ArrayList<>();
+        String orderBy = "Año ASC, Mes ASC, Dia ASC";
+        Cursor cursor = baseDatos.query(TABLA_HORAS_AJENAS, null, null, null, null, null, orderBy);
+        if (cursor.moveToFirst()) {
+            do {
+                HoraAjena ajena = new HoraAjena(cursor);
+                lista.add(ajena);
+            } while (cursor.moveToNext());
+        }
+
+        return lista;
+    }
+
 
     /**
      * @param mes Mes hasta donde se devolverán las horas ajenas.
@@ -1529,18 +1592,18 @@ public class BaseDatos {
         if (l != null) {
             //Recuperamos los servicios de la linea.
             ArrayList<ServicioModel> servicios = getServicios(linea.getLinea());
-            if (servicios != null){
-                for (ServicioModel s : servicios){
+            if (servicios != null) {
+                for (ServicioModel s : servicios) {
                     s.Nuevo = true;
                     if (s.getServiciosAuxiliares() != null) {
-                        for (ServicioAuxiliarModel sa : s.getServiciosAuxiliares()){
+                        for (ServicioAuxiliarModel sa : s.getServiciosAuxiliares()) {
                             sa.Nuevo = true;
                         }
                     }
                 }
                 borrarLinea(l.getLinea());
                 guardarServicios(servicios);
-            } else{
+            } else {
                 borrarLinea(l.getLinea());
             }
         }
@@ -1685,33 +1748,32 @@ public class BaseDatos {
 
     public ArrayList<ServicioModel> getServicios(String linea) {
         String[] args = new String[]{linea};
+        ArrayList<ServicioModel> servicios = new ArrayList<>();
         String where = "Linea=?";
         Cursor cursorServicios = baseDatos.query(TABLA_SERVICIOS, null, where, args, null, null, null);
-        if (cursorServicios.getCount() == 0) return null;
+        if (cursorServicios.getCount() == 0) return servicios;
         if (cursorServicios.moveToFirst()) {
-            ArrayList<ServicioModel> servicios = new ArrayList<>();
             do {
                 ServicioModel servicio = new ServicioModel(cursorServicios);
                 Cursor cursorAuxiliares = cursorServiciosAuxiliares(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+                ArrayList<ServicioAuxiliarModel> auxiliares = new ArrayList<>();
                 if (cursorAuxiliares.moveToFirst()) {
-                    ArrayList<ServicioAuxiliarModel> auxiliares = new ArrayList<>();
                     do {
                         ServicioAuxiliarModel auxiliar = new ServicioAuxiliarModel(cursorAuxiliares);
                         auxiliares.add(auxiliar);
                     } while (cursorAuxiliares.moveToNext());
                     cursorAuxiliares.close();
-                    servicio.setServiciosAuxiliares(auxiliares);
-                    servicio.Modificado = false;
                 }
+                servicio.setServiciosAuxiliares(auxiliares);
+                servicio.Modificado = false;
                 servicios.add(servicio);
             } while (cursorServicios.moveToNext());
             cursorServicios.close();
-            return servicios;
         }
-        return null;
+        return servicios;
     }
 
-    public void guardarServicios(ArrayList<ServicioModel> servicios){
+    public void guardarServicios(ArrayList<ServicioModel> servicios) {
         for (ServicioModel servicio : servicios) {
             // Si el servicio es nuevo o ha sido modificado, lo guardamos.
             if (servicio.Nuevo || servicio.Modificado) {
@@ -1732,7 +1794,6 @@ public class BaseDatos {
         }
 
     }
-
 
 
     public void setServicio(int id, Servicio servicio) {
@@ -1793,6 +1854,40 @@ public class BaseDatos {
 
     //region  METODOS RELEVOS
 
+    public ArrayList<Relevo> getRelevos(int orden) {
+        String orderby = "";
+        switch (orden) {
+            case RELEVOS_POR_MATRICULA:
+                orderby = "Matricula ASC";
+                break;
+            case RELEVOS_POR_MATRICULA_DESC:
+                orderby = "Matricula DESC";
+                break;
+            case RELEVOS_POR_NOMBRE:
+                orderby = "Nombre ASC";
+                break;
+            case RELEVOS_POR_NOMBRE_DESC:
+                orderby = "Nombre DESC";
+                break;
+            case RELEVOS_POR_APELLIDOS:
+                orderby = "Apellidos ASC";
+                break;
+            case RELEVOS_POR_APELLIDOS_DESC:
+                orderby = "Apellidos DESC";
+                break;
+        }
+
+        Cursor cursor = baseDatos.query(TABLA_RELEVOS, null, null, null, null, null, orderby);
+        ArrayList<Relevo> lista = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                Relevo relevo = new Relevo(cursor);
+                lista.add(relevo);
+            } while (cursor.moveToNext());
+        }
+        return lista;
+    }
+
     public Cursor cursorRelevos(int orden) {
 
         String orderBy;
@@ -1800,11 +1895,20 @@ public class BaseDatos {
             case RELEVOS_POR_MATRICULA:
                 orderBy = "Matricula ASC";
                 break;
-            case RELEVOS_POR_NOMRE:
+            case RELEVOS_POR_MATRICULA_DESC:
+                orderBy = "Matricula DESC";
+                break;
+            case RELEVOS_POR_NOMBRE:
                 orderBy = "Nombre ASC";
+                break;
+            case RELEVOS_POR_NOMBRE_DESC:
+                orderBy = "Nombre DESC";
                 break;
             case RELEVOS_POR_APELLIDOS:
                 orderBy = "Apellidos ASC";
+                break;
+            case RELEVOS_POR_APELLIDOS_DESC:
+                orderBy = "Apellidos DESC";
                 break;
             default:
                 orderBy = "Matricula ASC";
@@ -1887,6 +1991,23 @@ public class BaseDatos {
         String orderBy = "ServicioAuxiliar ASC, TurnoAuxiliar ASC";
         return baseDatos.query(TABLA_SERVICIOS_AUXILIARES, null, where, args, null, null, orderBy);
     }
+
+
+    public ArrayList<ServicioAuxiliarModel> getServiciosAuxiliares(String linea, String servicio, int turno) {
+        String[] args = new String[]{linea, servicio, String.valueOf(turno)};
+        ArrayList<ServicioAuxiliarModel> lista = new ArrayList<>();
+        String where = "Linea=? AND Servicio=? AND Turno=?";
+        String orderBy = "ServicioAuxiliar ASC, TurnoAuxiliar ASC";
+        Cursor cursor = baseDatos.query(TABLA_SERVICIOS_AUXILIARES, null, where, args, null, null, orderBy);
+        if (cursor.moveToFirst()) {
+            do {
+                ServicioAuxiliarModel servAux = new ServicioAuxiliarModel(cursor);
+                lista.add(servAux);
+            } while (cursor.moveToNext());
+        }
+        return lista;
+    }
+
 
     public void setServicioAuxiliar(ServicioAuxiliar servicioAuxiliar) {
         hayCambios = true;

@@ -19,7 +19,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/vertical"
     android:layout_height="match_parent"
-    android:background="#ffe0ebff"
+    android:background="#FFEEEEEE"
     android:padding="5dp">
 
     <!-- LAYOUT PARA RECIBIR EL FOCO -->
@@ -45,9 +45,9 @@
             android:id="@+id/et_texto_linea"
             style="@style/edit_text"
             android:layout_width="match_parent"
-            android:nextFocusDown="@+id/et_inicio"
-            android:inputType="textCapWords"
             android:hint="Texto de línea"
+            android:inputType="textCapWords"
+            android:nextFocusDown="@+id/et_inicio"
             android:text="" />
 
         <EditText
@@ -106,8 +106,8 @@
             android:id="@+id/ly_auxiliares"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:divider="@null"
             android:dividerHeight="0dp"
             android:orientation="vertical">
@@ -122,9 +122,9 @@
                 android:id="@+id/listaAuxiliares"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:divider="@null"
-                android:dividerHeight="-1dp"
-                android:layout_marginTop="5dp"/>
+                android:dividerHeight="-1dp" />
 
         </LinearLayout>
 
@@ -135,26 +135,26 @@
         android:id="@+id/tv_incidencia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/bt_nuevo_servicio"
         android:layout_alignBottom="@+id/bt_nuevo_servicio"
         android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/bt_nuevo_servicio"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/bt_incidencia"
         android:clickable="true"
         android:gravity="center"
         android:onClick="botonPulsado"
         android:padding="8dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginRight="4dp"
         android:text="Incidencia Desconocida"
         android:textSize="22sp"
         android:textStyle="bold" />
 
-<!--    <View-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="2dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:layout_marginRight="5dp"-->
-<!--        android:background="#000000" />-->
+    <!--    <View-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="2dp"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:layout_marginRight="5dp"-->
+    <!--        android:background="#000000" />-->
 
     <!-- CONTENIDO -->
     <ScrollView
@@ -165,7 +165,7 @@
             android:id="@+id/principal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffe0ebff"
+            android:background="#FFEEEEEE"
             android:orientation="vertical">
 
 
@@ -174,20 +174,20 @@
                 android:id="@+id/ly_susti"
                 style="@style/horizontal">
 
-                    <TextView
-                        android:id="@+id/tv_susti"
-                        style="@style/text_view_basico"
-                        android:text="Compañero/a: " />
+                <TextView
+                    android:id="@+id/tv_susti"
+                    style="@style/text_view_basico"
+                    android:text="Compañero/a: " />
 
-                    <EditText
-                        android:id="@+id/et_matricula_susti"
-                        style="@style/edit_text_basico"
-                        android:layout_width="wrap_content"
-                        android:gravity="center"
-                        android:hint="Matrícula"
-                        android:inputType="numberDecimal"
-                        android:nextFocusDown="@+id/et_linea"
-                        android:text="" />
+                <EditText
+                    android:id="@+id/et_matricula_susti"
+                    style="@style/edit_text_basico"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:hint="Matrícula"
+                    android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_linea"
+                    android:text="" />
 
             </LinearLayout>
 
@@ -201,19 +201,19 @@
                 <CheckBox
                     android:id="@+id/cb_huelga"
                     style="@style/text_view_basico"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:text="Huelga Parcial: " />
 
                 <EditText
                     android:id="@+id/et_huelga"
                     style="@style/edit_text_basico"
-                    android:gravity="center"
                     android:layout_width="wrap_content"
+                    android:gravity="center"
                     android:hint="Horas de paro"
-                    android:nextFocusDown="@+id/et_linea"
                     android:inputType="numberDecimal"
+                    android:nextFocusDown="@+id/et_linea"
                     android:text="" />
 
             </LinearLayout>
@@ -222,8 +222,8 @@
             <!-- LINEA - SERVICIO - TURNO -->
             <LinearLayout
                 android:id="@+id/ly_linea"
-                android:layout_marginTop="10dp"
                 style="@style/horizontal"
+                android:layout_marginTop="10dp"
                 android:weightSum="3">
 
                 <LinearLayout
@@ -306,9 +306,9 @@
                     <EditText
                         android:id="@+id/et_inicio"
                         style="@style/edit_text_basico"
+                        android:layout_width="match_parent"
                         android:gravity="center"
                         android:inputType="numberDecimal"
-                        android:layout_width="match_parent"
                         android:nextFocusDown="@+id/et_final"
                         android:text="" />
                 </LinearLayout>
@@ -359,17 +359,17 @@
             <!-- HORAS -->
             <LinearLayout
                 style="@style/horizontal"
-                android:gravity="center_horizontal"
-                android:layout_weight="3">
+                android:layout_weight="3"
+                android:gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/tv_trabajadas"
                     style="@style/text_view_basico"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:padding="5dp"
                     android:background="@drawable/fondo_horas_dia"
                     android:gravity="center_horizontal"
+                    android:padding="5dp"
                     android:text="Tra.: 0,00"
                     android:textColor="#ff000000" />
 
@@ -378,11 +378,11 @@
                     style="@style/text_view_basico"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:background="@drawable/fondo_horas_dia"
                     android:clickable="true"
+                    android:gravity="center_horizontal"
                     android:longClickable="true"
                     android:padding="5dp"
-                    android:background="@drawable/fondo_horas_dia"
-                    android:gravity="center_horizontal"
                     android:text="Acu.: 0,00"
                     android:textColor="#ffff0003" />
 
@@ -391,9 +391,9 @@
                     style="@style/text_view_basico"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:background="@drawable/fondo_horas_dia"
                     android:gravity="center_horizontal"
                     android:padding="5dp"
-                    android:background="@drawable/fondo_horas_dia"
                     android:text="Noc.: 0,00"
                     android:textColor="#ff3432ff" />
 
@@ -416,21 +416,21 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end|right"
                     android:layout_weight="1"
+                    android:gravity="end|right"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/desayuno"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="10dp"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/desayuno"
+                        android:layout_marginRight="10dp"
+                        android:adjustViewBounds="true"
                         android:maxHeight="36dp"
-                        android:adjustViewBounds="true"/>
+                        android:padding="4dp"
+                        android:src="@drawable/desayuno" />
 
                     <!-- Comida -->
                     <ImageView
@@ -438,12 +438,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="10dp"
                         android:layout_marginLeft="10dp"
-                        android:padding="4dp"
-                        android:src="@drawable/comida"
+                        android:layout_marginRight="10dp"
+                        android:adjustViewBounds="true"
                         android:maxHeight="36dp"
-                        android:adjustViewBounds="true"/>
+                        android:padding="4dp"
+                        android:src="@drawable/comida" />
 
                     <!-- Cena -->
                     <ImageView
@@ -451,12 +451,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginRight="10dp"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/cena"
-                        android:padding="4dp"
+                        android:layout_marginRight="10dp"
+                        android:adjustViewBounds="true"
                         android:maxHeight="36dp"
-                        android:adjustViewBounds="true"/>
+                        android:padding="4dp"
+                        android:src="@drawable/cena" />
 
                 </LinearLayout>
 

@@ -17,21 +17,27 @@
 package com.quattro.quattroid;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.InputType;
-import android.view.ContextMenu;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.quattro.models.ServicioAuxiliarModel;
+
+import java.util.ArrayList;
 
 import BaseDatos.BaseDatos;
 import BaseDatos.Servicio;
@@ -41,18 +47,20 @@ import Objetos.Colores;
 import Objetos.Hora;
 
 public class EditarServicio extends Activity implements AdapterView.OnItemClickListener,
-                                                        View.OnFocusChangeListener,
-                                                        View.OnLongClickListener {
+        View.OnFocusChangeListener,
+        View.OnLongClickListener,
+        AbsListView.MultiChoiceModeListener {
 
     // CONSTANTES
     private static final int ACCION_EDITA_SERVICIO_AUXILIAR = 1;
+    private final ArrayList<Integer> listaIds = new ArrayList<>();
 
     // VARIABLES
     Context context = null;
     BaseDatos datos = null;
     Bundle datosIntent = null;
-    Cursor cursor = null;
     AdaptadorServiciosAuxiliares adaptador = null;
+    ArrayList<ServicioAuxiliarModel> serviciosAuxiliares = null;
     Servicio serv = null;
     String lineatext = "";
     int id = -1;
@@ -72,6 +80,8 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     EditText tomaDeje = null;
     EditText euros = null;
     ListView listaServicios = null;
+    Button botonAddServicioAuxiliar = null;
+    Button botonBorrarServicioAuxiliar = null;
 
     // AL CREARSE LA ACTIVITY
     @Override
@@ -86,7 +96,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         context = this;
         titulo = findViewById(R.id.titulo);
         complementarios = findViewById(R.id.tv_complementarios);
-	    servicio = findViewById(R.id.et_servicio);
+        servicio = findViewById(R.id.et_servicio);
         turno = findViewById(R.id.et_turno);
         inicio = findViewById(R.id.et_inicio);
         fin = findViewById(R.id.et_final);
@@ -95,21 +105,25 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         tomaDeje = findViewById(R.id.et_tomaDeje);
         euros = findViewById(R.id.et_euros);
         listaServicios = findViewById(R.id.lw_listaServicios);
+        botonAddServicioAuxiliar = findViewById(R.id.bt_addServicio);
+        botonBorrarServicioAuxiliar = findViewById(R.id.bt_borrarServicio);
 
         // Inicialización de la base de datos
         datos = new BaseDatos(this);
-        //opciones = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Definimos el vibrador.
         vibrador = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
 
         // Activamos el teclado numérico en los campos habituales.
-        if (datos.opciones.isActivarTecladoNumerico()){ //opciones.getBoolean("ActivarTecladoNumerico", false)){
+        if (datos.opciones.isActivarTecladoNumerico()) { //opciones.getBoolean("ActivarTecladoNumerico", false)){
             servicio.setInputType(InputType.TYPE_CLASS_PHONE);
         }
 
-
         // Registrar los listeners
+        listaServicios.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listaServicios.setDivider(null);
+        listaServicios.setDividerHeight(0);
+        listaServicios.setMultiChoiceModeListener(this);// MULTI-SELECCION
         servicio.setOnFocusChangeListener(this);
         servicio.setOnLongClickListener(this);
         turno.setOnFocusChangeListener(this);
@@ -119,6 +133,8 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         euros.setOnFocusChangeListener(this);
         listaServicios.setOnItemClickListener(this);
         registerForContextMenu(listaServicios);
+        botonAddServicioAuxiliar.setOnClickListener(this::botonAddServicioAuxiliarPulsado);
+        botonBorrarServicioAuxiliar.setOnClickListener(this::botonBorrarServicioAuxiliarPulsado);
 
         // Recogemos los datos del intent
         datosIntent = getIntent().getExtras();
@@ -126,8 +142,8 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         if (lineatext == null) lineatext = "";
         id = datosIntent.getInt("Id", -1);
 
-        // Definir si vamos a editar un servicio o crear una nuevo.
-        if (id == -1){
+        // Definir si vamos a editar un servicio o crear uno nuevo.
+        if (id == -1) {
             //SERVICIO NUEVO
             if (lineatext.equals("")) finish();
             titulo.setText("NUEVO SERVICIO");
@@ -153,7 +169,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
             lugarInicio.setText(serv.getLugarInicio());
             lugarFinal.setText(serv.getLugarFinal());
             tomaDeje.setText(String.valueOf(serv.getTomaDeje()));
-            if (serv.getEuros() == 0){
+            if (serv.getEuros() == 0) {
                 euros.setText("");
             } else {
                 euros.setText(Hora.textoDecimal(serv.getEuros()));
@@ -163,10 +179,10 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         // Ponemos el subtítulo de la ActionBar
         getActionBar().setSubtitle("Línea " + serv.getLinea());
         // Llenar la lista con los servicios auxiliares.
-        cursor = datos.cursorServiciosAuxiliares(serv.getLinea(), serv.getServicio(), serv.getTurno());
-        adaptador = new AdaptadorServiciosAuxiliares(context, cursor);
+        serviciosAuxiliares = datos.getServiciosAuxiliares(serv.getLinea(), serv.getServicio(), serv.getTurno());
+        adaptador = new AdaptadorServiciosAuxiliares(context, serviciosAuxiliares);
         listaServicios.setAdapter(adaptador);
-        if (cursor.getCount() == 0){
+        if (serviciosAuxiliares.isEmpty()) {
             complementarios.setText("No hay servicios complementarios");
         } else {
             complementarios.setText("Servicios complementarios");
@@ -183,20 +199,11 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     // AL PULSAR UNA OPCION DEL MENÚ SUPERIOR.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        Intent intent = null;
         int idd = item.getItemId();
-        switch (idd){
+        switch (idd) {
             case R.id.bt_guardar:
                 Guardar();
                 finish();
-                return true;
-            case R.id.bt_nuevo:
-                validarCampos();
-                if (!serv.getServicio().equals("") && serv.getTurno() != 0){
-                    intent = new Intent(context, EditarServiciosDia.class);
-                    startActivityForResult(intent, ACCION_EDITA_SERVICIO_AUXILIAR);
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -204,44 +211,44 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     }
 
     // CREAR MENU CONTEXTUAL
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.contexto_editarservicio, menu);
-    }
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+//        super.onCreateContextMenu(menu, v, menuInfo);
+//        getMenuInflater().inflate(R.menu.contexto_editarservicio, menu);
+//    }
 
     // AL PULSAR UNA OPCION DEL MENU CONTEXTUAL
-    @Override
-    public boolean onContextItemSelected(MenuItem item){
-
-        // Guardar el elemento que ha provocado el menu contextual
-        AdapterView.AdapterContextMenuInfo acmi =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int elementoPulsado = acmi.position;
-
-        // Determinar la opción pulsada
-        switch (item.getItemId()){
-            case R.id.bt_borrar:
-                Cursor c = adaptador.getCursor();
-                datos.borraServicioAuxiliar(c.getInt(c.getColumnIndexOrThrow("_id")));
-                actualizarCursor();
-                return true;
-            case R.id.bt_vaciar:
-                validarCampos();
-                datos.vaciarServiciosAuxiliares(serv.getLinea(), serv.getServicio(), serv.getTurno());
-                actualizarCursor();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item){
+//
+//        // Guardar el elemento que ha provocado el menu contextual
+//        AdapterView.AdapterContextMenuInfo acmi =
+//                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//        int elementoPulsado = acmi.position;
+//
+//        // Determinar la opción pulsada
+//        switch (item.getItemId()){
+//            case R.id.bt_borrar:
+//                Cursor c = adaptador.getCursor();
+//                datos.borraServicioAuxiliar(c.getInt(c.getColumnIndexOrThrow("_id")));
+//                actualizarCursor();
+//                return true;
+//            case R.id.bt_vaciar:
+//                validarCampos();
+//                datos.vaciarServiciosAuxiliares(serv.getLinea(), serv.getServicio(), serv.getTurno());
+//                actualizarCursor();
+//                return true;
+//            default:
+//                return super.onContextItemSelected(item);
+//        }
+//    }
 
     // AL PULSAR UNA TECLA
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Al pulsar la tecla retroceso
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            if (datos.opciones.isGuardarSiempre()){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            if (datos.opciones.isGuardarSiempre()) {
                 Guardar();
             } else {
                 setResult(RESULT_CANCELED);
@@ -255,13 +262,13 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
     public boolean onLongClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.et_servicio:
                 vibrador.vibrate(50);
-                if (((EditText)v).getInputType() == android.text.InputType.TYPE_CLASS_TEXT){
-                    ((EditText)v).setInputType(InputType.TYPE_CLASS_PHONE);
+                if (((EditText) v).getInputType() == android.text.InputType.TYPE_CLASS_TEXT) {
+                    ((EditText) v).setInputType(InputType.TYPE_CLASS_PHONE);
                 } else {
-                    ((EditText)v).setInputType(InputType.TYPE_CLASS_TEXT);
+                    ((EditText) v).setInputType(InputType.TYPE_CLASS_TEXT);
                 }
                 break;
         }
@@ -273,18 +280,18 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         // Extraemos los datos del cursor
-        Cursor c = adaptador.getCursor();
+        ServicioAuxiliarModel servicioPulsado = serviciosAuxiliares.get(position);
 
         // Creamos un intent para editar el servicio
         Intent intent = new Intent(context, EditarServiciosDia.class);
-        intent.putExtra("Linea", c.getString(c.getColumnIndexOrThrow("LineaAuxiliar")));
-        intent.putExtra("Servicio", c.getString(c.getColumnIndexOrThrow("ServicioAuxiliar")));
-        intent.putExtra("Turno", c.getInt(c.getColumnIndexOrThrow("TurnoAuxiliar")));
-        intent.putExtra("Inicio", c.getString(c.getColumnIndexOrThrow("Inicio")));
-        intent.putExtra("Final", c.getString(c.getColumnIndexOrThrow("Final")));
-        intent.putExtra("LugarInicio", c.getString(c.getColumnIndexOrThrow("LugarInicio")));
-        intent.putExtra("LugarFinal", c.getString(c.getColumnIndexOrThrow("LugarFinal")));
-        intent.putExtra("Id", c.getInt(c.getColumnIndexOrThrow("_id")));
+        intent.putExtra("Linea", servicioPulsado.getLineaAuxiliar());
+        intent.putExtra("Servicio", servicioPulsado.getServicioAuxiliar());
+        intent.putExtra("Turno", servicioPulsado.getTurnoAuxiliar());
+        intent.putExtra("Inicio", servicioPulsado.getInicio());
+        intent.putExtra("Final", servicioPulsado.getFinal());
+        intent.putExtra("LugarInicio", servicioPulsado.getLugarInicio());
+        intent.putExtra("LugarFinal", servicioPulsado.getLugarFinal());
+        intent.putExtra("Id", servicioPulsado.getId());
         startActivityForResult(intent, ACCION_EDITA_SERVICIO_AUXILIAR);
     }
 
@@ -292,17 +299,19 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) return;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.et_servicio:
                 servicio.setText(Hora.validarServicio(servicio.getText().toString()));
                 break;
             case R.id.et_turno:
                 String s = turno.getText().toString().trim();
-                switch (s){
-                    case "1":case "01":
+                switch (s) {
+                    case "1":
+                    case "01":
                         turno.setText("1");
                         break;
-                    case "2":case "02":
+                    case "2":
+                    case "02":
                         turno.setText("2");
                         break;
                     default:
@@ -329,11 +338,11 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
 
     // AL VOLVER DE UNA SUBACTIVITY
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Evaluamos el codigo de petición.
-        switch (requestCode){
+        switch (requestCode) {
             case ACCION_EDITA_SERVICIO_AUXILIAR:
                 if (resultCode == RESULT_OK) {
                     // Recogemos los datos del intent
@@ -361,7 +370,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
                     if (idd != -1) datos.borraServicioAuxiliar(idd);
                     // Guardamos el servicio auxiliar.
                     datos.setServicioAuxiliar(saux);
-                    actualizarCursor();
+                    actualizarLista();
                 }
                 break;
             default:
@@ -375,15 +384,80 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         super.onDestroy();
     }
 
+
+    //******************************************************************************************
+    //region Multi selección
+
+    // MULTI-SELECCION: Al seleccionar un día del calendario.
+    @Override
+    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+        int checkedCount = listaServicios.getCheckedItemCount();
+        mode.setTitle(checkedCount + " Selec.");
+
+        if (checked) {
+            listaIds.add(position);
+            serviciosAuxiliares.get(position).setSeleccionado(true);
+        } else {
+            Integer pos = position;
+            listaIds.remove(pos);
+            serviciosAuxiliares.get(position).setSeleccionado(false);
+        }
+
+        if (checkedCount > 0) {
+            activarBoton(botonBorrarServicioAuxiliar);
+            desactivarBoton(botonAddServicioAuxiliar);
+        } else {
+            activarBoton(botonAddServicioAuxiliar);
+            desactivarBoton(botonBorrarServicioAuxiliar);
+        }
+        adaptador.notifyDataSetChanged();
+    }
+
+    // MULTI-SELECCION: Al crearse el menú para los días seleccionados.
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        return true;
+    }
+
+    // MULTI-SELECCION: Al prepararse el menú para los días seleccionados.
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    // MULTI-SELECCION: Al hacer click en un elemento del menú para los días seleccionados.
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
+        return true;
+    }
+
+    // MULTI-SELECCION: Al quitarse todos los días seleccionados.
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        activarBoton(botonAddServicioAuxiliar);
+        desactivarBoton(botonBorrarServicioAuxiliar);
+        //Refrescar la lista.
+        for (ServicioAuxiliarModel d : serviciosAuxiliares) {
+            d.setSeleccionado(false);
+        }
+        listaIds.clear();
+        adaptador.notifyDataSetChanged();
+    }
+
+    //endregion
+    // ******************************************************************************************
+
+
     // ACTUALIZAMOS LA LISTA
-    private void actualizarCursor(){
-        cursor = datos.cursorServiciosAuxiliares(serv.getLinea(), serv.getServicio(), serv.getTurno());
-        adaptador.changeCursor(cursor);
+    private void actualizarLista() {
+        serviciosAuxiliares = datos.getServiciosAuxiliares(serv.getLinea(), serv.getServicio(), serv.getTurno());
+        adaptador = new AdaptadorServiciosAuxiliares(this, serviciosAuxiliares);
+        listaServicios.setAdapter(adaptador);
         adaptador.notifyDataSetChanged();
         Calculos.setAlturaLista(listaServicios);
-        if (cursor.getCount() == 0){
+        if (serviciosAuxiliares.isEmpty()) {
             complementarios.setText("No hay servicios complementarios");
-            if (id == -1){
+            if (id == -1) {
                 desbloquearServicio();
             } else {
                 bloquearServicio();
@@ -395,7 +469,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     }
 
     // BLOQUEAR EL SERVICIO Y EL TURNO
-    private void bloquearServicio(){
+    private void bloquearServicio() {
         servicio.setTextColor(Colores.ROJO_OSCURO);
         servicio.setFocusable(false);
         turno.setTextColor(Colores.ROJO_OSCURO);
@@ -404,7 +478,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     }
 
     // DESBLOQUEAR EL SERVICIO Y EL TURNO
-    private void desbloquearServicio(){
+    private void desbloquearServicio() {
         servicio.setTextColor(Colores.NEGRO);
         servicio.setFocusable(true);
         turno.setTextColor(Colores.NEGRO);
@@ -413,7 +487,7 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     }
 
     // VALIDAR CAMPOS
-    private void validarCampos(){
+    private void validarCampos() {
         servicio.setText(Hora.validarServicio(servicio.getText().toString()));
         serv.setServicio(servicio.getText().toString());
         inicio.setText(Hora.horaToString(inicio.getText().toString()));
@@ -421,12 +495,14 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         fin.setText(Hora.horaToString(fin.getText().toString()));
         serv.setFinal(fin.getText().toString());
         String s = turno.getText().toString().trim();
-        switch (s){
-            case "1":case "01":
+        switch (s) {
+            case "1":
+            case "01":
                 turno.setText("1");
                 serv.setTurno(1);
                 break;
-            case "2":case "02":
+            case "2":
+            case "02":
                 turno.setText("2");
                 serv.setTurno(2);
                 break;
@@ -438,14 +514,14 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
         serv.setLugarFinal(lugarFinal.getText().toString().trim());
 
         s = Hora.horaToString(tomaDeje.getText().toString().trim());
-        if (s.equals("")){
+        if (s.equals("")) {
             serv.setTomaDeje("");
         } else {
             serv.setTomaDeje(s);
         }
 
         s = Hora.validaHoraDecimal(euros.getText().toString().trim());
-        if (s.equals("")){
+        if (s.equals("")) {
             serv.setEuros(0d);
         } else {
             serv.setEuros(Double.valueOf(s.replace(",", ".")));
@@ -454,12 +530,53 @@ public class EditarServicio extends Activity implements AdapterView.OnItemClickL
     }
 
 
-    private void Guardar(){
+    private void Guardar() {
         validarCampos();
-        if (!serv.getServicio().equals("") && serv.getTurno() != 0){
+        if (!serv.getServicio().equals("") && serv.getTurno() != 0) {
             datos.setServicio(id, serv);
         }
         setResult(RESULT_OK);
+    }
+
+
+    private void botonAddServicioAuxiliarPulsado(View view) {
+        validarCampos();
+        if (!serv.getServicio().equals("") && serv.getTurno() != 0) {
+            Intent intent = new Intent(context, EditarServiciosDia.class);
+            startActivityForResult(intent, ACCION_EDITA_SERVICIO_AUXILIAR);
+        }
+    }
+
+
+    private void botonBorrarServicioAuxiliarPulsado(View view) {
+        AlertDialog.Builder aviso = new AlertDialog.Builder(context);
+        aviso.setTitle("ATENCION");
+        aviso.setMessage("Vas a borrar los servicios seleccionadas\n\n¿Estás seguro?");
+        aviso.setPositiveButton("SI", (dialog, which) -> {
+            ArrayList<Integer> ids = new ArrayList<>();
+            ids.addAll(listaIds);
+            for (int id : ids) {
+                ServicioAuxiliarModel servSeleccionado = serviciosAuxiliares.get(id);
+                listaServicios.setItemChecked(serviciosAuxiliares.indexOf(servSeleccionado), false);
+                datos.borraServicioAuxiliar(servSeleccionado.getId());
+            }
+            actualizarLista();
+        });
+        aviso.setNegativeButton("NO", (dialog, which) -> {
+        });
+        aviso.show();
+    }
+
+
+    private void activarBoton(Button boton) {
+        boton.setEnabled(true);
+        boton.setVisibility(View.VISIBLE);
+    }
+
+
+    private void desactivarBoton(Button boton) {
+        boton.setEnabled(false);
+        boton.setVisibility(View.GONE);
     }
 
 }

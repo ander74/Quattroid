@@ -18,6 +18,7 @@ package BaseDatos;
 
 public class Servicio {
 
+    private int Id = 0;
     private String Linea = "";
     private String Servicio = "";
     private int Turno = 0;
@@ -30,7 +31,13 @@ public class Servicio {
     private String TomaDeje = "";
     private double Euros = 0d;
 
+    private boolean Seleccionado = false;
+
     //region GETTERS
+
+    public int getId() {
+        return Id;
+    }
 
     public String getLinea() {
         return Linea;
@@ -68,9 +75,17 @@ public class Servicio {
         return Euros;
     }
 
+    public boolean isSeleccionado(){
+        return Seleccionado;
+    }
+
     //endregion
 
     //region SETTERS
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public void setLinea(String linea) {
         Linea = linea;
@@ -106,6 +121,10 @@ public class Servicio {
 
     public void setEuros(double euros) {
         Euros = euros;
+    }
+
+    public void setSeleccionado(boolean seleccionado){
+        Seleccionado = seleccionado;
     }
 
     //endregion

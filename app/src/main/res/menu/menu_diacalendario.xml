@@ -25,13 +25,13 @@
         android:icon="@android:drawable/ic_menu_rotate"
         android:showAsAction="ifRoom"
         tools:ignore="AppCompatResource" />
-    <item
-        android:id="@+id/bt_nuevo"
-        android:title="Añadir auxiliar"
-        android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="ifRoom"
-        tools:ignore="AppCompatResource" />
+<!--    <item-->
+<!--        android:id="@+id/bt_nuevo"-->
+<!--        android:title="Añadir auxiliar"-->
+<!--        android:orderInCategory="100"-->
+<!--        android:icon="@android:drawable/ic_menu_add"-->
+<!--        android:showAsAction="ifRoom"-->
+<!--        tools:ignore="AppCompatResource" />-->
     <item
         android:id="@+id/bt_guardar"
         android:title="Guardar"

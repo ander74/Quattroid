@@ -35,6 +35,7 @@ public class Herramientas extends Activity {
     LinearLayout btConsultas = null;
     LinearLayout btBusquedas = null;
     LinearLayout btAjustes = null;
+    LinearLayout titulo = null;
 
 
     // AL CREARSE LA ACTIVITY
@@ -47,13 +48,19 @@ public class Herramientas extends Activity {
         // Establecemos el contexto
         context = this;
 
+        // Instanciamos los elementos
+        titulo = findViewById(R.id.titulo);
+
+        // Registrar los listeners
+        titulo.setOnLongClickListener(this::tituloPulsadoLargo);
+
     }
 
     // AL PULSAR UNA TECLA
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Al pulsar la tecla retroceso
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -66,12 +73,12 @@ public class Herramientas extends Activity {
     }
 
     // AL PULSAR UN BOTON
-    public void BotonPulsado(View view){
+    public void BotonPulsado(View view) {
 
         Intent intent = null;
 
         // Evaluar el view que ha llamado.
-        switch (view.getId()){
+        switch (view.getId()) {
 
             // Botón Consultas Pulsado
             case R.id.bt_estadisticas:
@@ -113,5 +120,14 @@ public class Herramientas extends Activity {
         }
 
     }
+
+
+    // AL PULSAR LARGO EN EL TÍTULO
+    private boolean tituloPulsadoLargo(View view) {
+        Intent intent = new Intent(this, Utilidades.class);
+        startActivity(intent);
+        return true;
+    }
+
 
 }

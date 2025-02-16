@@ -1,6 +1,7 @@
 package com.quattro.models;
 
 import android.database.Cursor;
+
 import BaseDatos.ServicioAuxiliar;
 
 public class ServicioAuxiliarModel {
@@ -11,6 +12,7 @@ public class ServicioAuxiliarModel {
     public ServicioAuxiliarModel() { }
 
     public ServicioAuxiliarModel(Cursor cursor){
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
         Servicio = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
         Turno = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
@@ -44,6 +46,7 @@ public class ServicioAuxiliarModel {
 
     public ServicioAuxiliar ToServicioAuxiliar(){
         ServicioAuxiliar auxiliar = new ServicioAuxiliar();
+        auxiliar.setId(Id);
         auxiliar.setLinea(Linea);
         auxiliar.setServicio(Servicio);
         auxiliar.setTurno(Turno);
@@ -59,6 +62,7 @@ public class ServicioAuxiliarModel {
 
 
     public void FromModel(ServicioAuxiliarModel servicio){
+        Id = servicio.getId();
         Linea = servicio.getLinea();
         Servicio = servicio.getServicio();
         Turno = servicio.getTurno();
@@ -85,6 +89,19 @@ public class ServicioAuxiliarModel {
 
 
     //region PROPIEDADES
+
+
+    // ID
+    private int Id = 0;
+    public int getId() {
+        return Id;
+    }
+    public void setId(int id) {
+        if (id != Id) {
+            Id = id;
+            Modificado = true;
+        }
+    }
 
 
     // LINEA
@@ -212,6 +229,17 @@ public class ServicioAuxiliarModel {
     public void setLugarFinal(String lugarFinal) {
         if (!lugarFinal.equals(LugarFinal)) {
             LugarFinal = lugarFinal;
+            Modificado = true;
+        }
+    }
+
+    private boolean Seleccionado = false;
+    public boolean isSeleccionado() {
+        return Seleccionado;
+    }
+    public void setSeleccionado(boolean seleccionado) {
+        if (seleccionado != Seleccionado) {
+            Seleccionado = seleccionado;
             Modificado = true;
         }
     }

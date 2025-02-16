@@ -1,4 +1,3 @@
-
 <!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
@@ -15,223 +14,234 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:ignore="HardcodedText,KeyboardInaccessibleWidget,UseCompoundDrawables,RtlSymmetry"
     android:background="#FF000000">
 
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    android:layout_gravity="center"
-    android:background="#000000">
-
-    <!-- TITULO -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="40dp"
-        android:gravity="center_horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/herramientas"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ffdcdcdc"
-            android:textStyle="bold"
-            android:text="@string/bt_herramientas"/>
-
-    </LinearLayout>
-
-    <!-- ESTADISTICAS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
         android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_busquedas"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_estadisticas">
+        android:layout_gravity="center"
+        android:background="#000000">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/graficobarras"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- TITULO -->
+        <LinearLayout
+            android:id="@+id/titulo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#ffdddd00"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_estadisticas"
-            android:paddingLeft="25dp"/>
-    </LinearLayout>
+            android:orientation="vertical"
+            android:layout_marginBottom="40dp"
+            android:longClickable="true"
+            android:gravity="center_horizontal">
 
-    <!-- BUSQUEDAS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_calendario"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_busquedas">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Herramientas"
+                android:src="@drawable/herramientas"
+                tools:ignore="HardcodedText" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/busquedas"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffdcdcdc"
+                android:textStyle="bold"
+                android:text="@string/bt_herramientas" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        </LinearLayout>
+
+        <!-- ESTADISTICAS -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_busquedas"
-            android:textColor="#ff00aa00"
-            android:paddingLeft="25dp"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:clickable="true"
+            android:longClickable="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_busquedas"
+            android:onClick="BotonPulsado"
+            android:id="@+id/bt_estadisticas">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Estadísticas"
+                android:src="@drawable/graficobarras" />
 
-    <!-- INCIDENCIAS -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_ajenas"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_incidencias">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffdddd00"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/bt_estadisticas"
+                android:paddingStart="25dp" />
+        </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/incidencias"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- BUSQUEDAS -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#ffaa00aa"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_incidencias"
-            android:paddingLeft="25dp"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:clickable="true"
+            android:longClickable="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_calendario"
+            android:onClick="BotonPulsado"
+            android:id="@+id/bt_busquedas">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Búsquedas"
+                android:src="@drawable/busquedas" />
 
-    <!-- COPIA DE SEGURIDAD -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_relevos"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_copiaSeguridad">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/bt_busquedas"
+                android:textColor="#ff00aa00"
+                android:paddingStart="25dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/guardar"/>
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- INCIDENCIAS -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_copiaSeguridad"
-            android:textColor="#ffff6600"
-            android:paddingLeft="25dp"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:clickable="true"
+            android:longClickable="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_ajenas"
+            android:onClick="BotonPulsado"
+            android:id="@+id/bt_incidencias">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Incidencias"
+                android:src="@drawable/incidencias" />
 
-    <!-- DROPBOX -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_dropbox"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_dropBox">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffaa00aa"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/bt_incidencias"
+                android:paddingStart="25dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/dropbox"/>
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- COPIA DE SEGURIDAD -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#03A9F4"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_dropbox"
-            android:paddingLeft="25dp"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:clickable="true"
+            android:longClickable="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_relevos"
+            android:onClick="BotonPulsado"
+            android:id="@+id/bt_copiaSeguridad">
 
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Copia de seguridad"
+                android:src="@drawable/guardar" />
 
-    <!-- AJUSTES -->
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="10dp"
-        android:clickable="true"
-        android:longClickable="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bt_ajustes"
-        android:onClick="BotonPulsado"
-        android:id="@+id/bt_ajustes">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/bt_copiaSeguridad"
+                android:textColor="#ffff6600"
+                android:paddingStart="25dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ajustes"/>
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:textColor="#ff909090"
+        <!-- DROPBOX -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/bt_ajustes"
-            android:paddingLeft="25dp"/>
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:clickable="true"
+            android:longClickable="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_dropbox"
+            android:onClick="BotonPulsado"
+            android:id="@+id/bt_dropBox">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Dropbox"
+                android:src="@drawable/dropbox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#03A9F4"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/bt_dropbox"
+                android:paddingStart="25dp" />
+
+        </LinearLayout>
+
+        <!-- AJUSTES -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="10dp"
+            android:clickable="true"
+            android:longClickable="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bt_ajustes"
+            android:onClick="BotonPulsado"
+            android:id="@+id/bt_ajustes">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="Ajustes"
+                android:src="@drawable/ajustes" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="#ff909090"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/bt_ajustes"
+                android:paddingStart="25dp" />
+        </LinearLayout>
+
+
     </LinearLayout>
-
-
-</LinearLayout>
 </ScrollView>

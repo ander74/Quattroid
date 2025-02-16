@@ -1,139 +1,168 @@
 /*
- * Copyright 2015 - Quattroid 1.0
- *
- * Creado por A. Herrero en Enero de 2015
- * http://sites.google.com/site/qtroid
- * acumulador.admin@gmail.com
- *
- * Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
- * de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
- * ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
- *
- * Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
- * incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
- * Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+ * AnderSoft - Open Source Software
+ * Licencia GPL 3.0 - 2025
+ * Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
  */
+
 package com.quattro.quattroid;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+
 import BaseDatos.BaseDatos;
+import BaseDatos.Relevo;
 import Objetos.Colores;
 
-public class AdaptadorRelevos extends CursorAdapter {
+public class AdaptadorRelevos extends ArrayAdapter<Relevo> {
 
-    LayoutInflater inflater = null;
+    // Variables
+    private Context context;
+    private ArrayList<Relevo> listaRelevos;
 
-    public AdaptadorRelevos(Context context, Cursor c) {
-        super(context, c, 0);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+    // Constructor
+    public AdaptadorRelevos(@NonNull Context context, ArrayList<Relevo> lista) {
+        super(context, 0, lista);
+        this.context = context;
+        this.listaRelevos = lista;
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_relevo2, parent, false);
+    // Métodos públicos
+    public int getCount() {
+        return listaRelevos.size();
+    }
+    public Relevo getItem(int position) {
+        return listaRelevos.get(position);
+    }
+    public long getItemId(Relevo item) {
+        return listaRelevos.indexOf(item);
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
 
-        // Instancias de los elementos del item.
-        RelativeLayout item = view.findViewById(R.id.item);
-        TextView matricula = view.findViewById(R.id.tv_matricula);
-        TextView nombre = view.findViewById(R.id.tv_nombre);
-        TextView apellidos = view.findViewById(R.id.tv_apellidos);
-        TextView deuda = view.findViewById(R.id.tv_deuda);
-        ImageView calificacion = view.findViewById(R.id.im_calificacion);
-        ImageView iconoLlamar = view.findViewById(R.id.iconoLlamar);
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent){
+        final ViewHolder holder;
+        if (view == null){
+            view = LayoutInflater.from(context).inflate(R.layout.item_relevo2, null);
+            holder = new ViewHolder();
+            holder.Item = view.findViewById(R.id.item);
+            holder.Matricula = view.findViewById(R.id.tv_matricula);
+            holder.Nombre = view.findViewById(R.id.tv_nombre);
+            holder.Apellidos = view.findViewById(R.id.tv_apellidos);
+            holder.Deuda = view.findViewById(R.id.tv_deuda);
+            holder.Calificacion = view.findViewById(R.id.im_calificacion);
+            holder.IconoLlamar = view.findViewById(R.id.iconoLlamar);
+            view.setTag(holder);
+        } else {
+            holder = (AdaptadorRelevos.ViewHolder) view.getTag();
+        }
 
         // Instanciamos la base de datos
         BaseDatos datos = new BaseDatos(context);
 
-        // Borrado de los textos anteriores.
-        matricula.setText("");
-        nombre.setText("");
-        apellidos.setText("");
-        deuda.setText("");
-
-        // Extraemos los datos del cursor.
-        int c = cursor.getInt(cursor.getColumnIndexOrThrow("Calificacion"));
-        int m = cursor.getInt(cursor.getColumnIndexOrThrow("Matricula"));
-        String n = cursor.getString(cursor.getColumnIndexOrThrow("Nombre"));
-        String a = cursor.getString(cursor.getColumnIndexOrThrow("Apellidos"));
-        String t = cursor.getString(cursor.getColumnIndexOrThrow("Telefono"));
-
-        // Si hay teléfono, mostramos el icono de llamar.
-        if (!t.equals("")){
-            iconoLlamar.setVisibility(View.VISIBLE);
-        } else {
-            iconoLlamar.setVisibility(View.GONE);
-        }
-
+        // Extraemos el relevo de la lista
+        Relevo relevo = listaRelevos.get(position);
 
         // Extraemos la deuda de la base de datos
-        int d = datos.deudaRelevo(m);
+        int deudaTotal = datos.deudaRelevo(relevo.getMatricula());
+
+        // Borrado de los textos anteriores.
+        holder.Matricula.setText("");
+        holder.Nombre.setText("");
+        holder.Apellidos.setText("");
+        holder.Deuda.setText("");
+
+        // Si hay teléfono, mostramos el icono de llamar.
+        if (!relevo.getTelefono().isEmpty()){
+            holder.IconoLlamar.setVisibility(View.VISIBLE);
+        } else {
+            holder.IconoLlamar.setVisibility(View.GONE);
+        }
 
         // Color del fondo
-        if ((cursor.getPosition() + 1) % 2 == 0) {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_par));
+        if(relevo.isSeleccionado()){
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
+        } else if ((position + 1) % 2 == 0) {
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_par));
         } else {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_impar));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_relevo_impar));
         }
 
         // Mostramos la calificacion
-        switch (c){
+        switch (relevo.getCalificacion()){
             case 1:
-                calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_buen_relevo));
-                calificacion.setVisibility(View.VISIBLE);
+                holder.Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_buen_relevo));
+                holder.Calificacion.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_mal_relevo));
-                calificacion.setVisibility(View.VISIBLE);
+                holder.Calificacion.setImageDrawable(context.getResources().getDrawable(R.drawable.icono_mal_relevo));
+                holder.Calificacion.setVisibility(View.VISIBLE);
                 break;
             default:
-                calificacion.setVisibility(View.GONE);
+                holder.Calificacion.setVisibility(View.GONE);
         }
 
         // Escribimos los datos.
-        matricula.setText((m == 0) ? "" : String.valueOf(m));
-        nombre.setText(n);
-        apellidos.setText(a);
+        holder.Matricula.setText((relevo.getMatricula() == 0) ? "" : String.valueOf(relevo.getMatricula()));
+        holder.Nombre.setText(relevo.getNombre());
+        holder.Apellidos.setText(relevo.getApellidos());
 
         // Escribimos la deuda
-        String s = "";
-        switch (d){
+        String textoDeuda = "";
+        switch (deudaTotal){
             case 0:
-                s = "";
+                textoDeuda = "";
                 break;
             case 1:
-                s = "Me debe un día.";
-                deuda.setTextColor(Colores.VERDE_OSCURO);
+                textoDeuda = "Me debe un día.";
+                holder.Deuda.setTextColor(Colores.VERDE_OSCURO);
                 break;
             case -1:
-                s = "Le debo un día.";
-                deuda.setTextColor(Colores.ROJO_OSCURO);
+                textoDeuda = "Le debo un día.";
+                holder.Deuda.setTextColor(Colores.ROJO_OSCURO);
                 break;
             default:
-                if (d > 1){
-                    s = "Me debe " + String.valueOf(d) + " días.";
-                    deuda.setTextColor(Colores.VERDE_OSCURO);
+                if (deudaTotal > 1){
+                    textoDeuda = "Me debe " + String.valueOf(deudaTotal) + " días.";
+                    holder.Deuda.setTextColor(Colores.VERDE_OSCURO);
                 }
-                if (d < -1){
-                    d = d * -1;
-                    s = "Le debo " + String.valueOf(d) + " días.";
-                    deuda.setTextColor(Colores.ROJO_OSCURO);
+                if (deudaTotal < -1){
+                    deudaTotal = deudaTotal * -1;
+                    textoDeuda = "Le debo " + String.valueOf(deudaTotal) + " días.";
+                    holder.Deuda.setTextColor(Colores.ROJO_OSCURO);
                 }
         }
-        deuda.setText(s);
+        holder.Deuda.setText(textoDeuda);
+
+        return view;
     }
+
+
+
+    public static class ViewHolder{
+        RelativeLayout Item;
+        TextView Matricula;
+        TextView Nombre;
+        TextView Apellidos;
+        TextView Deuda;
+        ImageView Calificacion;
+        ImageView IconoLlamar;
+    }
+
+
+
 
 
 }

@@ -16,8 +16,11 @@
  */
 package BaseDatos;
 
+import android.database.Cursor;
+
 public class ServicioDia {
 
+    private int Id;
     private int Dia;
     private int Mes;
     private int Año;
@@ -30,7 +33,33 @@ public class ServicioDia {
     private String LugarInicio = "";
     private String LugarFinal = "";
 
+    private boolean Seleccionado = false;
+
+
+    public ServicioDia() {
+    }
+
+
+    public ServicioDia(Cursor cursor) {
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        Dia = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
+        Mes = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
+        Año = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
+        Servicio = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
+        Turno = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
+        Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
+        Inicio = cursor.getString(cursor.getColumnIndexOrThrow("Inicio"));
+        Final = cursor.getString(cursor.getColumnIndexOrThrow("Final"));
+        LugarInicio = cursor.getString(cursor.getColumnIndexOrThrow("LugarInicio"));
+        LugarFinal = cursor.getString(cursor.getColumnIndexOrThrow("LugarFinal"));
+    }
+
+
     //region GETTERS
+
+    public int getId() {
+        return Id;
+    }
 
     public int getDia() {
         return Dia;
@@ -63,7 +92,7 @@ public class ServicioDia {
     public String getFinal() {
         return Final;
     }
-	
+
     public String getLugarInicio() {
         return LugarInicio;
     }
@@ -72,10 +101,18 @@ public class ServicioDia {
         return LugarFinal;
     }
 
+    public boolean isSeleccionado() {
+        return Seleccionado;
+    }
+
 
     //endregion
 
     //region SETTERS
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public void setDia(int dia) {
         Dia = dia;
@@ -115,6 +152,10 @@ public class ServicioDia {
 
     public void setLugarFinal(String lugarFinal) {
         LugarFinal = lugarFinal;
+    }
+
+    public void setSeleccionado(boolean seleccionado) {
+        Seleccionado = seleccionado;
     }
 
 

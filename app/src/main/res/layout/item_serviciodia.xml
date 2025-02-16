@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
   ~ Creado por A. Herrero en Enero de 2015
@@ -15,92 +14,98 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<LinearLayout
-    style="@style/vertical">
+<LinearLayout style="@style/vertical">
 
-    <LinearLayout
-    android:id="@+id/ly_cabecera"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:background="#ffff9300"
-    android:orientation="horizontal">
+    <LinearLayout android:id="@+id/ly_cabecera"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="#FF6464"
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginRight="-1dp"
-        android:layout_marginBottom="-1dp"
-        android:gravity="center_horizontal"
-        android:paddingRight="12dp"
-        android:paddingLeft="12dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:background="@android:color/transparent"
-        android:textSize="10sp"
-        android:text="SERV"/>
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginRight="-1dp"
-        android:layout_marginBottom="-1dp"
-        android:gravity="center_horizontal"
-        android:paddingRight="12dp"
-        android:paddingLeft="12dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:background="@android:color/transparent"
-        android:textSize="10sp"
-        android:text="TURNO"/>
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginRight="-1dp"
-        android:layout_marginBottom="-1dp"
-        android:gravity="center_horizontal"
-        android:paddingRight="12dp"
-        android:paddingLeft="12dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:background="@android:color/transparent"
-        android:textSize="10sp"
-        android:text="LINEA"/>
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginRight="-1dp"
-        android:layout_marginBottom="-1dp"
-        android:gravity="center_horizontal"
-        android:paddingRight="12dp"
-        android:paddingLeft="12dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:background="@android:color/transparent"
-        android:textSize="10sp"
-        android:text="INI"/>
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginBottom="-1dp"
-        android:gravity="center_horizontal"
-        android:paddingRight="12dp"
-        android:paddingLeft="12dp"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:background="@android:color/transparent"
-        android:textSize="10sp"
-        android:text="FIN"/>
-</LinearLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="-1dp"
+            android:layout_marginBottom="-1dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="SERV" />
 
-    <LinearLayout
-        android:id="@+id/ly_item"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="-1dp"
+            android:layout_marginBottom="-1dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="TURNO" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="-1dp"
+            android:layout_marginBottom="-1dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="LINEA" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="-1dp"
+            android:layout_marginBottom="-1dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="INI" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="-1dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:background="@android:color/transparent"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:text="FIN" />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/ly_item"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -122,7 +127,8 @@
             android:paddingTop="4dp"
             android:background="@android:color/transparent"
             android:textSize="12sp"
-            android:text="91"/>
+            android:text="91" />
+
         <TextView
             android:id="@+id/tv_turno"
             android:layout_width="0dp"
@@ -136,7 +142,8 @@
             android:paddingTop="4dp"
             android:background="@android:color/transparent"
             android:textSize="12sp"
-            android:text="1"/>
+            android:text="1" />
+
         <TextView
             android:id="@+id/tv_linea"
             android:layout_width="0dp"
@@ -150,7 +157,8 @@
             android:paddingTop="4dp"
             android:background="@android:color/transparent"
             android:textSize="12sp"
-            android:text="2322"/>
+            android:text="2322" />
+
         <TextView
             android:id="@+id/tv_inicio"
             android:layout_width="0dp"
@@ -164,7 +172,8 @@
             android:paddingTop="4dp"
             android:background="@android:color/transparent"
             android:textSize="12sp"
-            android:text="08:00"/>
+            android:text="08:00" />
+
         <TextView
             android:id="@+id/tv_final"
             android:layout_width="0dp"
@@ -177,7 +186,7 @@
             android:paddingTop="4dp"
             android:background="@android:color/transparent"
             android:textSize="12sp"
-            android:text="09:10"/>
+            android:text="09:10" />
     </LinearLayout>
 
 </LinearLayout>

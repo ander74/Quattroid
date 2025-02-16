@@ -88,6 +88,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/fondo_relevo_impar"
         android:orientation="horizontal">
 
         <TextView

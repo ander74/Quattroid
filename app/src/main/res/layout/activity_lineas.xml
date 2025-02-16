@@ -36,13 +36,11 @@
 
         <Button
             android:id="@+id/bt_barra_addLinea"
-            android:layout_width="72dp"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/icono_sumar"
-            android:gravity="center"
             android:layout_marginVertical="5dp"
             android:background="@drawable/fondo_boton_barra_inferior"
-            android:paddingHorizontal="10dp"
             android:paddingVertical="10dp"
             android:drawablePadding="5dp"
             android:drawableTint="#FF000099"
@@ -51,8 +49,36 @@
             android:textSize="10dp" />
 
         <Button
+            android:id="@+id/bt_barra_editarLinea"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_exportar"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF909090"
+            android:text="Editar"
+            android:textColor="#FF909090"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/bt_barra_borrarLinea"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/icono_boton_vaciar"
+            android:layout_marginVertical="5dp"
+            android:background="@drawable/fondo_boton_barra_inferior"
+            android:paddingVertical="10dp"
+            android:drawablePadding="5dp"
+            android:drawableTint="#FF909090"
+            android:text="Borrar"
+            android:textColor="#FF909090"
+            android:textSize="10dp" />
+
+        <Button
             android:id="@+id/bt_barra_importar"
-            android:layout_width="72dp"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/icono_importar"
             android:layout_marginVertical="5dp"
@@ -66,13 +92,11 @@
 
         <Button
             android:id="@+id/bt_barra_exportar"
-            android:layout_width="72dp"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/icono_exportar"
-            android:gravity="center"
             android:layout_marginVertical="5dp"
             android:background="@drawable/fondo_boton_barra_inferior"
-            android:paddingHorizontal="10dp"
             android:paddingVertical="10dp"
             android:drawablePadding="5dp"
             android:drawableTint="#FF000099"

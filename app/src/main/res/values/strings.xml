@@ -23,7 +23,7 @@
 
 
     <!-- ACTIVITY PRINCIPAL -->
-    <string name="nombreAplicacion">Quattroid 2.0.1</string>
+    <string name="nombreAplicacion">Quattroid 2.0.2</string>
     <string name="creditoPrincipal">A. Herrero</string>
     <string name="bt_quattrox">Quattro X</string>
     <string name="bt_calendario">Calendario</string>
@@ -85,6 +85,14 @@
     <!-- ACTIVITY DROPBOX -->
     <string name="dropbox_siHacerCopia"><h1>SI</h1>\nQuiero ir a Copia de Seguridad y proteger mis datos de un borrado accidental.</string>
     <string name="dropbox_noHacerCopia">NO\nSoy un/a irresponsable y me arriesgo a perder todos los datos.</string>
+
+    <!-- ACTIVITY UTILIDADES -->
+    <string name="titulo_utilidades">UTILIDADES</string>
+    <string name="bt_findesComoFranqueo">Franqueo todos los findes</string>
+    <string name="bt_marcarFestivos">Establece los festivos</string>
+    <string name="bt_pegarDiaEnAño">Pegar día en año</string>
+    <string name="bt_vaciarMes">Vaciar los días de un mes</string>
+    <string name="bt_marcarEnfermoMes">Trabajo por enfermo en mes</string>
 
     <!-- AJUSTES -->
     <string name="inferirTurnosPrompt">Día</string>

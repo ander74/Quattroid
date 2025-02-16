@@ -13,6 +13,7 @@ public class ServicioModel {
     public ServicioModel() { }
 
     public ServicioModel(Cursor cursor){
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         Linea = cursor.getString(cursor.getColumnIndexOrThrow("Linea"));
         Servicio = cursor.getString(cursor.getColumnIndexOrThrow("Servicio"));
         Turno = cursor.getInt(cursor.getColumnIndexOrThrow("Turno"));
@@ -38,6 +39,7 @@ public class ServicioModel {
 
     public Boolean Modificado = false;
 
+
     //endregion
 
 
@@ -45,6 +47,7 @@ public class ServicioModel {
 
     public Servicio ToServicio(){
         Servicio servicio = new Servicio();
+        servicio.setId(Id);
         servicio.setLinea(Linea);
         servicio.setServicio(Servicio);
         servicio.setTurno(Turno);
@@ -58,6 +61,7 @@ public class ServicioModel {
     }
 
     public void FromModel(ServicioModel servicio){
+        Id = servicio.getId();
         Linea = servicio.getLinea();
         Servicio = servicio.getServicio();
         Turno = servicio.getTurno();
@@ -77,6 +81,19 @@ public class ServicioModel {
 
 
     //region PROPIEDADES
+
+
+    // ID
+    private int Id = 0;
+    public int getId() {
+        return Id;
+    }
+    public void setId(int id) {
+        if (id != Id) {
+            Id = id;
+            Modificado = true;
+        }
+    }
 
     // LINEA
     private String Linea = "";
@@ -199,6 +216,20 @@ public class ServicioModel {
     public void setServiciosAuxiliares(ArrayList<ServicioAuxiliarModel> servicios) {
         ServiciosAuxiliares = servicios;
         Modificado = true;
+    }
+
+
+
+    // SELECCIONADO
+    private boolean Seleccionado = false;
+    public boolean isSeleccionado() {
+        return Seleccionado;
+    }
+    public void setSeleccionado(boolean seleccionado) {
+        if(Seleccionado != seleccionado) {
+            Seleccionado = seleccionado;
+            Modificado = true;
+        }
     }
 
     //endregion

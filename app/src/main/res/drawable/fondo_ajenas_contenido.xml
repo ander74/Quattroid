@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2015 - Quattroid 1.0
   ~
@@ -16,20 +15,17 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-<!--    <item-->
-<!--        android:id="@+id/bt_nuevo"-->
-<!--        android:title="Nuevo"-->
-<!--        android:orderInCategory="100"-->
-<!--        android:icon="@android:drawable/ic_menu_add"-->
-<!--        app:showAsAction="ifRoom" />-->
-    <item
-        android:id="@+id/bt_guardar"
-        android:title="Guardar"
-        android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_save"
-        android:showAsAction="always"
-        tools:ignore="AppCompatResource"  />
-</menu>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:state_focused="false" android:state_selected="false">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="#FFC5ACFF"/>
+        </shape>
+    </item>
+
+    <item android:state_pressed="false" android:state_focused="false" android:state_selected="false">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <solid android:color="#ffffffff"/>
+        </shape>
+    </item>
+</selector>
+

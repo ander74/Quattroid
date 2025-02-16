@@ -16,14 +16,34 @@
  */
 package BaseDatos;
 
+import android.database.Cursor;
+
 public class Incidencia {
 
+    private int Id = 0;
     private int Codigo;
     private String Texto;
     private int Tipo;
+    private boolean Seleccionada = false;
+
+
+    public Incidencia() {
+    }
+
+
+    public Incidencia(Cursor cursor) {
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        Codigo = cursor.getInt(cursor.getColumnIndexOrThrow("Codigo"));
+        Texto = cursor.getString(cursor.getColumnIndexOrThrow("Incidencia"));
+        Tipo = cursor.getInt(cursor.getColumnIndexOrThrow("Tipo"));
+    }
 
 
     //region GETTERS
+
+    public int getId() {
+        return Id;
+    }
 
     public int getCodigo() {
         return Codigo;
@@ -37,10 +57,18 @@ public class Incidencia {
         return Tipo;
     }
 
+    public boolean isSeleccionada() {
+        return Seleccionada;
+    }
+
 
     //endregion
 
     //region SETTERS
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public void setCodigo(int codigo) {
         Codigo = codigo;
@@ -54,9 +82,12 @@ public class Incidencia {
         Tipo = tipo;
     }
 
+    public void setSeleccionada(boolean seleccionada) {
+        Seleccionada = seleccionada;
+    }
+
 
     //endregion
-
 
 
 }

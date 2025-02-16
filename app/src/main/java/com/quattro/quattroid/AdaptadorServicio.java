@@ -1,79 +1,114 @@
 /*
- * Copyright 2015 - Quattroid 1.0
- *
- * Creado por A. Herrero en Enero de 2015
- * http://sites.google.com/site/qtroid
- * acumulador.admin@gmail.com
- *
- * Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
- * de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
- * ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
- *
- * Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
- * incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
- * Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
+ * AnderSoft - Open Source Software
+ * Licencia GPL 3.0 - 2025
+ * Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
  */
+
 package com.quattro.quattroid;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AdaptadorServicio extends CursorAdapter {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-    LayoutInflater inflater = null;
+import com.quattro.models.ServicioModel;
 
-    public AdaptadorServicio(Context context, Cursor c) {
-        super(context, c, 0);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+import java.util.ArrayList;
+
+public class AdaptadorServicio extends ArrayAdapter<ServicioModel> {
+
+    // Variables
+    private Context context;
+    private ArrayList<ServicioModel> listaServicios;
+
+
+    public AdaptadorServicio(@NonNull Context context, ArrayList<ServicioModel> lista) {
+        super(context, 0, lista);
+        this.context = context;
+        this.listaServicios = lista;
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return inflater.inflate(R.layout.item_servicio, parent, false);
+    // Métodos públicos
+    public int getCount() {
+        return listaServicios.size();
+    }
+    public ServicioModel getItem(int position) {
+        return listaServicios.get(position);
+    }
+    public long getItemId(ServicioModel item) {
+        return listaServicios.indexOf(item);
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
 
-        // Instancias de los elementos del item.
-        TextView servicio = view.findViewById(R.id.tv_servicio);
-        TextView turno = view.findViewById(R.id.tv_turno);
-        TextView inicio = view.findViewById(R.id.tv_inicio);
-        TextView fin = view.findViewById(R.id.tv_final);
-        LinearLayout item = view.findViewById(R.id.ly_item);
-        LinearLayout cabecera = view.findViewById(R.id.ly_cabecera);
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent){
+        final AdaptadorServicio.ViewHolder holder;
+        if (view == null){
+            view = LayoutInflater.from(context).inflate(R.layout.item_servicio, null);
+            holder = new AdaptadorServicio.ViewHolder();
+            holder.Cabecera = view.findViewById(R.id.ly_cabecera);
+            holder.Item = view.findViewById(R.id.ly_item);
+            holder.Servicio = view.findViewById(R.id.tv_servicio);
+            holder.Turno = view.findViewById(R.id.tv_turno);
+            holder.Inicio = view.findViewById(R.id.tv_inicio);
+            holder.Fin = view.findViewById(R.id.tv_final);
+            view.setTag(holder);
+        } else {
+            holder = (AdaptadorServicio.ViewHolder) view.getTag();
+        }
+
+        // Extraemos el servicio de la lista
+        ServicioModel servicio = listaServicios.get(position);
 
         // Borrado de los textos anteriores.
-        servicio.setText("");
-        turno.setText("");
-        inicio.setText("");
-        fin.setText("");
+        holder.Servicio.setText("");
+        holder.Turno.setText("");
+        holder.Inicio.setText("");
+        holder.Fin.setText("");
 
         // Determinamos si se muestra la cabecera
-        if (cursor.getPosition() == 0){
-            cabecera.setVisibility(View.VISIBLE);
+        if (position == 0){
+            holder.Cabecera.setVisibility(View.VISIBLE);
         } else {
-            cabecera.setVisibility(View.GONE);
+            holder.Cabecera.setVisibility(View.GONE);
         }
 
         // Color del fondo
-        if ((cursor.getPosition() + 1) % 2 == 0) {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_servicio_p));
+        if(servicio.isSeleccionado()){
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_seleccionado));
+        } else if ((position + 1) % 2 == 0) {
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_servicio_p));
         } else {
-            item.setBackground(context.getResources().getDrawable(R.drawable.fondo_servicio_i));
+            holder.Item.setBackground(context.getResources().getDrawable(R.drawable.fondo_servicio_i));
         }
 
         // Escribimos los datos.
-        servicio.setText(cursor.getString(cursor.getColumnIndexOrThrow("Servicio")));
-        turno.setText(String.valueOf(cursor.getInt(cursor.getColumnIndexOrThrow("Turno"))));
-        inicio.setText(cursor.getString(cursor.getColumnIndexOrThrow("Inicio")));
-        fin.setText(cursor.getString(cursor.getColumnIndexOrThrow("Final")));
+        holder.Servicio.setText(servicio.getServicio());
+        holder.Turno.setText(String.valueOf(servicio.getTurno()));
+        holder.Inicio.setText(servicio.getInicio());
+        holder.Fin.setText(servicio.getFinal());
 
+        return view;
     }
+
+
+    public static class ViewHolder{
+        LinearLayout Item;
+        TextView Servicio;
+        TextView Turno;
+        TextView Inicio;
+        TextView Fin;
+        LinearLayout Cabecera;
+    }
+
+
+
 }
