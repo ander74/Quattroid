@@ -22,9 +22,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import com.quattro.helpers.FileHelper;
 import com.quattro.models.LineaModel;
 import com.quattro.models.ServicioAuxiliarModel;
 import com.quattro.models.ServicioModel;
@@ -34,6 +37,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -2117,6 +2124,11 @@ public class BaseDatos {
         return baseHelper.restaurarCopia();
     }
 
+    public boolean restaurarCopiaSeguridad(Uri origen) {
+        hayCambios = true;
+        return baseHelper.restaurarCopia(origen);
+    }
+
     //endregion
 
 
@@ -2296,25 +2308,28 @@ public class BaseDatos {
             String origen = context.getDatabasePath(BASE_NAME).getPath();
 
             // Definimos el path de destino y lo creamos si no existe.
-            String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
-            destino = destino + "/Quattroid";
-            File d = new File(destino);
-            if (!d.exists()) {
+            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid";
+            File filePathDestino = new File(pathDestino);
+            if (!filePathDestino.exists()) {
                 //noinspection ResultOfMethodCallIgnored
-                d.mkdir();
+                filePathDestino.mkdir();
             }
-
-            // Creamos el path del archivo de destino
-            destino = destino + "/backup.db";
+//            File fileDestino = new File(pathDestino, "backup.db");
+//            if (fileDestino.exists()) {
+//                File fileDestinoOld = new File(pathDestino, "backupOLD.db");
+//                if (fileDestinoOld.exists()) {
+//                    boolean oldBorrado = fileDestinoOld.delete();
+//                }
+//                boolean renombrado = fileDestino.renameTo(fileDestinoOld);
+//                boolean borrado = fileDestino.delete();
+//            }
 
             // Cerramos la base de datos para que se guarden las operaciones pendientes.
             close();
 
             // Copiamos el archivo de base de datos en el archivo de destino.
             try {
-                FileInputStream archivoDatos = new FileInputStream(origen);
-                FileOutputStream archivoDestino = new FileOutputStream(destino);
-                copiarArchivo(archivoDatos, archivoDestino);
+                FileHelper.CreateFile(origen, "backup.db", context);
             } catch (IOException e) {
                 return false;
             }
@@ -2360,6 +2375,44 @@ public class BaseDatos {
             return true;
         }
 
+        // RESTAURAR COPIA DE SEGURIDAD
+        boolean restaurarCopia(Uri uriOrigen) {
+
+            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
+//            String estadoMemoria = Environment.getExternalStorageState();
+//            if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
+//                return false;
+//            }
+//            hayCambios = true;
+
+            // Definimos el path de la copia de seguridad
+            String origen = uriOrigen.getPath();
+
+            // Evaluamos si existe una copia de seguridad
+            if (!new File(origen).exists()) return false;
+
+            // Definimos el path de la base de datos.
+            String destino = context.getDatabasePath(BASE_NAME).getPath();
+
+            // Cerramos la base de datos para que este liberado el archivo
+            close();
+
+            // Copiamos los archivos
+            try {
+                FileInputStream archivoOrigen = new FileInputStream(origen);
+                FileOutputStream archivoDestino = new FileOutputStream(destino);
+                copiarArchivo(archivoOrigen, archivoDestino);
+                //noinspection ResultOfMethodCallIgnored
+                new File(destino).setLastModified(new Date().getTime());
+            } catch (IOException e) {
+                return false;
+            }
+            // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
+            getWritableDatabase().close();
+
+            return true;
+        }
+
         // COPIAR UN ARCHIVO
         static void copiarArchivo(FileInputStream origen, FileOutputStream destino) throws IOException {
             FileChannel fromChannel = null;
@@ -2378,6 +2431,16 @@ public class BaseDatos {
                         toChannel.close();
                     }
                 }
+            }
+        }
+
+
+        static void copiarArchivo(String origen, String destino) throws IOException {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Path origenPath = Paths.get(destino);
+                Path destinoPath = Paths.get(destino);
+                Files.deleteIfExists(destinoPath);
+                Files.copy(origenPath, destinoPath, StandardCopyOption.REPLACE_EXISTING);
             }
         }
 

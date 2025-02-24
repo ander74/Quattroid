@@ -8,6 +8,7 @@ package com.quattro.quattroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -15,12 +16,20 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.text.HtmlCompat;
 
 import com.quattro.helpers.DiaHelper;
 
 import org.joda.time.DateTime;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import BaseDatos.BaseDatos;
 import BaseDatos.Helpers;
@@ -40,6 +49,10 @@ public class Utilidades extends Activity {
     TextView botonPegarDiaEnAño = null;
     TextView botonVaciarMes = null;
     TextView botonMarcaEnfermoMes = null;
+    TextView botonMostrarAyuda = null;
+    ScrollView scrollBotones = null;
+    ScrollView scrollAyuda = null;
+    TextView textoAyuda = null;
 
 
     //******************************************************************************************
@@ -61,6 +74,16 @@ public class Utilidades extends Activity {
         botonPegarDiaEnAño = findViewById(R.id.bt_pegarDiaEnAño);
         botonVaciarMes = findViewById(R.id.bt_vaciarMes);
         botonMarcaEnfermoMes = findViewById(R.id.bt_marcarEnfermoMes);
+        botonMostrarAyuda = findViewById(R.id.bt_mostrarAyuda);
+        scrollBotones = findViewById(R.id.scrollBotones);
+        scrollAyuda = findViewById(R.id.scrollAyuda);
+        textoAyuda = findViewById(R.id.textoAyuda);
+
+        // Ocultar el scroll ayuda
+        scrollAyuda.setVisibility(View.GONE);
+
+        // Llenar el texto de ayuda con el contenido del archivo
+        textoAyuda.setText(HtmlCompat.fromHtml(leeTexto(), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
         // Registrar los listeners
         botonFindesComoFranqueo.setOnClickListener(this::botonFindesComoFranqueoPulsado);
@@ -68,6 +91,7 @@ public class Utilidades extends Activity {
         botonPegarDiaEnAño.setOnClickListener(this::botonPegarDiaEnAñoPulsado);
         botonVaciarMes.setOnClickListener(this::botonVaciarMesPulsado);
         botonMarcaEnfermoMes.setOnClickListener(this::botonMarcaEnfermoMesPulsado);
+        botonMostrarAyuda.setOnClickListener(this::botonMostrarAyudaPulsado);
 
     }
 
@@ -236,6 +260,19 @@ public class Utilidades extends Activity {
     }
 
 
+    private void botonMostrarAyudaPulsado(View view) {
+        if (scrollBotones.getVisibility() == View.VISIBLE) {
+            scrollBotones.setVisibility(View.GONE);
+            scrollAyuda.setVisibility(View.VISIBLE);
+            botonMostrarAyuda.setText(R.string.bt_cerrarAyuda);
+        } else {
+            scrollAyuda.setVisibility(View.GONE);
+            scrollBotones.setVisibility(View.VISIBLE);
+            botonMostrarAyuda.setText(R.string.bt_mostrarAyuda);
+        }
+    }
+
+
     //endregion
     //******************************************************************************************
 
@@ -243,6 +280,27 @@ public class Utilidades extends Activity {
     //******************************************************************************************
     //region Métodos privados
 
+    // LEE EL ARCHIVO DE AYUDA Y LO DEVUELVE EN UNA CADENA
+    private String leeTexto() {
+        // Cadenas de texto que se usarán
+        StringBuilder texto = new StringBuilder();
+        // Manager de la carpeta Assets
+        AssetManager am = getAssets();
+        try (InputStream is = am.open("ayuda_utilidades.html");
+             InputStreamReader isr = new InputStreamReader(is);
+             BufferedReader br = new BufferedReader(isr)) {
+            // Leemos la primera línea del archivo.
+            String linea = br.readLine();
+            // Mientras las líneas existan, las leemos
+            while (linea != null) {
+                texto.append(linea).append("\n");
+                linea = br.readLine();
+            }
+        } catch (IOException e) {
+            // No hacemos nada.
+        }
+        return texto.toString();
+    }
 
     //endregion
     //******************************************************************************************

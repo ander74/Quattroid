@@ -4,60 +4,97 @@
   ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
   -->
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF000000">
+    android:background="#FF000000"
+    android:padding="10dp">
 
-    <LinearLayout
+    <!-- MOSTRAR LA AYUDA -->
+    <TextView
+        android:id="@+id/bt_mostrarAyuda"
+        style="@style/botones_utilidades"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bt_calendario"
+        android:text="@string/bt_mostrarAyuda"
+        android:textColor="#ff00aa00" />
+
+    <ScrollView
+        android:id="@+id/scrollBotones"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/bt_mostrarAyuda">
 
-        <!-- TÍTULO -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="40dp"
-            android:gravity="center_horizontal"
-            android:text="@string/titulo_utilidades"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ffdcdcdc"
-            android:textStyle="bold" />
+            android:layout_gravity="top|center_horizontal"
+            android:orientation="vertical">
 
-        <!-- MARCAR TODOS LOS FINDES COMO FRANQUEO -->
+            <!-- TÍTULO -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="40dp"
+                android:gravity="center_horizontal"
+                android:text="@string/titulo_utilidades"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffdcdcdc"
+                android:textStyle="bold" />
+
+            <!-- MARCAR TODOS LOS FINDES COMO FRANQUEO -->
+            <TextView
+                android:id="@+id/bt_findesComoFranqueo"
+                style="@style/botones_utilidades"
+                android:text="@string/bt_findesComoFranqueo" />
+
+            <!-- MARCAR LOS FESTIVOS -->
+            <TextView
+                android:id="@+id/bt_marcarFestivos"
+                style="@style/botones_utilidades"
+                android:text="@string/bt_marcarFestivos" />
+
+            <!-- PEGAR DIA EN TODO EL AÑO (RESPETA TURNO) -->
+            <TextView
+                android:id="@+id/bt_pegarDiaEnAño"
+                style="@style/botones_utilidades"
+                android:text="@string/bt_pegarDiaEnAño" />
+
+            <!-- VACÍA LOS DÍAS DE UN MES -->
+            <TextView
+                android:id="@+id/bt_vaciarMes"
+                style="@style/botones_utilidades"
+                android:text="@string/bt_vaciarMes" />
+
+            <!-- CAMBIA TRABAJO POR ENFERMO EN UN MES -->
+            <TextView
+                android:id="@+id/bt_marcarEnfermoMes"
+                style="@style/botones_utilidades"
+                android:text="@string/bt_marcarEnfermoMes" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/scrollAyuda"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/bt_mostrarAyuda">
+
         <TextView
-            android:id="@+id/bt_findesComoFranqueo"
-            style="@style/botones_utilidades"
-            android:text="@string/bt_findesComoFranqueo" />
+            android:id="@+id/textoAyuda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFEEEEEE"
+            android:textSize="16sp" />
+    </ScrollView>
 
-        <!-- MARCAR LOS FESTIVOS -->
-        <TextView
-            android:id="@+id/bt_marcarFestivos"
-            style="@style/botones_utilidades"
-            android:text="@string/bt_marcarFestivos" />
+</RelativeLayout>
 
-        <!-- PEGAR DIA EN TODO EL AÑO (RESPETA TURNO) -->
-        <TextView
-            android:id="@+id/bt_pegarDiaEnAño"
-            style="@style/botones_utilidades"
-            android:text="@string/bt_pegarDiaEnAño" />
-
-        <!-- VACÍA LOS DÍAS DE UN MES -->
-        <TextView
-            android:id="@+id/bt_vaciarMes"
-            style="@style/botones_utilidades"
-            android:text="@string/bt_vaciarMes" />
-
-        <!-- CAMBIA TRABAJO POR ENFERMO EN UN MES -->
-        <TextView
-            android:id="@+id/bt_marcarEnfermoMes"
-            style="@style/botones_utilidades"
-            android:text="@string/bt_marcarEnfermoMes" />
-        
-    </LinearLayout>
-
-</ScrollView>

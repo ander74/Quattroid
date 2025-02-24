@@ -16,8 +16,7 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
@@ -58,6 +57,7 @@
             android:drawablePadding="5dp"
             android:drawableTint="#FF909090"
             android:text="Borrar"
+            android:enabled="false"
             android:textColor="#FF909090"
             android:textSize="10dp" />
 
@@ -72,6 +72,7 @@
             android:drawablePadding="5dp"
             android:drawableTint="#FF909090"
             android:text="Rel. fijo"
+            android:enabled="false"
             android:textColor="#FF909090"
             android:textSize="10dp" />
 
@@ -101,6 +102,7 @@
             android:drawableTint="#FF909090"
             android:text="Llamar"
             android:textColor="#FF909090"
+            android:enabled="false"
             android:textSize="10dp" />
 
     </LinearLayout>
@@ -113,6 +115,6 @@
         android:dividerHeight="0dp"
         android:paddingBottom="120dp"
         android:clipToPadding="false"
-        android:background="#ffeeeeee"/>
+        android:background="#ffeeeeee" />
 
 </RelativeLayout>

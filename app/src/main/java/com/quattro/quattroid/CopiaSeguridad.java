@@ -16,8 +16,11 @@
 package com.quattro.quattroid;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -33,6 +36,7 @@ public class CopiaSeguridad extends Activity {
     // CONSTANTES
     private final int MODO_NORMAL = 0;
     private final int MODO_AVISO = 1;
+    private final int PEDIR_ARCHIVO_ACTIVITY = 2;
 
     // VARIABLES
     BaseDatos datos = null;
@@ -66,9 +70,9 @@ public class CopiaSeguridad extends Activity {
 
         // Buscar el archivo de copia de seguridad.
         String estadoSD = Environment.getExternalStorageState();
-        if(Environment.MEDIA_MOUNTED.equals(estadoSD)) {
+        if (Environment.MEDIA_MOUNTED.equals(estadoSD)) {
             File archivoCopia = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db");
-            if (archivoCopia.exists()){
+            if (archivoCopia.exists()) {
                 // Extraer la fecha del archivo
                 Date f = new Date(archivoCopia.lastModified());
                 String ff = String.format("%td - %tB - %tY", f, f, f);
@@ -84,10 +88,10 @@ public class CopiaSeguridad extends Activity {
 
     // AL PULSAR UNA TECLA
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         //Al pulsar la tecla retroceso
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
-            switch (modo){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            switch (modo) {
                 case MODO_NORMAL:
                     finish();
                     break;
@@ -103,10 +107,10 @@ public class CopiaSeguridad extends Activity {
     }
 
     // AL PULSAR UN BOTON
-    public void botonPulsado(View v){
-        switch (v.getId()){
+    public void botonPulsado(View v) {
+        switch (v.getId()) {
             case R.id.bt_hacerCopia:
-                if (datos.hacerCopiaSeguridad()){
+                if (datos.hacerCopiaSeguridad()) {
                     fecha.setText("Copia creada correctamente.");
                 } else {
                     fecha.setText("No se pudo hacer la copia.");
@@ -118,20 +122,35 @@ public class CopiaSeguridad extends Activity {
                 modo = MODO_AVISO;
                 break;
             case R.id.bt_aceptar:
-                if (datos.restaurarCopiaSeguridad()){
-                    // Intentar apagar la activity del calendario.
-                    try{
-                        Calendario.activityCalendario.finish();
-                    } catch (NullPointerException e){
-                        // Error en la llamada al Calendario.
-                    }
-                    finish();
-                } else {
-                    confirmacion.setVisibility(View.GONE);
-                    copia.setVisibility(View.VISIBLE);
-                    modo = MODO_NORMAL;
-                    fecha.setText("No se pudo restaurar la copia.");
-                }
+                // Choose a directory using the system's file picker.
+//                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("application/x-sqlite3");
+                String[] mimetypes = {"application/vnd.sqlite3", "application/octet-stream", "application/x-trash"};
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+
+                // Optionally, specify a URI for the directory that should be opened in
+                // the system file picker when it loads.
+                Uri uriToLoad = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/Quattroid/");
+                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uriToLoad);
+
+                startActivityForResult(intent, PEDIR_ARCHIVO_ACTIVITY);
+
+//                if (datos.restaurarCopiaSeguridad()) {
+//                    // Intentar apagar la activity del calendario.
+//                    try {
+//                        Calendario.activityCalendario.finish();
+//                    } catch (NullPointerException e) {
+//                        // Error en la llamada al Calendario.
+//                    }
+//                    finish();
+//                } else {
+//                    confirmacion.setVisibility(View.GONE);
+//                    copia.setVisibility(View.VISIBLE);
+//                    modo = MODO_NORMAL;
+//                    fecha.setText("No se pudo restaurar la copia.");
+//                }
                 break;
             case R.id.bt_cancelar:
                 confirmacion.setVisibility(View.GONE);
@@ -141,6 +160,32 @@ public class CopiaSeguridad extends Activity {
         }
     }
 
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Evaluamos el codigo de petición.
+        if (requestCode == PEDIR_ARCHIVO_ACTIVITY && resultCode == RESULT_OK) {
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                // Perform operations on the document using its URI.
+                if (datos.restaurarCopiaSeguridad(uri)) {
+                    // Intentar apagar la activity del calendario.
+                    try {
+                        Calendario.activityCalendario.finish();
+                    } catch (NullPointerException e) {
+                        // Error en la llamada al Calendario.
+                    }
+                    finish();
+                } else {
+                    confirmacion.setVisibility(View.GONE);
+                    copia.setVisibility(View.VISIBLE);
+                    modo = MODO_NORMAL;
+                    fecha.setText("No se pudo restaurar la copia.");
+                }
+            }
+        }
+    }
 
 
 }

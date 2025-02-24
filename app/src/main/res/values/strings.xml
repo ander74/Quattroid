@@ -23,7 +23,7 @@
 
 
     <!-- ACTIVITY PRINCIPAL -->
-    <string name="nombreAplicacion">Quattroid 2.0.2</string>
+    <string name="nombreAplicacion">Quattroid 2.0.3</string>
     <string name="creditoPrincipal">A. Herrero</string>
     <string name="bt_quattrox">Quattro X</string>
     <string name="bt_calendario">Calendario</string>
@@ -93,6 +93,8 @@
     <string name="bt_pegarDiaEnAño">Pegar día en año</string>
     <string name="bt_vaciarMes">Vaciar los días de un mes</string>
     <string name="bt_marcarEnfermoMes">Trabajo por enfermo en mes</string>
+    <string name="bt_mostrarAyuda">Ayuda</string>
+    <string name="bt_cerrarAyuda">Volder</string>
 
     <!-- AJUSTES -->
     <string name="inferirTurnosPrompt">Día</string>
