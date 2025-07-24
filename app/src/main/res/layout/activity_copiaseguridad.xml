@@ -18,6 +18,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,53 +38,55 @@
     <!--        android:background="#000000"/>-->
 
     <!-- TEMPORALMENTE FUERA DE SERVICIO -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
+    <!--
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="4dp"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:text="Fuera de servicio temporalmente." />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"
-            android:textSize="16sp"
-            android:text="Por varios problemas creados por los cambios de las políticas de almacenamiento en los dispositivos Android en las últimas versiones del mismo, temporalmente no se podrán crear ni restaurar copias de seguridad." />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:padding="4dp"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:text="Fuera de servicio temporalmente." />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"
-            android:textSize="16sp"
-            android:text="Proximamente se implementará de nuevo el sistema de copias de seguridad de la mejor forma posible. Mientras tanto os recomiendo que useis la sincronización en la nube a través de Dropbox para mantener a salvo los datos de la aplicación." />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:text="Por varios problemas creados por los cambios de las políticas de almacenamiento en los dispositivos Android en las últimas versiones del mismo, temporalmente no se podrán crear ni restaurar copias de seguridad." />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"
-            android:textSize="16sp"
-            android:text="Siento las molestias que esto os pueda ocasionar." />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:text="Proximamente se implementará de nuevo el sistema de copias de seguridad de la mejor forma posible. Mientras tanto os recomiendo que useis la sincronización en la nube a través de Dropbox para mantener a salvo los datos de la aplicación." />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:text="Siento las molestias que esto os pueda ocasionar." />
 
 
-    </LinearLayout>
+        </LinearLayout>
+    -->
 
     <!-- INTERFAZ COPIA DE SEGURIDAD -->
     <LinearLayout
         android:id="@+id/ly_copia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <Button

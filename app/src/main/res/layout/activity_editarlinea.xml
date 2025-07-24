@@ -16,80 +16,83 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#eeeeee"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true"
-    android:padding="5dp">
-
-    <!-- TITULO -->
-    <TextView
-        android:id="@+id/tv_titulo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="NUEVA LINEA"/>
-<!--    <View-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="2dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:layout_marginRight="5dp"-->
-<!--        android:nextFocusDown="@+id/Et_linea"-->
-<!--        android:background="#000000"/>-->
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#eeeeee"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:padding="5dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        <!-- TITULO -->
+        <TextView
+            android:id="@+id/tv_titulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="NUEVA LINEA" />
+        <!--    <View-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="2dp"-->
+        <!--        android:layout_marginBottom="8dp"-->
+        <!--        android:layout_marginRight="5dp"-->
+        <!--        android:nextFocusDown="@+id/Et_linea"-->
+        <!--        android:background="#000000"/>-->
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <!-- MATRICULA -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="8dp"
-                        style="@style/text_view"
-                        android:text="Línea"/>
-                    <EditText
-                        android:id="@+id/et_linea"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minWidth="90dp"
-                        android:nextFocusDown="@+id/et_texto"
-                        style="@style/edit_text"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="8dp"
+                    style="@style/text_view"
+                    android:text="Línea" />
+
+                <EditText
+                    android:id="@+id/et_linea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="90dp"
+                    android:nextFocusDown="@+id/et_texto"
+                    style="@style/edit_text" />
 
                 <!-- NOMBRE -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="8dp"
-                        style="@style/text_view"
-                        android:text="Descripción"/>
-                    <EditText
-                        android:id="@+id/et_texto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapWords"
-                        android:nextFocusDown="@+id/et_linea"
-                        style="@style/edit_text"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="8dp"
+                    style="@style/text_view"
+                    android:text="Descripción" />
+
+                <EditText
+                    android:id="@+id/et_texto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
+                    android:nextFocusDown="@+id/et_linea"
+                    style="@style/edit_text" />
 
 
-        </LinearLayout>
-    </ScrollView>
+            </LinearLayout>
+        </ScrollView>
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

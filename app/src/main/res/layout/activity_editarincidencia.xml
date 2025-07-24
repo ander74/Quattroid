@@ -16,10 +16,10 @@
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="#eeeeee"
     android:descendantFocusability="beforeDescendants"
@@ -33,84 +33,94 @@
         android:gravity="center"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="NUEVA INCIDENCIA"/>
+        android:text="NUEVA INCIDENCIA" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="5dp"
         android:nextFocusDown="@+id/Et_linea"
-        android:background="#000000"/>
+        android:background="#000000" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        style="@style/text_view"
-        android:text="Incidencia:"/>
-    <EditText
-        android:id="@+id/et_nuevaIncidencia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Texto de la incidencia"
-        style="@style/edit_text"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                style="@style/text_view"
+                android:text="Incidencia:" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        style="@style/text_view"
-        android:text="Tipo:"/>
-    <RadioGroup
-        android:id="@+id/grupoTipos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:background="@drawable/fondo_edittext2">
-        <RadioButton
-            android:id="@+id/tipo1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Tipo 1 : Trabajo"/>
-        <RadioButton
-            android:id="@+id/tipo2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo 2 : Franqueo a Trabajar"/>
-        <RadioButton
-            android:id="@+id/tipo3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo 3 : Fiesta por otro día"/>
-        <RadioButton
-            android:id="@+id/tipo4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo 4 : Franqueo"/>
-        <RadioButton
-            android:id="@+id/tipo5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo 5 : Trabajo sin acumular"/>
-        <RadioButton
-            android:id="@+id/tipo6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tipo 6 : Jornada Media"/>
-    </RadioGroup>
-</LinearLayout>
+            <EditText
+                android:id="@+id/et_nuevaIncidencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Texto de la incidencia"
+                style="@style/edit_text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                style="@style/text_view"
+                android:text="Tipo:" />
+
+            <RadioGroup
+                android:id="@+id/grupoTipos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/fondo_edittext2">
+
+                <RadioButton
+                    android:id="@+id/tipo1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Tipo 1 : Trabajo" />
+
+                <RadioButton
+                    android:id="@+id/tipo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo 2 : Franqueo a Trabajar" />
+
+                <RadioButton
+                    android:id="@+id/tipo3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo 3 : Fiesta por otro día" />
+
+                <RadioButton
+                    android:id="@+id/tipo4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo 4 : Franqueo" />
+
+                <RadioButton
+                    android:id="@+id/tipo5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo 5 : Trabajo sin acumular" />
+
+                <RadioButton
+                    android:id="@+id/tipo6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo 6 : Jornada Media" />
+            </RadioGroup>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

@@ -4,14 +4,15 @@
   ~ Visite https://www.gnu.org/licenses/gpl-3.0.html para más detalles.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="wrap_content">
 
     <!-- Principal -->
-    <LinearLayout android:id="@+id/item"
+    <LinearLayout
+        android:id="@+id/item"
         android:background="@drawable/fondo_calendario_par"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -48,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|center_horizontal"
                 android:textSize="13sp"
-                android:layout_below="@id/dia"/>
+                android:layout_below="@id/dia" />
         </RelativeLayout>
 
         <!-- Contenido del día -->
@@ -75,7 +76,7 @@
                     android:src="@drawable/icono_huelga"
                     android:maxHeight="16dp"
                     android:padding="2dp"
-                    android:adjustViewBounds="true"/>
+                    android:adjustViewBounds="true" />
 
                 <!-- Hay compañero -->
                 <ImageView
@@ -86,7 +87,7 @@
                     android:src="@drawable/icono_usuario_verde"
                     android:maxHeight="16dp"
                     android:padding="2dp"
-                    android:adjustViewBounds="true"/>
+                    android:adjustViewBounds="true" />
 
                 <!-- Servicio -->
                 <TextView
@@ -97,7 +98,7 @@
                     android:maxLines="1"
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="2dp"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -118,7 +119,7 @@
                     android:padding="2dp"
                     android:maxHeight="16dp"
                     android:adjustViewBounds="true"
-                    android:layout_alignParentStart="true"/>
+                    android:layout_alignParentStart="true" />
 
                 <!-- Horario -->
                 <TextView
@@ -130,7 +131,7 @@
                     android:layout_marginStart="2dp"
                     android:maxLines="1"
                     android:textSize="12sp"
-                    android:layout_toEndOf="@id/notas"/>
+                    android:layout_toEndOf="@id/notas" />
 
                 <!-- Cena -->
                 <ImageView
@@ -143,7 +144,7 @@
                     android:padding="2dp"
                     android:maxHeight="16dp"
                     android:adjustViewBounds="true"
-                    android:layout_toStartOf="@+id/acumuladas"/>
+                    android:layout_toStartOf="@+id/acumuladas" />
 
                 <!-- Comida -->
                 <ImageView
@@ -155,7 +156,7 @@
                     android:padding="2dp"
                     android:maxHeight="16dp"
                     android:adjustViewBounds="true"
-                    android:layout_toStartOf="@+id/cena"/>
+                    android:layout_toStartOf="@+id/cena" />
 
                 <!-- Desayuno -->
                 <ImageView
@@ -167,7 +168,7 @@
                     android:padding="2dp"
                     android:maxHeight="16dp"
                     android:adjustViewBounds="true"
-                    android:layout_toStartOf="@id/comida"/>
+                    android:layout_toStartOf="@id/comida" />
 
                 <!-- Nocturnas -->
                 <TextView
@@ -180,7 +181,7 @@
                     android:maxLines="1"
                     android:textSize="12sp"
                     android:textColor="#ff0000ff"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_alignParentEnd="true" />
 
                 <!-- Guion -->
                 <TextView
@@ -192,7 +193,7 @@
                     android:maxLines="1"
                     android:textSize="12sp"
                     android:layout_marginBottom="2dp"
-                    android:layout_toStartOf="@+id/nocturnas"/>
+                    android:layout_toStartOf="@+id/nocturnas" />
 
                 <!-- Acumuladas -->
                 <TextView
@@ -205,7 +206,7 @@
                     android:layout_marginStart="4dp"
                     android:textSize="12sp"
                     android:textColor="#ffff0000"
-                    android:layout_toStartOf="@+id/guion"/>
+                    android:layout_toStartOf="@+id/guion" />
 
             </RelativeLayout>
 
@@ -225,7 +226,7 @@
                     android:src="@drawable/icono_buen_relevo"
                     android:maxHeight="16dp"
                     android:adjustViewBounds="true"
-                    android:padding="2dp"/>
+                    android:padding="2dp" />
 
                 <!-- Relevo -->
                 <TextView
@@ -235,7 +236,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="4dp"
                     android:maxLines="1"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp" />
 
             </LinearLayout>
 
@@ -251,7 +252,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="#FFDDDDDD"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 
     <!-- Separador del último elemento -->
     <LinearLayout
@@ -260,6 +261,6 @@
         android:layout_width="match_parent"
         android:visibility="gone"
         android:background="@android:color/transparent"
-        android:layout_height="120dp"/>
+        android:layout_height="120dp" />
 
 </LinearLayout>

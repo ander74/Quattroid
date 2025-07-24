@@ -15,10 +15,11 @@
   ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- TITULO -->
     <LinearLayout
@@ -84,12 +85,12 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="8dp"-->
-<!--                android:textSize="20sp"-->
-<!--                android:text="Mes : "/>-->
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:padding="8dp"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="Mes : "/>-->
 
             <NumberPicker
                 android:id="@+id/np_mes"
@@ -99,14 +100,14 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:padding="8dp"-->
-<!--                android:textSize="20sp"-->
-<!--                android:text="Año : "/>-->
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:padding="8dp"-->
+            <!--                android:textSize="20sp"-->
+            <!--                android:text="Año : "/>-->
 
             <NumberPicker
                 android:id="@+id/np_año"
@@ -116,19 +117,19 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <!-- ESTADISTICAS -->
-        <ListView
-            android:id="@+id/lw_estadisticas"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:background="#ffeeeeee"/>
+    <ListView
+        android:id="@+id/lw_estadisticas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:background="#ffeeeeee" />
 
-    </LinearLayout>
+</LinearLayout>

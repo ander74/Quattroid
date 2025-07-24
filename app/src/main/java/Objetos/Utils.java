@@ -22,11 +22,11 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -39,7 +39,7 @@ public class Utils {
 
     // EVALUAR SI HAY INTERNET
     @NonNull
-    public static Boolean hayInternet(Context contexto){
+    public static Boolean hayInternet(Context contexto) {
 
         ConnectivityManager cm = (ConnectivityManager) contexto.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
@@ -48,7 +48,7 @@ public class Utils {
 
     // EVALUAR SI HAY WIFI
     @NonNull
-    public static Boolean hayWifi(Context contexto){
+    public static Boolean hayWifi(Context contexto) {
 
         ConnectivityManager cm = (ConnectivityManager) contexto.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -58,7 +58,7 @@ public class Utils {
 
 
     // HACER COPIA DE LAS OPCIONES
-    public static boolean guardarOpcionesTemp(SharedPreferences Opciones){
+    public static boolean guardarOpcionesTemp(SharedPreferences Opciones) {
 
         // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
         String estadoMemoria = Environment.getExternalStorageState();
@@ -70,7 +70,7 @@ public class Utils {
         String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid";
         File d = new File(destino);
-        if (!d.exists()){
+        if (!d.exists()) {
             d.mkdir();
         }
         // Creamos el path del archivo de destino
@@ -80,13 +80,11 @@ public class Utils {
         boolean res = false;
         ObjectOutputStream output = null;
 
-        try{
+        try {
             output = new ObjectOutputStream(new FileOutputStream(d));
             output.writeObject(Opciones.getAll());
             res = true;
-        } catch (FileNotFoundException e){
-            return false;
-        } catch (IOException e){
+        } catch (IOException e) {
             return false;
         } finally {
             // Cerramos los streams.
@@ -103,7 +101,7 @@ public class Utils {
     }
 
     // RESTAURAR COPIA DE LAS OPCIONES
-    public static boolean restaurarOpcionesTemp(SharedPreferences Opciones){
+    public static boolean restaurarOpcionesTemp(SharedPreferences Opciones) {
 
         // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
         String estadoMemoria = Environment.getExternalStorageState();
@@ -118,7 +116,7 @@ public class Utils {
         String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid/opciones.tmp";
         File d = new File(destino);
-        if (!d.exists()){
+        if (!d.exists()) {
             return false;
         }
 
@@ -150,15 +148,11 @@ public class Utils {
             }
             // Restauramos el estado de la sincronización con dropbox antes de la restauración.
             prefEdit.putBoolean("SincronizarDropBox", sincronizarDropbox);
-            prefEdit.commit();
+            prefEdit.apply();
             res = true;
-        } catch (FileNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             return false;
-        } catch (IOException e) {
-            return false;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }finally {
+        } finally {
             // Cerramos el stream.
             try {
                 if (input != null) {
@@ -173,7 +167,7 @@ public class Utils {
 
 
     // Devuelve si es un año bisiesto
-    public static boolean esAñoBisiesto(int año){
+    public static boolean esAñoBisiesto(int año) {
         Calendar fecha = Calendar.getInstance();
         fecha.set(año, 0, 1);
         return fecha.getActualMaximum(Calendar.DAY_OF_YEAR) == 366;
@@ -181,12 +175,12 @@ public class Utils {
 
 
     // Guarda un archivo de texto en la carpeta Quattroid
-    public static boolean guardarLineasJson(String nombre, String texto){
+    public static boolean guardarLineasJson(String nombre, String texto) {
         // Definimos el path de destino y lo creamos si no existe.
         String destino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
         destino = destino + "/Quattroid/Lineas";
         File d = new File(destino);
-        if (!d.exists()){
+        if (!d.exists()) {
             if (!d.mkdir()) return false;
         }
         // Creamos el path del archivo de destino
@@ -196,11 +190,11 @@ public class Utils {
         boolean res = false;
         OutputStreamWriter output = null;
 
-        try{
+        try {
             output = new OutputStreamWriter(new FileOutputStream(d));
             output.write(texto);
             res = true;
-        } catch (IOException e){
+        } catch (IOException e) {
             res = false;
         } finally {
             // Cerramos los streams.
@@ -216,7 +210,6 @@ public class Utils {
 
         return res;
     }
-
 
 
 }

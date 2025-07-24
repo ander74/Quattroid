@@ -6,115 +6,150 @@
 
 package com.quattro.helpers;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
 
-import java.io.BufferedInputStream;
+import androidx.annotation.OptIn;
+import androidx.media3.common.util.Log;
+import androidx.media3.common.util.UnstableApi;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 
 public class FileHelper {
 
+    private static final String TAG = "FileHelper";
+    public static final String DATABASE_NAME = "Quattro";
 
-    private Context context;
+    /**
+     * !! CAVEAT: Directly writing to Documents folder using a path is NOT reliable
+     * on API 29+ due to Scoped Storage. Use SAF and URIs instead. !!
+     * This method is provided for illustration or legacy scenarios.
+     * <p>
+     * Copies the app's internal database to a specified destination file path.
+     *
+     * @param context            The application context.
+     * @param destinationPathStr The full path string for the destination file.
+     * @return true if successful, false otherwise.
+     */
+    @OptIn(markerClass = UnstableApi.class)
+    public static boolean exportDatabaseToPath(Context context, String destinationPathStr) {
+        File dbFileInternal = context.getDatabasePath(DATABASE_NAME);
+        if (!dbFileInternal.exists()) {
+            Log.e(TAG, "Database file does not exist: " + dbFileInternal.getAbsolutePath());
+            return false;
+        }
 
-    public static FileHelper getInstance() {
-        return new FileHelper();
+        File destinationFile = new File(destinationPathStr);
+
+        // Ensure the destination directory exists
+        File parentDir = destinationFile.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            if (!parentDir.mkdirs()) {
+                Log.w(TAG, "Could not create destination directory (might fail due to permissions): " + parentDir.getAbsolutePath());
+                // Don't immediately return false, attempt the copy anyway, but log a warning.
+            }
+        }
+
+        try (InputStream in = new FileInputStream(dbFileInternal);
+             OutputStream out = new FileOutputStream(destinationFile, false)) { // false to overwrite
+
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            out.flush();
+            Log.i(TAG, "Database exported successfully to: " + destinationPathStr);
+            return true;
+        } catch (IOException e) {
+            Log.e(TAG, "Error exporting database to path '" + destinationPathStr + "': " + e.getMessage(), e);
+            return false;
+        }
     }
 
-    public FileHelper with(Context context) {
-        this.context = context;
-        return this;
-    }
+    /**
+     * !! CAVEAT: Directly reading from Documents folder using a path is NOT reliable
+     * on API 29+ due to Scoped Storage. Use SAF and URIs instead. !!
+     * This method is provided for illustration or legacy scenarios.
+     * <p>
+     * Copies a database file from a source file path to the app's internal database location.
+     *
+     * @param context       The application context.
+     * @param sourcePathStr The full path string of the source database file.
+     * @return true if successful, false otherwise.
+     */
+    @OptIn(markerClass = UnstableApi.class)
+    public static boolean importDatabaseFromPath(Context context, String sourcePathStr) {
+        File sourceFile = new File(sourcePathStr);
+        if (!sourceFile.exists()) {
+            Log.e(TAG, "Source database file does not exist: " + sourcePathStr);
+            return false;
+        }
+        if (!sourceFile.canRead()) {
+            Log.e(TAG, "Cannot read source database file (check permissions): " + sourcePathStr);
+            return false;
+        }
 
 
-    public static void CreateFile(String origen, String name, Context context) throws IOException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10 and above
-            ContentResolver contentResolver = context.getContentResolver();
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.Downloads.DISPLAY_NAME, name);
-            contentValues.put(MediaStore.Downloads.MIME_TYPE, "application/x-sqlite3");
-            contentValues.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Quattroid");
+        File dbFileInternal = context.getDatabasePath(DATABASE_NAME);
 
-            Uri contentUri = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
-            Uri itemUri = contentResolver.insert(contentUri, contentValues);
-//            File destFile = new File(contentUri.toString() + "/Quattroid/" + name);
-//            if (destFile.exists()) {
-//                DocumentsContract.deleteDocument(contentResolver, itemUri);
-//            }
-
-            if (itemUri != null) {
-                try {
-                    OutputStream outputStream = contentResolver.openOutputStream(itemUri, "rwt");
-                    File origenFile = new File(origen);
-                    int size = (int) origenFile.length();
-                    byte[] origenBytes = new byte[size];
-                    BufferedInputStream buf = new BufferedInputStream(Files.newInputStream(origenFile.toPath()));
-                    buf.read(origenBytes, 0, origenBytes.length);
-                    buf.close();
-                    if (outputStream != null) {
-                        outputStream.write(origenBytes);
-                        outputStream.close();
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                throw new RuntimeException("Failed to create a file in the Downloads directory.");
+        File dbDir = dbFileInternal.getParentFile();
+        if (dbDir != null && !dbDir.exists()) {
+            if (!dbDir.mkdirs()) {
+                Log.e(TAG, "Could not create internal database directory: " + dbDir.getAbsolutePath());
+                return false;
             }
-        } else {
-            // Android 8 and 9
-            File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        }
 
-            if (!downloadsDirectory.exists()) {
-                downloadsDirectory.mkdirs();
-            }
-            File destFile = new File(downloadsDirectory, name);
+        try (InputStream in = new FileInputStream(sourceFile);
+             OutputStream out = new FileOutputStream(dbFileInternal, false)) { // false to overwrite
 
-            try {
-                File origenFile = new File(origen);
-                int size = (int) origenFile.length();
-                byte[] origenBytes = new byte[size];
-                BufferedInputStream buf = new BufferedInputStream(new FileInputStream(origenFile));
-                buf.read(origenBytes, 0, origenBytes.length);
-                buf.close();
-                FileOutputStream outputStream = new FileOutputStream(destFile);
-                outputStream.write(origenBytes);
-                outputStream.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
             }
+            out.flush();
+            Log.i(TAG, "Database imported successfully from: " + sourcePathStr + " to: " + dbFileInternal.getAbsolutePath());
+            return true;
+        } catch (IOException e) {
+            Log.e(TAG, "Error importing database from path '" + sourcePathStr + "': " + e.getMessage(), e);
+            return false;
         }
     }
 
 
     /**
-     * Get file path from uri.
+     * !! CAVEAT: This method is deprecated on API 29+ for public directories.
+     * Use with extreme caution and expect it to fail on newer Android versions
+     * for accessing Documents folder without SAF or special permissions. !!
+     *
+     * @return A File object pointing to the public Documents directory, or null if not available/accessible.
      */
-    private String getPathFromUri(Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-
-        String text = null;
-
-        if (cursor.moveToNext()) {
-            text = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
+    @OptIn(markerClass = UnstableApi.class)
+    @SuppressWarnings("deprecation")
+    public static File getPublicDocumentsStorageDir() {
+        // Attempt to get the directory. This is deprecated and unreliable for general access.
+        File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        if (file == null) {
+            Log.e(TAG, "Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) returned null.");
+            return null;
         }
-
-        cursor.close();
-
-        return text;
+        // Even if a path is returned, writing to it might not be permitted.
+        // For backup purposes, consider creating a sub-folder for your app.
+        File appBackupDir = new File(file, "YourAppBackups"); // Or your app name
+        if (!appBackupDir.exists()) {
+            if (!appBackupDir.mkdirs()) {
+                Log.w(TAG, "Could not create app-specific backup directory in Documents (permissions?): " + appBackupDir.getAbsolutePath());
+                // Fallback to the root Documents directory if sub-folder creation fails, but this is less ideal.
+                return file;
+            }
+        }
+        return appBackupDir;
     }
-
-
 }

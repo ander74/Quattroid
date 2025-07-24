@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -69,6 +68,7 @@ public class CopiaSeguridad extends Activity {
         confirmacion.setVisibility(View.GONE);
 
         // Buscar el archivo de copia de seguridad.
+        //TODO: Cambiar la dirección del archivo para que apunte a documents.
         String estadoSD = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(estadoSD)) {
             File archivoCopia = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db");
@@ -124,33 +124,33 @@ public class CopiaSeguridad extends Activity {
             case R.id.bt_aceptar:
                 // Choose a directory using the system's file picker.
 //                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("application/x-sqlite3");
-                String[] mimetypes = {"application/vnd.sqlite3", "application/octet-stream", "application/x-trash"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+//                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+//                intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                intent.setType("application/x-sqlite3");
+//                String[] mimetypes = {"application/vnd.sqlite3", "application/octet-stream", "application/x-trash"};
+//                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+//
+//                // Optionally, specify a URI for the directory that should be opened in
+//                // the system file picker when it loads.
+//                Uri uriToLoad = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/Quattroid/");
+//                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uriToLoad);
+//
+//                startActivityForResult(intent, PEDIR_ARCHIVO_ACTIVITY);
 
-                // Optionally, specify a URI for the directory that should be opened in
-                // the system file picker when it loads.
-                Uri uriToLoad = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/Quattroid/");
-                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uriToLoad);
-
-                startActivityForResult(intent, PEDIR_ARCHIVO_ACTIVITY);
-
-//                if (datos.restaurarCopiaSeguridad()) {
-//                    // Intentar apagar la activity del calendario.
-//                    try {
-//                        Calendario.activityCalendario.finish();
-//                    } catch (NullPointerException e) {
-//                        // Error en la llamada al Calendario.
-//                    }
-//                    finish();
-//                } else {
-//                    confirmacion.setVisibility(View.GONE);
-//                    copia.setVisibility(View.VISIBLE);
-//                    modo = MODO_NORMAL;
-//                    fecha.setText("No se pudo restaurar la copia.");
-//                }
+                if (datos.restaurarCopiaSeguridad()) {
+                    // Intentar apagar la activity del calendario.
+                    try {
+                        Calendario.activityCalendario.finish();
+                    } catch (NullPointerException e) {
+                        // Error en la llamada al Calendario.
+                    }
+                    finish();
+                } else {
+                    confirmacion.setVisibility(View.GONE);
+                    copia.setVisibility(View.VISIBLE);
+                    modo = MODO_NORMAL;
+                    fecha.setText("No se pudo restaurar la copia.");
+                }
                 break;
             case R.id.bt_cancelar:
                 confirmacion.setVisibility(View.GONE);

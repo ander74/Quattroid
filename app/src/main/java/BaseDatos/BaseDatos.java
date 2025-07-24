@@ -2297,48 +2297,21 @@ public class BaseDatos {
 
         // HACER COPIA DE SEGURIDAD
         boolean hacerCopia() {
-
             // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
             String estadoMemoria = Environment.getExternalStorageState();
             if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
                 return false;
             }
-
-            // Definimos el path de la base de datos.
-            String origen = context.getDatabasePath(BASE_NAME).getPath();
-
-            // Definimos el path de destino y lo creamos si no existe.
-            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid";
-            File filePathDestino = new File(pathDestino);
-            if (!filePathDestino.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                filePathDestino.mkdir();
-            }
-//            File fileDestino = new File(pathDestino, "backup.db");
-//            if (fileDestino.exists()) {
-//                File fileDestinoOld = new File(pathDestino, "backupOLD.db");
-//                if (fileDestinoOld.exists()) {
-//                    boolean oldBorrado = fileDestinoOld.delete();
-//                }
-//                boolean renombrado = fileDestino.renameTo(fileDestinoOld);
-//                boolean borrado = fileDestino.delete();
-//            }
-
+            // Hacemos la copia
+            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db";
+            FileHelper.exportDatabaseToPath(context, pathDestino);
             // Cerramos la base de datos para que se guarden las operaciones pendientes.
             close();
-
-            // Copiamos el archivo de base de datos en el archivo de destino.
-            try {
-                FileHelper.CreateFile(origen, "backup.db", context);
-            } catch (IOException e) {
-                return false;
-            }
             return true;
         }
 
         // RESTAURAR COPIA DE SEGURIDAD
         boolean restaurarCopia() {
-
             // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
             String estadoMemoria = Environment.getExternalStorageState();
             if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
@@ -2347,31 +2320,18 @@ public class BaseDatos {
             hayCambios = true;
 
             // Definimos el path de la copia de seguridad
-            String origen = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
-            origen = origen + "/Quattroid/backup.db";
-
+            String origen = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/Quattroid/backup.db").getAbsolutePath();
             // Evaluamos si existe una copia de seguridad
             if (!new File(origen).exists()) return false;
-
-            // Definimos el path de la base de datos.
-            String destino = context.getDatabasePath(BASE_NAME).getPath();
-
-            // Cerramos la base de datos para que este liberado el archivo
             close();
 
-            // Copiamos los archivos
-            try {
-                FileInputStream archivoOrigen = new FileInputStream(origen);
-                FileOutputStream archivoDestino = new FileOutputStream(destino);
-                copiarArchivo(archivoOrigen, archivoDestino);
-                //noinspection ResultOfMethodCallIgnored
-                new File(destino).setLastModified(new Date().getTime());
-            } catch (IOException e) {
-                return false;
-            }
+            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db";
+            FileHelper.importDatabaseFromPath(context, pathDestino);
+
+            String destino = context.getDatabasePath(BASE_NAME).getPath();
+            new File(destino).setLastModified(new Date().getTime());
             // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
             getWritableDatabase().close();
-
             return true;
         }
 

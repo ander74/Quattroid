@@ -20,6 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="#FFE7E7E7"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
