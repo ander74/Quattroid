@@ -21,6 +21,7 @@ public class Opciones {
         jornadaMedia = cursor.getDouble(cursor.getColumnIndexOrThrow("JorMedia"));
         jornadaMinima = cursor.getDouble(cursor.getColumnIndexOrThrow("JorMinima"));
         limiteEntreServicios = cursor.getInt(cursor.getColumnIndexOrThrow("LimiteEntreServicios"));
+        diaCierreMes = cursor.getInt(cursor.getColumnIndexOrThrow("DiaCierreMes"));
         jornadaAnual = cursor.getInt(cursor.getColumnIndexOrThrow("JornadaAnual"));
         regularJornadaAnual = cursor.getInt(cursor.getColumnIndexOrThrow("RegularJornadaAnual")) > 0;
         regularBisiestos = cursor.getInt(cursor.getColumnIndexOrThrow("RegularBisiestos")) > 0;
@@ -60,6 +61,7 @@ public class Opciones {
     private double jornadaMedia = 0;
     private double jornadaMinima = 0;
     private int limiteEntreServicios = 60;
+    private int diaCierreMes = 1;
     private int jornadaAnual = 1592;
     private boolean regularJornadaAnual = true;
     private boolean regularBisiestos = true;
@@ -126,6 +128,10 @@ public class Opciones {
 
     public int getLimiteEntreServicios() {
         return limiteEntreServicios;
+    }
+
+    public int getDiaCierreMes() {
+        return diaCierreMes;
     }
 
     public int getJornadaAnual() {
@@ -260,6 +266,10 @@ public class Opciones {
 
     public void setLimiteEntreServicios(int limiteEntreServicios) {
         this.limiteEntreServicios = limiteEntreServicios;
+    }
+
+    public void setDiaCierreMes(int diaCierreMes) {
+        this.diaCierreMes = diaCierreMes;
     }
 
     public void setJornadaAnual(int jornadaAnual) {

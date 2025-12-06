@@ -9,7 +9,7 @@ package BaseDatos;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.quattro.helpers.DiaHelper;
+import com.quattroid.Helpers.DiaHelper;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

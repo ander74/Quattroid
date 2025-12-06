@@ -119,12 +119,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4dp"
-                android:textSize="16sp"
-                android:text="Linea" />
+                android:text="Linea"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/et_linea"
                 style="@style/edit_text"
+                android:background="#FFDDDDDD"
                 android:nextFocusDown="@+id/et_servicio"
                 android:layout_width="match_parent" />
         </LinearLayout>
@@ -145,6 +146,7 @@
             <EditText
                 android:id="@+id/et_servicio"
                 style="@style/edit_text"
+                android:background="#FFDDDDDD"
                 android:nextFocusDown="@+id/et_turno"
                 android:layout_width="match_parent" />
         </LinearLayout>
@@ -165,6 +167,7 @@
             <EditText
                 android:id="@+id/et_turno"
                 style="@style/edit_text"
+                android:background="#FFDDDDDD"
                 android:nextFocusDown="@+id/et_linea"
                 android:inputType="number"
                 android:layout_width="match_parent" />
@@ -194,6 +197,7 @@
             <EditText
                 android:id="@+id/et_matricula"
                 style="@style/edit_text"
+                android:background="#FFDDDDDD"
                 android:inputType="number"
                 android:layout_width="match_parent" />
         </LinearLayout>
@@ -245,6 +249,7 @@
             <EditText
                 android:id="@+id/et_bus"
                 style="@style/edit_text"
+                android:background="#FFDDDDDD"
                 android:inputType="number"
                 android:layout_width="match_parent" />
         </LinearLayout>
@@ -276,6 +281,7 @@
                 style="@style/edit_text"
                 android:minLines="5"
                 android:minHeight="150dp"
+                android:background="#FFDDDDDD"
                 android:inputType="textAutoCorrect"
                 android:gravity="left|top"
                 android:layout_width="match_parent" />

@@ -30,7 +30,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Principal"
+            android:name="com.quattroid.Activities.Principal"
             android:configChanges="orientation|keyboardHidden"
             android:exported="true"
             android:screenOrientation="portrait">
@@ -40,101 +40,101 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Quattrox"
+            android:name="com.quattroid.Activities.Quattrox"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Licencia"
+            android:name="com.quattroid.Activities.Licencia"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Calendario"
+            android:name="com.quattroid.Activities.Calendario"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DiaCalendario"
+            android:name="com.quattroid.Activities.DiaCalendario"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Incidencias"
+            android:name="com.quattroid.Activities.Incidencias"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EditarIncidencia"
+            android:name="com.quattroid.Activities.EditarIncidencia"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".EditarServiciosDia"
+            android:name="com.quattroid.Activities.EditarServiciosDia"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".HorasAjenas"
+            android:name="com.quattroid.Activities.HorasAjenas"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EditarHorasAjenas"
+            android:name="com.quattroid.Activities.EditarHorasAjenas"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".Relevos"
+            android:name="com.quattroid.Activities.Relevos"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EditarRelevo"
+            android:name="com.quattroid.Activities.EditarRelevo"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".Lineas"
+            android:name="com.quattroid.Activities.Lineas"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Servicios"
+            android:name="com.quattroid.Activities.Servicios"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".EditarLinea"
+            android:name="com.quattroid.Activities.EditarLinea"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".EditarServicio"
+            android:name="com.quattroid.Activities.EditarServicio"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name=".Creditos"
+            android:name="com.quattroid.Activities.Creditos"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Ajustes"
+            android:name="com.quattroid.Activities.Ajustes"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Herramientas"
+            android:name="com.quattroid.Activities.Herramientas"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Busquedas"
+            android:name="com.quattroid.Activities.Busquedas"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Estadisticas"
+            android:name="com.quattroid.Activities.Estadisticas"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CopiaSeguridad"
+            android:name="com.quattroid.Activities.CopiaSeguridad"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DropBox"
+            android:name="com.quattroid.Activities.DropBox"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Utilidades"
+            android:name="com.quattroid.Activities.Utilidades"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
 

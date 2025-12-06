@@ -38,6 +38,19 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/tv_subTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="0dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="Del 26 del mes anterior al 25"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -58,6 +71,19 @@
             android:background="@drawable/bt_calendario"
             android:onClick="botonPulsado"
             android:text="Por Mes" />
+
+        <TextView
+            android:id="@+id/tv_diaCierreMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingTop="0dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="4dp"
+            android:text="Se cierra el mes el día "
+            android:textSize="14sp"
+            android:textStyle="normal" />
 
         <Button
             android:id="@+id/bt_año"

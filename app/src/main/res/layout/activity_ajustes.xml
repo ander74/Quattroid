@@ -9,13 +9,12 @@
   ~
   ~ Este programa es software libre; usted puede redistruirlo y/o modificarlo bajo los términos
   ~ de la Licencia Pública General GNU, tal y como está publicada por la Free Software Foundation;
-  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier versión posterior.
+  ~ ya sea la versión 2 de la Licencia, o (a su elección) cualquier vers    ión posterior.
   ~
   ~ Este programa se distribuye con la intención de ser útil, pero SIN NINGUNA GARANTÍA;
   ~ incluso sin la garantía implícita de USABILIDAD O UTILIDAD PARA UN FIN PARTICULAR.
   ~ Vea la Licencia Pública General GNU en "assets/Licencia" para más detalles.
   -->
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -192,6 +191,9 @@
 
 
         <!-- CONVENIO -->
+
+
+        <!-- JORNADA MEDIA -->
         <LinearLayout style="@style/op_ly">
 
             <TextView
@@ -201,8 +203,6 @@
             <View style="@style/op_sep_verde" />
         </LinearLayout>
 
-
-        <!-- JORNADA MEDIA -->
         <RelativeLayout style="@style/op_rl">
 
             <EditText
@@ -269,6 +269,30 @@
                 style="@style/op_descripcion"
                 android:text="Límite de tiempo que pasa entre dos\nservicios y se acumula."
                 android:layout_below="@+id/et_limiteServicios" />
+        </RelativeLayout>
+
+        <View style="@style/op_separador" />
+
+
+        <!-- DÍA DE CIERRE DE MES -->
+        <RelativeLayout style="@style/op_rl">
+
+            <EditText
+                android:id="@+id/et_cierreMes"
+                style="@style/op_edit"
+                android:minWidth="100dp"
+                android:inputType="numberDecimal|numberSigned"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                style="@style/op_titulo"
+                android:text="Día de cierre de mes"
+                android:layout_alignBaseline="@+id/et_cierreMes" />
+
+            <TextView
+                style="@style/op_descripcion"
+                android:text="Día en que se cierra el mes.\nPoner 1 para mes natural."
+                android:layout_below="@+id/et_cierreMes" />
         </RelativeLayout>
 
         <View style="@style/op_separador" />

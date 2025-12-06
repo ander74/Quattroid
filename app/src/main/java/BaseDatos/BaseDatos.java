@@ -27,10 +27,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import com.quattro.helpers.FileHelper;
-import com.quattro.models.LineaModel;
-import com.quattro.models.ServicioAuxiliarModel;
-import com.quattro.models.ServicioModel;
+import com.quattroid.Helpers.FileHelper;
+import com.quattroid.Models.LineaModel;
+import com.quattroid.Models.OpcionesModel;
+import com.quattroid.Models.ServicioAuxiliarModel;
+import com.quattroid.Models.ServicioModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -200,6 +201,7 @@ public class BaseDatos {
             "JorMedia REAL DEFAULT 0, " + // Jornada media
             "JorMinima REAL DEFAULT 0, " + // Jornada mínima
             "LimiteEntreServicios INTEGER DEFAULT 0, " + // Límite entre servicios
+            "DiaCierreMes INTEGER DEFAULT 1, " + // Límite entre servicios
             "JornadaAnual INTEGER DEFAULT 0, " + // Jornada anual
             "RegularJornadaAnual INTEGER DEFAULT 0, " + // Regular Jornada anual
             "RegularBisiestos INTEGER DEFAULT 0, " + // Regular años bisiestos
@@ -302,6 +304,24 @@ public class BaseDatos {
             "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
             "Bus, Notas " +
             "FROM CalendarioOld;";
+
+    // INSERTAR REGISTROS EN SERVICOS PARA LA VERSIÓN 6
+    private static final String COPIAR_TABLA_OPCIONES_V6 = "INSERT INTO Opciones " +
+            "(PrimerMes, PrimerAño, AcumuladasAnteriores, RelevoFijo, ModoBasico, RellenarSemana, JorMedia, " +
+            "JorMinima, LimiteEntreServicios, JornadaAnual, RegularJornadaAnual, RegularBisiestos, " +
+            "InicioNocturnas, FinalNocturnas, LimiteDesayuno, LimiteComida1, LimiteComida2, LimiteCena, " +
+            "InferirTurnos, DiaBaseTurnos, MesBaseTurnos, AñoBaseTurnos, PdfHorizontal, PdfIncluirServicios, " +
+            "PdfIncluirNotas, PdfAgruparNotas, VerMesActual, IniciarCalendario, SumarTomaDeje, " +
+            "ActivarTecladoNumerico, GuardarSiempre) " +
+            "SELECT " +
+            "PrimerMes, PrimerAño, AcumuladasAnteriores, RelevoFijo, ModoBasico, RellenarSemana, JorMedia, " +
+            "JorMinima, LimiteEntreServicios, JornadaAnual, RegularJornadaAnual, RegularBisiestos, " +
+            "InicioNocturnas, FinalNocturnas, LimiteDesayuno, LimiteComida1, LimiteComida2, LimiteCena, " +
+            "InferirTurnos, DiaBaseTurnos, MesBaseTurnos, AñoBaseTurnos, PdfHorizontal, PdfIncluirServicios, " +
+            "PdfIncluirNotas, PdfAgruparNotas, VerMesActual, IniciarCalendario, SumarTomaDeje, " +
+            "ActivarTecladoNumerico, GuardarSiempre " +
+            "FROM OpcionesOld";
+
 
     //endregion
 
@@ -672,6 +692,26 @@ public class BaseDatos {
         return acum;
     }
 
+    public double acumuladasHastaMes(int dia, int mes, int año) {
+        double acum = 0d;
+        if (dia <= 1) return acumuladasHastaMes(mes, año);
+        String consulta = "SELECT SUM(Acumuladas)" +
+                " AS sumaAcumuladas FROM Calendario WHERE Año<" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
+        consulta = "SELECT SUM(Acumuladas) AS sumaAcumuladas FROM Calendario WHERE Mes<" +
+                String.valueOf(mes) + " AND Año=" + String.valueOf(año);
+        c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
+        consulta = "SELECT SUM(Acumuladas) AS sumaAcumuladas FROM Calendario WHERE Dia<=" + String.valueOf(dia) + " AND Mes=" +
+                String.valueOf(mes) + " AND Año=" + String.valueOf(año);
+        c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
+        c.close();
+        return acum;
+    }
+
+
     /**
      * @param mes Mes del que se quieren tener las acumuladas.
      * @param año Año del mes del que se quieren tener las acumuladas.
@@ -682,6 +722,25 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Acumuladas)" +
                 " AS sumaAcumuladas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
+        c.close();
+        return acum;
+    }
+
+
+    public double acumuladasMes(int mes, int año, int diaCierre) {
+        double acum = 0d;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Acumuladas)" +
+                " AS sumaAcumuladas FROM Calendario WHERE " + where;
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) acum += c.getDouble(c.getColumnIndexOrThrow("sumaAcumuladas"));
         c.close();
@@ -724,6 +783,24 @@ public class BaseDatos {
         return noct;
     }
 
+    public double nocturnasMes(int mes, int año, int diaCierre) {
+        double noct = 0d;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Nocturnas)" +
+                " AS sumaNocturnas FROM Calendario WHERE " + where;
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) noct += c.getDouble(c.getColumnIndexOrThrow("sumaNocturnas"));
+        c.close();
+        return noct;
+    }
+
     /**
      * @param mes Mes del que se quieren tener las horas trabajadas.
      * @param año Año del mes del que se quieren tener las horas trabajadas.
@@ -734,6 +811,24 @@ public class BaseDatos {
         String consulta = "SELECT SUM(Trabajadas)" +
                 " AS sumaTrabajadas FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndexOrThrow("sumaTrabajadas"));
+        c.close();
+        return trab;
+    }
+
+    public double trabajadasMes(int mes, int año, int diaCierre) {
+        double trab = 0d;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Trabajadas)" +
+                " AS sumaTrabajadas FROM Calendario WHERE " + where;
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) trab += c.getDouble(c.getColumnIndexOrThrow("sumaTrabajadas"));
         c.close();
@@ -777,6 +872,24 @@ public class BaseDatos {
         return trab;
     }
 
+    public int diasTrabajadosConvenio(int mes, int año, int diaCierre) {
+        int trab = 0;
+        String where = "(Año=" + año + " AND Mes=" + mes + ")";
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT * FROM Calendario WHERE " + where +
+                " AND (TipoIncidencia=1 OR TipoIncidencia=3 OR TipoIncidencia=6)";
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) trab = c.getCount();
+        c.close();
+        return trab;
+    }
+
     public int diasTrabajadosConvenio(int año) {
         int trab = 0;
         String consulta = "SELECT * FROM Calendario WHERE Año=" + año +
@@ -809,6 +922,24 @@ public class BaseDatos {
         return trab;
     }
 
+    public int DesayunosMes(int mes, int año, int diaCierre) {
+        int trab = 0;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Desayuno)" +
+                " AS sumaDesayuno FROM Calendario WHERE " + where;
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaDesayuno"));
+        c.close();
+        return trab;
+    }
+
     public int ComidasMes(int mes, int año) {
         int trab = 0;
         String consulta = "SELECT SUM(Comida)" +
@@ -820,11 +951,47 @@ public class BaseDatos {
         return trab;
     }
 
+    public int ComidasMes(int mes, int año, int diaCierre) {
+        int trab = 0;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Comida)" +
+                " AS sumaComida FROM Calendario WHERE " + where;
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaComida"));
+        c.close();
+        return trab;
+    }
+
     public int CenasMes(int mes, int año) {
         int trab = 0;
         String consulta = "SELECT SUM(Cena)" +
                 " AS sumaCena FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaCena"));
+        c.close();
+        return trab;
+    }
+
+    public int CenasMes(int mes, int año, int diaCierre) {
+        int trab = 0;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Cena)" +
+                " AS sumaCena FROM Calendario WHERE " + where;
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) trab += c.getInt(c.getColumnIndexOrThrow("sumaCena"));
         c.close();
@@ -847,6 +1014,27 @@ public class BaseDatos {
         return tomadeje;
     }
 
+    public double tomaDejeHastaMes(int dia, int mes, int año) {
+        double tomadeje = 0d;
+        if (dia <= 1) return tomaDejeHastaMes(mes, año);
+        String consulta = "SELECT SUM(TomaDejeDecimal)" +
+                " AS sumaTomaDeje FROM Calendario WHERE Año<" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
+        consulta = "SELECT SUM(TomaDejeDecimal) AS sumaTomaDeje FROM Calendario WHERE Mes<" +
+                String.valueOf(mes) + " AND Año=" + String.valueOf(año);
+        c.close();
+        c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
+        consulta = "SELECT SUM(TomaDejeDecimal) AS sumaTomaDeje FROM Calendario WHERE Dia=" + dia + " AND Mes=" +
+                String.valueOf(mes) + " AND Año=" + String.valueOf(año);
+        c.close();
+        c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
+        c.close();
+        return tomadeje;
+    }
+
     public double tomaDejeMes(int mes, int año) {
         double tomadeje = 0d;
         String consulta = "SELECT SUM(TomaDejeDecimal)" +
@@ -858,11 +1046,47 @@ public class BaseDatos {
         return tomadeje;
     }
 
+    public double tomaDejeMes(int mes, int año, int diaCierre) {
+        double tomadeje = 0d;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(TomaDejeDecimal)" +
+                " AS sumaTomaDeje FROM Calendario WHERE " + where;
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) tomadeje += c.getDouble(c.getColumnIndexOrThrow("sumaTomaDeje"));
+        c.close();
+        return tomadeje;
+    }
+
     public double eurosMes(int mes, int año) {
         double euros = 0d;
         String consulta = "SELECT SUM(Euros)" +
                 " AS sumaEuros FROM Calendario WHERE Mes=" + String.valueOf(mes) +
                 " AND Año=" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) euros += c.getDouble(c.getColumnIndexOrThrow("sumaEuros"));
+        c.close();
+        return euros;
+    }
+
+    public double eurosMes(int mes, int año, int diaCierre) {
+        double euros = 0d;
+        String where = "Año=" + año + " AND Mes=" + mes;
+        if (diaCierre != 1) {
+            int añoAnterior = mes == 1 ? año - 1 : año;
+            int mesAnterior = mes == 1 ? 12 : mes - 1;
+            int diaAnterior = diaCierre + 1;
+            where = "((Año=" + añoAnterior + " AND Mes=" + mesAnterior + " AND Dia>= " + diaAnterior + ") OR (" +
+                    "Año=" + año + " AND Mes=" + mes + " AND Dia<=" + diaCierre + "))";
+        }
+        String consulta = "SELECT SUM(Euros)" +
+                " AS sumaEuros FROM Calendario WHERE " + where;
         Cursor c = baseDatos.rawQuery(consulta, null);
         if (c.moveToFirst()) euros += c.getDouble(c.getColumnIndexOrThrow("sumaEuros"));
         c.close();
@@ -1488,6 +1712,26 @@ public class BaseDatos {
         return ajenas;
     }
 
+    public double ajenasHastaMes(int dia, int mes, int año) {
+        double ajenas = 0d;
+        if (dia <= 1) return ajenasHastaMes(mes, año);
+        String consulta = "SELECT SUM(Horas)" +
+                " AS sumaAjenas FROM HorasAjenas WHERE Año<" + String.valueOf(año);
+        Cursor c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndexOrThrow("sumaAjenas"));
+        consulta = "SELECT SUM(Horas) AS sumaAjenas FROM HorasAjenas WHERE Mes<" +
+                String.valueOf(mes) + " AND Año=" + String.valueOf(año);
+        c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndexOrThrow("sumaAjenas"));
+        consulta = "SELECT SUM(Horas) AS sumaAjenas FROM HorasAjenas WHERE Dia<=" + dia + " AND Mes=" +
+                String.valueOf(mes) + " AND Año=" + String.valueOf(año);
+        c = baseDatos.rawQuery(consulta, null);
+        if (c.moveToFirst()) ajenas += c.getDouble(c.getColumnIndexOrThrow("sumaAjenas"));
+
+        c.close();
+        return ajenas;
+    }
+
     public void setAjena(HoraAjena horaAjena) {
         hayCambios = true;
         if (horaAjena.getDia() == 0 || horaAjena.getMes() == 0 || horaAjena.getAño() == 0) return;
@@ -2062,6 +2306,15 @@ public class BaseDatos {
         return o;
     }
 
+    public OpcionesModel getOpcionesModel() {
+        Cursor c = baseDatos.query(TABLA_OPCIONES, null, null, null, null, null, null);
+        if (c.getCount() == 0) return null;
+        c.moveToFirst();
+        OpcionesModel o = new OpcionesModel(c);
+        c.close();
+        return o;
+    }
+
     public boolean guardarOpciones() {
         if (opciones == null) return false;
         hayCambios = true;
@@ -2077,6 +2330,7 @@ public class BaseDatos {
         valores.put("JorMedia", opciones.getJornadaMedia());
         valores.put("JorMinima", opciones.getJornadaMinima());
         valores.put("LimiteEntreServicios", opciones.getLimiteEntreServicios());
+        valores.put("DiaCierreMes", opciones.getDiaCierreMes());
         valores.put("JornadaAnual", opciones.getJornadaAnual());
         valores.put("RegularJornadaAnual", opciones.isRegularJornadaAnual());
         valores.put("RegularBisiestos", opciones.isRegularBisiestos());
@@ -2139,9 +2393,9 @@ public class BaseDatos {
         Context context = null;
         SharedPreferences opc = null;
 
-        // Versión de la Base de Datos = 5
+        // Versión de la Base de Datos = 6
         BaseHelper(Context context) {
-            super(context, BASE_NAME, null, 5);
+            super(context, BASE_NAME, null, 6);
             this.context = context;
             opc = PreferenceManager.getDefaultSharedPreferences(context);
         }
@@ -2253,6 +2507,16 @@ public class BaseDatos {
                     valores.put("ActivarTecladoNumerico", (opc.getBoolean("ActivarTecladoNumerico", false)));
                     db.insert(TABLA_OPCIONES, null, valores);
                     //break;
+                case 6:
+                    // Cambiamos el nombre de las tablas afectadas
+                    db.execSQL("ALTER TABLE Opciones RENAME TO OpcionesOld;");
+                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
+                    db.execSQL(CREAR_TABLA_OPCIONES);
+                    // Copiamos los datos de las tablas antiguas a las nuevas
+                    db.execSQL(COPIAR_TABLA_OPCIONES_V6);
+                    // Borramos las tablas antiguas
+                    db.execSQL("DROP TABLE OpcionesOld");
+                    break;
             }
         }
 
