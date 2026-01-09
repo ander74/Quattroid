@@ -20,9 +20,10 @@ import android.database.Cursor;
 
 public class DatosDia {
 
-	
+
     //region VARIABLES PRIVADAS
 
+    private int Id = 0;
     private int Dia = 0;
     private int Mes = 0;
     private int Año = 0;
@@ -68,10 +69,12 @@ public class DatosDia {
 
     //region CONSTRUCTOR
 
-    public DatosDia(){ }
+    public DatosDia() {
+    }
 
-    DatosDia(Cursor cursor){
+    DatosDia(Cursor cursor) {
 
+        Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
         Dia = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
         Mes = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
         Año = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
@@ -114,6 +117,10 @@ public class DatosDia {
 
 
     //region GETTERS
+
+    public int getId() {
+        return Id;
+    }
 
     public int getDia() {
         return Dia;
@@ -247,15 +254,15 @@ public class DatosDia {
         return Euros;
     }
 
-    public double getHorasHuelga(){
+    public double getHorasHuelga() {
         return HorasHuelga;
     }
 
-    public boolean isHuelgaParcial(){
+    public boolean isHuelgaParcial() {
         return HuelgaParcial;
     }
 
-    public boolean isSeleccionado(){
+    public boolean isSeleccionado() {
         return Seleccionado;
     }
 
@@ -263,6 +270,10 @@ public class DatosDia {
 
 
     //region SETTERS
+
+    public void setId(int id) {
+        Id = id;
+    }
 
     public void setDia(int dia) {
         Dia = dia;
@@ -396,15 +407,15 @@ public class DatosDia {
         Euros = euros;
     }
 
-    public void setHorasHuelga(double horasHuelga){
+    public void setHorasHuelga(double horasHuelga) {
         HorasHuelga = horasHuelga;
     }
 
-    public void setHuelgaParcial(boolean huelgaParcial){
+    public void setHuelgaParcial(boolean huelgaParcial) {
         HuelgaParcial = huelgaParcial;
     }
 
-    public void setSeleccionado(boolean seleccionado){
+    public void setSeleccionado(boolean seleccionado) {
         Seleccionado = seleccionado;
     }
 
@@ -413,7 +424,7 @@ public class DatosDia {
 
     //region MÉTODOS
 
-    public void copiarDe(DatosDia datosDia){
+    public void copiarDe(DatosDia datosDia) {
         Dia = datosDia.getDia();
         Mes = datosDia.getMes();
         Año = datosDia.getAño();
@@ -455,12 +466,12 @@ public class DatosDia {
     /***
      * Devuelve true si el día tiene la línea, servicio, turno, inicio y final con datos.
      */
-    public boolean isServicioCompleto(){
+    public boolean isServicioCompleto() {
         return !(getLinea().trim().equals("")) &&
-        !(getServicio().trim().equals("")) &&
-        !(getTurno() == 0) &&
-        !(getInicio().trim().equals("")) &&
-        !(getFinal().trim().equals(""));
+                !(getServicio().trim().equals("")) &&
+                !(getTurno() == 0) &&
+                !(getInicio().trim().equals("")) &&
+                !(getFinal().trim().equals(""));
     }
 
 

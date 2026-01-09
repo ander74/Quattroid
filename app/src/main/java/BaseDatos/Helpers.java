@@ -9,7 +9,8 @@ package BaseDatos;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.quattroid.Helpers.DiaHelper;
+import com.quattroid.helpers.CalculosHelper;
+import com.quattroid.helpers.DiaHelper;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -17,8 +18,6 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
-
-import Objetos.Calculos;
 
 public class Helpers {
 
@@ -115,7 +114,7 @@ public class Helpers {
             LocalDate fechaReferencia = new LocalDate(añoTurno, mesTurno, diaTurno);
             listaDias.stream().filter(d -> d.getCodigoIncidencia() == 0).forEach(d -> {
                 LocalDate fechaDia = new LocalDate(d.getAño(), d.getMes(), d.getDia());
-                d.setTurno(Calculos.InferirTurno(fechaDia, fechaReferencia, 1));
+                d.setTurno(CalculosHelper.InferirTurno(fechaDia, fechaReferencia, 1));
                 datos.guardaDia(d);
             });
         }

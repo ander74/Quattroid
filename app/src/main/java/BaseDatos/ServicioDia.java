@@ -21,6 +21,7 @@ import android.database.Cursor;
 public class ServicioDia {
 
     private int Id;
+    private int DiaId;
     private int Dia;
     private int Mes;
     private int Año;
@@ -42,6 +43,7 @@ public class ServicioDia {
 
     public ServicioDia(Cursor cursor) {
         Id = cursor.getInt(cursor.getColumnIndexOrThrow("_id"));
+        DiaId = cursor.getInt(cursor.getColumnIndexOrThrow("DiaId"));
         Dia = cursor.getInt(cursor.getColumnIndexOrThrow("Dia"));
         Mes = cursor.getInt(cursor.getColumnIndexOrThrow("Mes"));
         Año = cursor.getInt(cursor.getColumnIndexOrThrow("Año"));
@@ -59,6 +61,10 @@ public class ServicioDia {
 
     public int getId() {
         return Id;
+    }
+
+    public int getDiaId() {
+        return DiaId;
     }
 
     public int getDia() {
@@ -112,6 +118,10 @@ public class ServicioDia {
 
     public void setId(int id) {
         Id = id;
+    }
+    
+    public void setDiaId(int id) {
+        DiaId = id;
     }
 
     public void setDia(int dia) {

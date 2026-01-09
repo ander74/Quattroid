@@ -16,42 +16,39 @@
 
 package BaseDatos;
 
+import static BaseDatos.DatabaseConstants.DB_VERSION;
+import static BaseDatos.DatabaseConstants.TABLA_CALENDARIO;
+import static BaseDatos.DatabaseConstants.TABLA_HORAS_AJENAS;
+import static BaseDatos.DatabaseConstants.TABLA_INCIDENCIAS;
+import static BaseDatos.DatabaseConstants.TABLA_LINEAS;
+import static BaseDatos.DatabaseConstants.TABLA_OPCIONES;
+import static BaseDatos.DatabaseConstants.TABLA_RELEVOS;
+import static BaseDatos.DatabaseConstants.TABLA_SERVICIOS;
+import static BaseDatos.DatabaseConstants.TABLA_SERVICIOS_AUXILIARES;
+import static BaseDatos.DatabaseConstants.TABLA_SERVICIOS_DIA;
+
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 
-import com.quattroid.Helpers.FileHelper;
-import com.quattroid.Models.LineaModel;
-import com.quattroid.Models.OpcionesModel;
-import com.quattroid.Models.ServicioAuxiliarModel;
-import com.quattroid.Models.ServicioModel;
+import com.quattroid.helpers.HoraHelper;
+import com.quattroid.models.LineaModel;
+import com.quattroid.models.OpcionesModel;
+import com.quattroid.models.ServicioAuxiliarModel;
+import com.quattroid.models.ServicioModel;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-
-import Objetos.Hora;
 
 public class BaseDatos {
 
 
     //region CONSTANTES
+
+    // Versión de la base de datos.
+    //public static final int DB_VERSION = 6;
 
     // INFORMA SI HAY CAMBIOS
     public static boolean hayCambios = false;
@@ -67,163 +64,163 @@ public class BaseDatos {
 
 
     // NOMBRE DE LA BASE DE DATOS
-    private static final String BASE_NAME = "Quattro";
+    //private static final String BASE_NAME = "Quattro";
 
     // NOMBRES DE LAS TABLAS
-    private static final String TABLA_CALENDARIO = "Calendario";
-    private static final String TABLA_SERVICIOS_DIA = "ServiciosCalendario";
-    private static final String TABLA_HORAS_AJENAS = "HorasAjenas";
-    private static final String TABLA_INCIDENCIAS = "Incidencias";
-    private static final String TABLA_TIPOS_INCIDENCIA = "TiposIncidencia";
-    private static final String TABLA_RELEVOS = "Relevos";
-    private static final String TABLA_LINEAS = "Lineas";
-    private static final String TABLA_SERVICIOS = "Servicios";
-    private static final String TABLA_SERVICIOS_AUXILIARES = "ServiciosAuxiliares";
-    private static final String TABLA_OPCIONES = "Opciones";
+    //private static final String TABLA_CALENDARIO = "Calendario";
+    //private static final String TABLA_SERVICIOS_DIA = "ServiciosCalendario";
+    //private static final String TABLA_HORAS_AJENAS = "HorasAjenas";
+    //private static final String TABLA_INCIDENCIAS = "Incidencias";
+    //private static final String TABLA_TIPOS_INCIDENCIA = "TiposIncidencia";
+    //private static final String TABLA_RELEVOS = "Relevos";
+    //private static final String TABLA_LINEAS = "Lineas";
+    //private static final String TABLA_SERVICIOS = "Servicios";
+    //private static final String TABLA_SERVICIOS_AUXILIARES = "ServiciosAuxiliares";
+    //private static final String TABLA_OPCIONES = "Opciones";
 
     // COMANDOS DE CREACION DE LAS TABLAS
 
-    private static final String CREAR_TABLA_CALENDARIO = "CREATE TABLE Calendario " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Dia INTEGER DEFAULT 0, " +
-            "Mes INTEGER DEFAULT 0, " +
-            "Año INTEGER DEFAULT 0, " +
-            "DiaSemana INTEGER DEFAULT 0, " +
-            "EsFranqueo INTEGER DEFAULT 0, " +
-            "EsFestivo INTEGER DEFAULT 0, " +
-            "CodigoIncidencia INTEGER DEFAULT 0, " +
-            "TextoIncidencia TEXT DEFAULT '', " +
-            "TipoIncidencia INTEGER DEFAULT 0, " +
-            "HuelgaParcial INTEGER DEFAULT 0, " +
-            "HorasHuelga REAL DEFAULT 0, " +
-            "Servicio TEXT DEFAULT '', " +
-            "Turno INTEGER DEFAULT 0, " +
-            "Linea TEXT DEFAULT '', " +
-            "TextoLinea TEXT DEFAULT '', " +
-            "Inicio TEXT DEFAULT '', " +
-            "LugarInicio TEXT DEFAULT '', " +
-            "Final TEXT DEFAULT '', " +
-            "LugarFinal TEXT DEFAULT '', " +
-            "Acumuladas REAL DEFAULT 0, " +
-            "Nocturnas REAL DEFAULT 0, " +
-            "Trabajadas REAL DEFAULT 0, " +
-            "Desayuno INTEGER DEFAULT 0, " +
-            "Comida INTEGER DEFAULT 0, " +
-            "Cena INTEGER DEFAULT 0, " +
-            "TomaDeje TEXT DEFAULT '', " +
-            "TomaDejeDecimal REAL DEFAULT 0, " +
-            "Euros REAL DEFAULT 0, " +
-            "Matricula INTEGER DEFAULT 0, " +
-            "Apellidos TEXT DEFAULT '', " +
-            "Calificacion INTEGER DEFAULT 0, " +
-            "MatriculaSusti INTEGER DEFAULT 0, " +
-            "ApellidosSusti TEXT DEFAULT '', " +
-            "Bus TEXT DEFAULT '', " +
-            "Notas TEXT DEFAULT '')";
-
-    private static final String CREAR_TABLA_SERVICIOS_DIA = "CREATE TABLE ServiciosCalendario " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Dia INTEGER DEFAULT 0, " +
-            "Mes INTEGER DEFAULT 0, " +
-            "Año INTEGER DEFAULT 0, " +
-            "Servicio TEXT DEFAULT '', " +
-            "Turno INTEGER DEFAULT 0, " +
-            "Linea TEXT DEFAULT '', " +
-            "Inicio TEXT DEFAULT '', " +
-            "LugarInicio TEXT DEFAULT '', " +
-            "Final TEXT DEFAULT '', " +
-            "LugarFinal TEXT DEFAULT '')";
-
-    private static final String CREAR_TABLA_HORAS_AJENAS = "CREATE TABLE HorasAjenas " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Dia INTEGER DEFAULT 0, " +
-            "Mes INTEGER DEFAULT 0, " +
-            "Año INTEGER DEFAULT 0, " +
-            "Horas REAL DEFAULT 0, " +
-            "Motivo TEXT DEFAULT '')";
-
-    private static final String CREAR_TABLA_INCIDENCIAS = "CREATE TABLE Incidencias " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Codigo INTEGER UNIQUE, " +
-            "Incidencia TEXT DEFAULT '', " +
-            "Tipo INTEGER DEFAULT 0)";
-
-    private static final String CREAR_TABLA_RELEVOS = "CREATE TABLE Relevos " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Matricula INTEGER UNIQUE, " +
-            "Nombre TEXT DEFAULT '', " +
-            "Apellidos TEXT DEFAULT '', " +
-            "Telefono TEXT DEFAULT '', " +
-            "Calificacion INTEGER DEFAULT 0, " +
-            "Deuda INTEGER DEFAULT 0, " +
-            "Notas TEXT DEFAULT '')";
-
-    private static final String CREAR_TABLA_LINEAS = "CREATE TABLE Lineas " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Linea TEXT DEFAULT '', " +
-            "Texto TEXT DEFAULT '')";
-
-    private static final String CREAR_TABLA_SERVICIOS = "CREATE TABLE Servicios " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Linea TEXT DEFAULT '', " +
-            "Servicio TEXT DEFAULT '', " +
-            "Turno INTEGER DEFAULT 0, " +
-            "TomaDeje TEXT DEFAULT '', " +
-            "TomaDejeDecimal REAL DEFAULT 0, " +
-            "Euros REAL DEFAULT 0, " +
-            "Inicio TEXT DEFAULT '', " +
-            "LugarInicio TEXT DEFAULT '', " +
-            "Final TEXT DEFAULT '', " +
-            "LugarFinal TEXT DEFAULT '')";
-
-    private static final String CREAR_TABLA_SERVICIOS_AUXILIARES = "CREATE TABLE ServiciosAuxiliares " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "Linea TEXT DEFAULT '', " +
-            "Servicio TEXT DEFAULT '', " +
-            "Turno INTEGER DEFAULT 0, " +
-            "LineaAuxiliar TEXT DEFAULT '', " +
-            "ServicioAuxiliar TEXT DEFAULT '', " +
-            "TurnoAuxiliar INTEGER DEFAULT 0, " +
-            "Inicio TEXT DEFAULT '', " +
-            "LugarInicio TEXT DEFAULT '', " +
-            "Final TEXT DEFAULT '', " +
-            "LugarFinal TEXT DEFAULT '')";
-
-
-    private static final String CREAR_TABLA_OPCIONES = "CREATE TABLE Opciones " +
-            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "PrimerMes INTEGER DEFAULT 1, " + // Primer mes mostrado
-            "PrimerAño INTEGER DEFAULT 2016, " + // Primer año mostrado
-            "AcumuladasAnteriores REAL DEFAULT 0, " + // Horas anteriores
-            "RelevoFijo INTEGER DEFAULT 0, " + // Relevo fijo
-            "ModoBasico INTEGER DEFAULT 0, " + // Mostrar día básico
-            "RellenarSemana INTEGER DEFAULT 0, " + // Autorellenar semana
-            "JorMedia REAL DEFAULT 0, " + // Jornada media
-            "JorMinima REAL DEFAULT 0, " + // Jornada mínima
-            "LimiteEntreServicios INTEGER DEFAULT 0, " + // Límite entre servicios
-            "DiaCierreMes INTEGER DEFAULT 1, " + // Límite entre servicios
-            "JornadaAnual INTEGER DEFAULT 0, " + // Jornada anual
-            "RegularJornadaAnual INTEGER DEFAULT 0, " + // Regular Jornada anual
-            "RegularBisiestos INTEGER DEFAULT 0, " + // Regular años bisiestos
-            "InicioNocturnas INTEGER DEFAULT 0, " + // Inicio nocturnas
-            "FinalNocturnas INTEGER DEFAULT 0, " + // Final nocturnas
-            "LimiteDesayuno INTEGER DEFAULT 0, " + // Limite dieta desayuno
-            "LimiteComida1 INTEGER DEFAULT 0, " + // Límite dieta comida turno 1
-            "LimiteComida2 INTEGER DEFAULT 0, " + // Límite dieta comida turno 2
-            "LimiteCena INTEGER DEFAULT 0, " + // Límite dieta cena
-            "InferirTurnos INTEGER DEFAULT 0, " + // Inferir turnos
-            "DiaBaseTurnos INTEGER DEFAULT 0, " + // Dia Inferir turnos
-            "MesBaseTurnos INTEGER DEFAULT 0, " + // Mes inferir turnos
-            "AñoBaseTurnos INTEGER DEFAULT 0, " + // Año inferir turnos
-            "PdfHorizontal INTEGER DEFAULT 0, " + // PDF en horizontal
-            "PdfIncluirServicios INTEGER DEFAULT 0, " + // Incluir servicios
-            "PdfIncluirNotas INTEGER DEFAULT 0, " + // Incluir notas
-            "PdfAgruparNotas INTEGER DEFAULT 0, " + // Agrupar notas
-            "VerMesActual INTEGER DEFAULT 0, " + // Iniciar mes actual
-            "IniciarCalendario INTEGER DEFAULT 0, " + // Iniciar en el calendario
-            "SumarTomaDeje INTEGER DEFAULT 0, " + // Acumular toma y deje
-            "ActivarTecladoNumerico INTEGER DEFAULT 0, " + // Activar teclado numérico
-            "GuardarSiempre INTEGER DEFAULT 0)"; // Guardar siempre, aunque le demos al boton atras.
+//    private static final String CREAR_TABLA_CALENDARIO = "CREATE TABLE Calendario " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Dia INTEGER DEFAULT 0, " +
+//            "Mes INTEGER DEFAULT 0, " +
+//            "Año INTEGER DEFAULT 0, " +
+//            "DiaSemana INTEGER DEFAULT 0, " +
+//            "EsFranqueo INTEGER DEFAULT 0, " +
+//            "EsFestivo INTEGER DEFAULT 0, " +
+//            "CodigoIncidencia INTEGER DEFAULT 0, " +
+//            "TextoIncidencia TEXT DEFAULT '', " +
+//            "TipoIncidencia INTEGER DEFAULT 0, " +
+//            "HuelgaParcial INTEGER DEFAULT 0, " +
+//            "HorasHuelga REAL DEFAULT 0, " +
+//            "Servicio TEXT DEFAULT '', " +
+//            "Turno INTEGER DEFAULT 0, " +
+//            "Linea TEXT DEFAULT '', " +
+//            "TextoLinea TEXT DEFAULT '', " +
+//            "Inicio TEXT DEFAULT '', " +
+//            "LugarInicio TEXT DEFAULT '', " +
+//            "Final TEXT DEFAULT '', " +
+//            "LugarFinal TEXT DEFAULT '', " +
+//            "Acumuladas REAL DEFAULT 0, " +
+//            "Nocturnas REAL DEFAULT 0, " +
+//            "Trabajadas REAL DEFAULT 0, " +
+//            "Desayuno INTEGER DEFAULT 0, " +
+//            "Comida INTEGER DEFAULT 0, " +
+//            "Cena INTEGER DEFAULT 0, " +
+//            "TomaDeje TEXT DEFAULT '', " +
+//            "TomaDejeDecimal REAL DEFAULT 0, " +
+//            "Euros REAL DEFAULT 0, " +
+//            "Matricula INTEGER DEFAULT 0, " +
+//            "Apellidos TEXT DEFAULT '', " +
+//            "Calificacion INTEGER DEFAULT 0, " +
+//            "MatriculaSusti INTEGER DEFAULT 0, " +
+//            "ApellidosSusti TEXT DEFAULT '', " +
+//            "Bus TEXT DEFAULT '', " +
+//            "Notas TEXT DEFAULT '')";
+//
+//    private static final String CREAR_TABLA_SERVICIOS_DIA = "CREATE TABLE ServiciosCalendario " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Dia INTEGER DEFAULT 0, " +
+//            "Mes INTEGER DEFAULT 0, " +
+//            "Año INTEGER DEFAULT 0, " +
+//            "Servicio TEXT DEFAULT '', " +
+//            "Turno INTEGER DEFAULT 0, " +
+//            "Linea TEXT DEFAULT '', " +
+//            "Inicio TEXT DEFAULT '', " +
+//            "LugarInicio TEXT DEFAULT '', " +
+//            "Final TEXT DEFAULT '', " +
+//            "LugarFinal TEXT DEFAULT '')";
+//
+//    private static final String CREAR_TABLA_HORAS_AJENAS = "CREATE TABLE HorasAjenas " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Dia INTEGER DEFAULT 0, " +
+//            "Mes INTEGER DEFAULT 0, " +
+//            "Año INTEGER DEFAULT 0, " +
+//            "Horas REAL DEFAULT 0, " +
+//            "Motivo TEXT DEFAULT '')";
+//
+//    private static final String CREAR_TABLA_INCIDENCIAS = "CREATE TABLE Incidencias " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Codigo INTEGER UNIQUE, " +
+//            "Incidencia TEXT DEFAULT '', " +
+//            "Tipo INTEGER DEFAULT 0)";
+//
+//    private static final String CREAR_TABLA_RELEVOS = "CREATE TABLE Relevos " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Matricula INTEGER UNIQUE, " +
+//            "Nombre TEXT DEFAULT '', " +
+//            "Apellidos TEXT DEFAULT '', " +
+//            "Telefono TEXT DEFAULT '', " +
+//            "Calificacion INTEGER DEFAULT 0, " +
+//            "Deuda INTEGER DEFAULT 0, " +
+//            "Notas TEXT DEFAULT '')";
+//
+//    private static final String CREAR_TABLA_LINEAS = "CREATE TABLE Lineas " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Linea TEXT DEFAULT '', " +
+//            "Texto TEXT DEFAULT '')";
+//
+//    private static final String CREAR_TABLA_SERVICIOS = "CREATE TABLE Servicios " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Linea TEXT DEFAULT '', " +
+//            "Servicio TEXT DEFAULT '', " +
+//            "Turno INTEGER DEFAULT 0, " +
+//            "TomaDeje TEXT DEFAULT '', " +
+//            "TomaDejeDecimal REAL DEFAULT 0, " +
+//            "Euros REAL DEFAULT 0, " +
+//            "Inicio TEXT DEFAULT '', " +
+//            "LugarInicio TEXT DEFAULT '', " +
+//            "Final TEXT DEFAULT '', " +
+//            "LugarFinal TEXT DEFAULT '')";
+//
+//    private static final String CREAR_TABLA_SERVICIOS_AUXILIARES = "CREATE TABLE ServiciosAuxiliares " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "Linea TEXT DEFAULT '', " +
+//            "Servicio TEXT DEFAULT '', " +
+//            "Turno INTEGER DEFAULT 0, " +
+//            "LineaAuxiliar TEXT DEFAULT '', " +
+//            "ServicioAuxiliar TEXT DEFAULT '', " +
+//            "TurnoAuxiliar INTEGER DEFAULT 0, " +
+//            "Inicio TEXT DEFAULT '', " +
+//            "LugarInicio TEXT DEFAULT '', " +
+//            "Final TEXT DEFAULT '', " +
+//            "LugarFinal TEXT DEFAULT '')";
+//
+//
+//    private static final String CREAR_TABLA_OPCIONES = "CREATE TABLE Opciones " +
+//            "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//            "PrimerMes INTEGER DEFAULT 1, " + // Primer mes mostrado
+//            "PrimerAño INTEGER DEFAULT 2016, " + // Primer año mostrado
+//            "AcumuladasAnteriores REAL DEFAULT 0, " + // Horas anteriores
+//            "RelevoFijo INTEGER DEFAULT 0, " + // Relevo fijo
+//            "ModoBasico INTEGER DEFAULT 0, " + // Mostrar día básico
+//            "RellenarSemana INTEGER DEFAULT 0, " + // Autorellenar semana
+//            "JorMedia REAL DEFAULT 0, " + // Jornada media
+//            "JorMinima REAL DEFAULT 0, " + // Jornada mínima
+//            "LimiteEntreServicios INTEGER DEFAULT 0, " + // Límite entre servicios
+//            "DiaCierreMes INTEGER DEFAULT 1, " + // Límite entre servicios
+//            "JornadaAnual INTEGER DEFAULT 0, " + // Jornada anual
+//            "RegularJornadaAnual INTEGER DEFAULT 0, " + // Regular Jornada anual
+//            "RegularBisiestos INTEGER DEFAULT 0, " + // Regular años bisiestos
+//            "InicioNocturnas INTEGER DEFAULT 0, " + // Inicio nocturnas
+//            "FinalNocturnas INTEGER DEFAULT 0, " + // Final nocturnas
+//            "LimiteDesayuno INTEGER DEFAULT 0, " + // Limite dieta desayuno
+//            "LimiteComida1 INTEGER DEFAULT 0, " + // Límite dieta comida turno 1
+//            "LimiteComida2 INTEGER DEFAULT 0, " + // Límite dieta comida turno 2
+//            "LimiteCena INTEGER DEFAULT 0, " + // Límite dieta cena
+//            "InferirTurnos INTEGER DEFAULT 0, " + // Inferir turnos
+//            "DiaBaseTurnos INTEGER DEFAULT 0, " + // Dia Inferir turnos
+//            "MesBaseTurnos INTEGER DEFAULT 0, " + // Mes inferir turnos
+//            "AñoBaseTurnos INTEGER DEFAULT 0, " + // Año inferir turnos
+//            "PdfHorizontal INTEGER DEFAULT 0, " + // PDF en horizontal
+//            "PdfIncluirServicios INTEGER DEFAULT 0, " + // Incluir servicios
+//            "PdfIncluirNotas INTEGER DEFAULT 0, " + // Incluir notas
+//            "PdfAgruparNotas INTEGER DEFAULT 0, " + // Agrupar notas
+//            "VerMesActual INTEGER DEFAULT 0, " + // Iniciar mes actual
+//            "IniciarCalendario INTEGER DEFAULT 0, " + // Iniciar en el calendario
+//            "SumarTomaDeje INTEGER DEFAULT 0, " + // Acumular toma y deje
+//            "ActivarTecladoNumerico INTEGER DEFAULT 0, " + // Activar teclado numérico
+//            "GuardarSiempre INTEGER DEFAULT 0)"; // Guardar siempre, aunque le demos al boton atras.
 
 
     //endregion
@@ -232,95 +229,95 @@ public class BaseDatos {
     //region  CADENAS DE ACTUALIZACION DE BASE DE DATOS
 
     // INSERTAR REGISTROS EN SERVICIOS PARA LA VERSION 2
-    private static final String COPIAR_TABLA_CALENDARIO_V2 = "INSERT INTO Calendario " +
-            "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
-            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, Final, " +
-            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
-            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
-            "Bus, Notas) " +
-            "SELECT " +
-            "Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
-            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, Final, " +
-            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
-            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
-            "Bus, Notas " +
-            "FROM CalendarioOld;";
-
-    private static final String COPIAR_TABLA_SERVICIOS_DIA_V2 = "INSERT INTO ServiciosCalendario " +
-            "(Dia, Mes, Año, Servicio, Turno, Linea, Inicio, Final) " +
-            "SELECT " +
-            "Dia, Mes, Año, Servicio, Turno, Linea, Inicio, Final " +
-            "FROM ServiciosCalendarioOld;";
-
-    private static final String COPIAR_TABLA_SERVICIOS_V2 = "INSERT INTO Servicios " +
-            "(Linea, Servicio, Turno, Inicio, Final) " +
-            "SELECT " +
-            "Linea, Servicio, Turno, Inicio, Final " +
-            "FROM ServiciosOld;";
-
-    private static final String COPIAR_TABLA_SERVICIOS_AUXILIARES_V2 = "INSERT INTO ServiciosAuxiliares " +
-            "(Linea, Servicio, Turno, LineaAuxiliar, ServicioAuxiliar, TurnoAuxiliar, Inicio, Final) " +
-            "SELECT " +
-            "Linea, Servicio, Turno, LineaAuxiliar, ServicioAuxiliar, TurnoAuxiliar, Inicio, Final " +
-            "FROM ServiciosAuxiliaresOld;";
-
-
-    // INSERTAR REGISTROS EN SERVICIOS PARA LA VERSION 3
-    private static final String COPIAR_TABLA_CALENDARIO_V3 = "INSERT INTO Calendario " +
-            "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
-            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, LugarInicio, Final, LugarFinal, " +
-            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
-            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
-            "Bus, Notas) " +
-            "SELECT " +
-            "Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
-            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, LugarInicio, Final, LugarFinal, " +
-            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
-            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
-            "Bus, Notas " +
-            "FROM CalendarioOld;";
-
-    private static final String COPIAR_TABLA_SERVICIOS_V3 = "INSERT INTO Servicios " +
-            "(Linea, Servicio, Turno, Inicio, LugarInicio, Final, LugarFinal) " +
-            "SELECT " +
-            "Linea, Servicio, Turno, Inicio, LugarInicio, Final, LugarFinal " +
-            "FROM ServiciosOld;";
-
-    // INSERTAR REGISTROS EN SERVICIOS PARA LA VERSION 4
-    private static final String COPIAR_TABLA_CALENDARIO_V4 = "INSERT INTO Calendario " +
-            "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
-            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, " +
-            "LugarInicio, Final, LugarFinal, " +
-            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
-            "Tomadeje, TomaDejeDecimal, Euros, " +
-            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
-            "Bus, Notas) " +
-            "SELECT " +
-            "Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
-            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, " +
-            "LugarInicio, Final, LugarFinal, " +
-            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
-            "Tomadeje, TomaDejeDecimal, Euros, " +
-            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
-            "Bus, Notas " +
-            "FROM CalendarioOld;";
-
-    // INSERTAR REGISTROS EN SERVICOS PARA LA VERSIÓN 6
-    private static final String COPIAR_TABLA_OPCIONES_V6 = "INSERT INTO Opciones " +
-            "(PrimerMes, PrimerAño, AcumuladasAnteriores, RelevoFijo, ModoBasico, RellenarSemana, JorMedia, " +
-            "JorMinima, LimiteEntreServicios, JornadaAnual, RegularJornadaAnual, RegularBisiestos, " +
-            "InicioNocturnas, FinalNocturnas, LimiteDesayuno, LimiteComida1, LimiteComida2, LimiteCena, " +
-            "InferirTurnos, DiaBaseTurnos, MesBaseTurnos, AñoBaseTurnos, PdfHorizontal, PdfIncluirServicios, " +
-            "PdfIncluirNotas, PdfAgruparNotas, VerMesActual, IniciarCalendario, SumarTomaDeje, " +
-            "ActivarTecladoNumerico, GuardarSiempre) " +
-            "SELECT " +
-            "PrimerMes, PrimerAño, AcumuladasAnteriores, RelevoFijo, ModoBasico, RellenarSemana, JorMedia, " +
-            "JorMinima, LimiteEntreServicios, JornadaAnual, RegularJornadaAnual, RegularBisiestos, " +
-            "InicioNocturnas, FinalNocturnas, LimiteDesayuno, LimiteComida1, LimiteComida2, LimiteCena, " +
-            "InferirTurnos, DiaBaseTurnos, MesBaseTurnos, AñoBaseTurnos, PdfHorizontal, PdfIncluirServicios, " +
-            "PdfIncluirNotas, PdfAgruparNotas, VerMesActual, IniciarCalendario, SumarTomaDeje, " +
-            "ActivarTecladoNumerico, GuardarSiempre " +
-            "FROM OpcionesOld";
+//    private static final String COPIAR_TABLA_CALENDARIO_V2 = "INSERT INTO Calendario " +
+//            "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
+//            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, Final, " +
+//            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
+//            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
+//            "Bus, Notas) " +
+//            "SELECT " +
+//            "Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
+//            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, Final, " +
+//            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
+//            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
+//            "Bus, Notas " +
+//            "FROM CalendarioOld;";
+//
+//    private static final String COPIAR_TABLA_SERVICIOS_DIA_V2 = "INSERT INTO ServiciosCalendario " +
+//            "(Dia, Mes, Año, Servicio, Turno, Linea, Inicio, Final) " +
+//            "SELECT " +
+//            "Dia, Mes, Año, Servicio, Turno, Linea, Inicio, Final " +
+//            "FROM ServiciosCalendarioOld;";
+//
+//    private static final String COPIAR_TABLA_SERVICIOS_V2 = "INSERT INTO Servicios " +
+//            "(Linea, Servicio, Turno, Inicio, Final) " +
+//            "SELECT " +
+//            "Linea, Servicio, Turno, Inicio, Final " +
+//            "FROM ServiciosOld;";
+//
+//    private static final String COPIAR_TABLA_SERVICIOS_AUXILIARES_V2 = "INSERT INTO ServiciosAuxiliares " +
+//            "(Linea, Servicio, Turno, LineaAuxiliar, ServicioAuxiliar, TurnoAuxiliar, Inicio, Final) " +
+//            "SELECT " +
+//            "Linea, Servicio, Turno, LineaAuxiliar, ServicioAuxiliar, TurnoAuxiliar, Inicio, Final " +
+//            "FROM ServiciosAuxiliaresOld;";
+//
+//
+//    // INSERTAR REGISTROS EN SERVICIOS PARA LA VERSION 3
+//    private static final String COPIAR_TABLA_CALENDARIO_V3 = "INSERT INTO Calendario " +
+//            "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
+//            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, LugarInicio, Final, LugarFinal, " +
+//            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
+//            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
+//            "Bus, Notas) " +
+//            "SELECT " +
+//            "Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
+//            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, LugarInicio, Final, LugarFinal, " +
+//            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
+//            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
+//            "Bus, Notas " +
+//            "FROM CalendarioOld;";
+//
+//    private static final String COPIAR_TABLA_SERVICIOS_V3 = "INSERT INTO Servicios " +
+//            "(Linea, Servicio, Turno, Inicio, LugarInicio, Final, LugarFinal) " +
+//            "SELECT " +
+//            "Linea, Servicio, Turno, Inicio, LugarInicio, Final, LugarFinal " +
+//            "FROM ServiciosOld;";
+//
+//    // INSERTAR REGISTROS EN SERVICIOS PARA LA VERSION 4
+//    private static final String COPIAR_TABLA_CALENDARIO_V4 = "INSERT INTO Calendario " +
+//            "(Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
+//            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, " +
+//            "LugarInicio, Final, LugarFinal, " +
+//            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
+//            "Tomadeje, TomaDejeDecimal, Euros, " +
+//            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
+//            "Bus, Notas) " +
+//            "SELECT " +
+//            "Dia, Mes, Año, DiaSemana, EsFranqueo, EsFestivo, CodigoIncidencia, TextoIncidencia, " +
+//            "TipoIncidencia, Servicio, Turno, Linea, TextoLinea, Inicio, " +
+//            "LugarInicio, Final, LugarFinal, " +
+//            "Acumuladas, Nocturnas, Trabajadas, Desayuno, Comida, Cena, " +
+//            "Tomadeje, TomaDejeDecimal, Euros, " +
+//            "Matricula, Apellidos, Calificacion, MatriculaSusti, ApellidosSusti, " +
+//            "Bus, Notas " +
+//            "FROM CalendarioOld;";
+//
+//    // INSERTAR REGISTROS EN SERVICOS PARA LA VERSIÓN 6
+//    private static final String COPIAR_TABLA_OPCIONES_V6 = "INSERT INTO Opciones " +
+//            "(PrimerMes, PrimerAño, AcumuladasAnteriores, RelevoFijo, ModoBasico, RellenarSemana, JorMedia, " +
+//            "JorMinima, LimiteEntreServicios, JornadaAnual, RegularJornadaAnual, RegularBisiestos, " +
+//            "InicioNocturnas, FinalNocturnas, LimiteDesayuno, LimiteComida1, LimiteComida2, LimiteCena, " +
+//            "InferirTurnos, DiaBaseTurnos, MesBaseTurnos, AñoBaseTurnos, PdfHorizontal, PdfIncluirServicios, " +
+//            "PdfIncluirNotas, PdfAgruparNotas, VerMesActual, IniciarCalendario, SumarTomaDeje, " +
+//            "ActivarTecladoNumerico, GuardarSiempre) " +
+//            "SELECT " +
+//            "PrimerMes, PrimerAño, AcumuladasAnteriores, RelevoFijo, ModoBasico, RellenarSemana, JorMedia, " +
+//            "JorMinima, LimiteEntreServicios, JornadaAnual, RegularJornadaAnual, RegularBisiestos, " +
+//            "InicioNocturnas, FinalNocturnas, LimiteDesayuno, LimiteComida1, LimiteComida2, LimiteCena, " +
+//            "InferirTurnos, DiaBaseTurnos, MesBaseTurnos, AñoBaseTurnos, PdfHorizontal, PdfIncluirServicios, " +
+//            "PdfIncluirNotas, PdfAgruparNotas, VerMesActual, IniciarCalendario, SumarTomaDeje, " +
+//            "ActivarTecladoNumerico, GuardarSiempre " +
+//            "FROM OpcionesOld";
 
 
     //endregion
@@ -336,7 +333,7 @@ public class BaseDatos {
 
     // CONSTRUCTOR DE LA CLASE
     public BaseDatos(Context context) {
-        baseHelper = new BaseHelper(context);
+        baseHelper = BaseHelper.getInstance(context, DB_VERSION);
         baseDatos = baseHelper.getWritableDatabase();
         opciones = getOpciones();
         if (opciones == null) {
@@ -1122,7 +1119,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1152,7 +1149,7 @@ public class BaseDatos {
         e.Valor = "0,00";
         e.Contador = contador;
         contador++;
-        e.Valor = Hora.textoDecimal(trabajadas);
+        e.Valor = HoraHelper.textoDecimal(trabajadas);
         lista.add(e);
         c.close();
 
@@ -1172,7 +1169,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1187,7 +1184,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1202,7 +1199,7 @@ public class BaseDatos {
         e.Contador = contador;
         contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1217,7 +1214,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1493,7 +1490,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma")));
         }
         lista.add(e);
         c.close();
@@ -1573,7 +1570,7 @@ public class BaseDatos {
         e.Contador = contador;
         //contador++;
         if (c.moveToFirst()) {
-            e.Valor = Hora.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma"))) + " €";
+            e.Valor = HoraHelper.textoDecimal(c.getDouble(c.getColumnIndexOrThrow("Suma"))) + " €";
         }
         lista.add(e);
 
@@ -1637,6 +1634,7 @@ public class BaseDatos {
     public void guardaServicioDia(ServicioDia servicioDia) {
         hayCambios = true;
         ContentValues valores = new ContentValues();
+        valores.put("DiaId", servicioDia.getDiaId());
         valores.put("Dia", servicioDia.getDia());
         valores.put("Mes", servicioDia.getMes());
         valores.put("Año", servicioDia.getAño());
@@ -1823,6 +1821,19 @@ public class BaseDatos {
         return l;
     }
 
+    public com.quattroid.data.models.LineaModel getLineaNuevo(String linea) {
+        com.quattroid.data.models.LineaModel l = new com.quattroid.data.models.LineaModel();
+        String where = "Linea='" + linea.trim() + "'";
+        Cursor c = baseDatos.query(TABLA_LINEAS, null, where, null, null, null, null);
+        if (c.getCount() == 0) return null;
+        c.moveToFirst();
+        l.setLinea(c.getString(c.getColumnIndexOrThrow("Linea")));
+        l.setTexto(c.getString(c.getColumnIndexOrThrow("Texto")));
+
+        c.close();
+        return l;
+    }
+
     public Linea getLinea(int id) {
         Linea l = new Linea();
         String where = "_id=" + String.valueOf(id);
@@ -1854,6 +1865,34 @@ public class BaseDatos {
                 }
                 borrarLinea(l.getLinea());
                 guardarServicios(servicios);
+            } else {
+                borrarLinea(l.getLinea());
+            }
+        }
+        ContentValues valores = new ContentValues();
+        valores.put("Linea", linea.getLinea());
+        valores.put("Texto", linea.getTexto());
+        return (baseDatos.insert(TABLA_LINEAS, null, valores) > -1);
+    }
+
+    public boolean setLineaNuevo(com.quattroid.data.models.LineaModel linea) {
+        if (linea == null) return false;
+        hayCambios = true;
+        com.quattroid.data.models.LineaModel l = getLineaNuevo(linea.getLinea());
+        if (l != null) {
+            //Recuperamos los servicios de la linea.
+            ArrayList<com.quattroid.data.models.ServicioModel> servicios = getServiciosNuevo(linea.getLinea());
+            if (servicios != null) {
+                for (com.quattroid.data.models.ServicioModel s : servicios) {
+                    //s.Nuevo = true;
+                    if (s.getServicios() != null) {
+                        for (com.quattroid.data.models.ServicioAuxiliarModel sa : s.getServicios()) {
+                            //sa.Nuevo = true;
+                        }
+                    }
+                }
+                borrarLinea(l.getLinea());
+                guardarServiciosNuevo(servicios);
             } else {
                 borrarLinea(l.getLinea());
             }
@@ -1915,6 +1954,65 @@ public class BaseDatos {
     }
 
 
+    public ArrayList<LineaModel> getAllLineas(Boolean incluirServicios) {
+        if (incluirServicios) return getAllLineas();
+        Cursor cursorLineas = cursorLineas();
+        ArrayList<LineaModel> lineas = new ArrayList<>();
+        if (cursorLineas.moveToFirst()) {
+            do {
+                LineaModel linea = new LineaModel(cursorLineas);
+                lineas.add(linea);
+            } while (cursorLineas.moveToNext());
+            cursorLineas.close();
+        }
+        return lineas;
+    }
+
+
+    public ArrayList<com.quattroid.data.models.LineaModel> getAllLineasNuevo(boolean incluirServicios) {
+        Cursor cursorLineas = cursorLineas(); //TODO: Sacar a un helper o similar.
+        ArrayList<com.quattroid.data.models.LineaModel> lineas = new ArrayList<>();
+        if (cursorLineas.moveToFirst()) {
+            do {
+                com.quattroid.data.models.LineaModel linea = new com.quattroid.data.models.LineaModel(cursorLineas);
+                if (incluirServicios) linea.setServicios(getServiciosNuevo(linea.getLinea()));
+                lineas.add(linea);
+            } while (cursorLineas.moveToNext());
+            cursorLineas.close();
+        }
+        return lineas;
+    }
+
+
+    public ArrayList<com.quattroid.data.models.ServicioModel> getServiciosNuevo(String linea) {
+        Cursor cursorServicios = cursorServiciosLinea(linea);//TODO: Sacar a un helper o similar.
+        ArrayList<com.quattroid.data.models.ServicioModel> servicios = new ArrayList<>();
+        if (cursorServicios.moveToFirst()) {
+            do {
+                com.quattroid.data.models.ServicioModel servicio = new com.quattroid.data.models.ServicioModel(cursorServicios);
+                servicio.setServicios(getServiciosAuxiliaresNuevo(servicio.getLinea(), servicio.getServicio(), servicio.getTurno()));
+                servicios.add(servicio);
+            } while (cursorServicios.moveToNext());
+            cursorServicios.close();
+        }
+        return servicios;
+    }
+
+
+    public ArrayList<com.quattroid.data.models.ServicioAuxiliarModel> getServiciosAuxiliaresNuevo(String linea, String servicio, int turno) {
+        Cursor cursorAuxiliares = cursorServiciosAuxiliares(linea, servicio, turno);//TODO: Sacar a un helper o similar.
+        ArrayList<com.quattroid.data.models.ServicioAuxiliarModel> serviciosAuxiliares = new ArrayList<>();
+        if (cursorAuxiliares.moveToFirst()) {
+            do {
+                com.quattroid.data.models.ServicioAuxiliarModel servicioAuxiliar = new com.quattroid.data.models.ServicioAuxiliarModel(cursorAuxiliares);
+                serviciosAuxiliares.add(servicioAuxiliar);
+            } while (cursorAuxiliares.moveToNext());
+            cursorAuxiliares.close();
+        }
+        return serviciosAuxiliares;
+    }
+
+
     public void guardarAllLineas(ArrayList<LineaModel> lineas) {
         for (LineaModel linea : lineas) {
             // Si la línea es nueva o ha sido modificada, la guardamos.
@@ -1936,6 +2034,36 @@ public class BaseDatos {
                             // Si el servicio auxiliar es nuevo o ha sido modificado lo guardamos.
                             if (auxiliar.Nuevo || auxiliar.Modificado)
                                 setServicioAuxiliar(auxiliar.ToServicioAuxiliar());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void guardarAllLineasNuevo(ArrayList<com.quattroid.data.models.LineaModel> lineas) {
+        for (com.quattroid.data.models.LineaModel linea : lineas) {
+            // Si la línea es nueva o ha sido modificada, la guardamos.
+            //if (linea.Nuevo || linea.Modificado)
+            setLineaNuevo(linea);
+            // Comprobamos los servicios.
+            if (linea.getServicios() != null) {
+                for (com.quattroid.data.models.ServicioModel servicio : linea.getServicios()) {
+                    // Si el servicio es nuevo o ha sido modificado, lo guardamos.
+//                    if (servicio.Nuevo || servicio.Modificado) {
+//                        // Si es nuevo, le ponemos -1 al id, sino 0.
+//                        if (servicio.Nuevo) {
+//                            setServicio(-1, servicio.ToServicio());
+//                        } else {
+                    setServicioNuevo(0, servicio);
+                    //}
+                    //}
+                    if (servicio.getServicios() != null) {
+                        for (com.quattroid.data.models.ServicioAuxiliarModel auxiliar : servicio.getServicios()) {
+                            // Si el servicio auxiliar es nuevo o ha sido modificado lo guardamos.
+                            //if (auxiliar.Nuevo || auxiliar.Modificado)
+                            setServicioAuxiliarNuevo(auxiliar);
                         }
                     }
                 }
@@ -2046,12 +2174,53 @@ public class BaseDatos {
 
     }
 
+    public void guardarServiciosNuevo(ArrayList<com.quattroid.data.models.ServicioModel> servicios) {
+        for (com.quattroid.data.models.ServicioModel servicio : servicios) {
+            // Si el servicio es nuevo o ha sido modificado, lo guardamos.
+            //if (servicio.Nuevo || servicio.Modificado) {
+            // Si es nuevo, le ponemos -1 al id, sino 0.
+            //if (servicio.Nuevo) {
+            //    setServicio(-1, servicio.ToServicio());
+            //} else {
+            setServicioNuevo(0, servicio);
+            //}
+
+            if (servicio.getServicios() != null) {
+                for (com.quattroid.data.models.ServicioAuxiliarModel auxiliar : servicio.getServicios()) {
+                    // Si el servicio auxiliar es nuevo o ha sido modificado lo guardamos.
+                    //if (auxiliar.Nuevo || auxiliar.Modificado)
+                    setServicioAuxiliarNuevo(auxiliar);
+                }
+            }
+        }
+
+    }
+
 
     public void setServicio(int id, Servicio servicio) {
         if (servicio == null) return;
         hayCambios = true;
         if (id != -1)
             borrarServicio(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
+        ContentValues valores = new ContentValues();
+        valores.put("Linea", servicio.getLinea());
+        valores.put("Servicio", servicio.getServicio());
+        valores.put("Turno", servicio.getTurno());
+        valores.put("Inicio", servicio.getInicio());
+        valores.put("TomaDeje", servicio.getTomaDeje());
+        valores.put("Euros", servicio.getEuros());
+        valores.put("LugarInicio", servicio.getLugarInicio());
+        valores.put("Final", servicio.getFinal());
+        valores.put("LugarFinal", servicio.getLugarFinal());
+        baseDatos.insert(TABLA_SERVICIOS, null, valores);
+    }
+
+
+    public void setServicioNuevo(int id, com.quattroid.data.models.ServicioModel servicio) {
+        if (servicio == null) return;
+        hayCambios = true;
+        //if (id != -1)
+        borrarServicio(servicio.getLinea(), servicio.getServicio(), servicio.getTurno());
         ContentValues valores = new ContentValues();
         valores.put("Linea", servicio.getLinea());
         valores.put("Servicio", servicio.getServicio());
@@ -2274,7 +2443,23 @@ public class BaseDatos {
         valores.put("Final", servicioAuxiliar.getFinal());
         valores.put("LugarFinal", servicioAuxiliar.getLugarFinal());
         baseDatos.insert(TABLA_SERVICIOS_AUXILIARES, null, valores);
+    }
 
+
+    public void setServicioAuxiliarNuevo(com.quattroid.data.models.ServicioAuxiliarModel servicioAuxiliar) {
+        hayCambios = true;
+        ContentValues valores = new ContentValues();
+        valores.put("Linea", servicioAuxiliar.getLinea());
+        valores.put("Servicio", servicioAuxiliar.getServicio());
+        valores.put("Turno", servicioAuxiliar.getTurno());
+        valores.put("LineaAuxiliar", servicioAuxiliar.getLineaAuxiliar());
+        valores.put("ServicioAuxiliar", servicioAuxiliar.getServicioAuxiliar());
+        valores.put("TurnoAuxiliar", servicioAuxiliar.getTurnoAuxiliar());
+        valores.put("Inicio", servicioAuxiliar.getInicio());
+        valores.put("LugarInicio", servicioAuxiliar.getLugarInicio());
+        valores.put("Final", servicioAuxiliar.getFinal());
+        valores.put("LugarFinal", servicioAuxiliar.getLugarFinal());
+        baseDatos.insert(TABLA_SERVICIOS_AUXILIARES, null, valores);
     }
 
     public void borraServicioAuxiliar(int id) {
@@ -2388,288 +2573,288 @@ public class BaseDatos {
 
     //region   CLASE HELPER PARA LAS BASES DE DATOS. VERSION = 5
 
-    private static class BaseHelper extends SQLiteOpenHelper {
-
-        Context context = null;
-        SharedPreferences opc = null;
-
-        // Versión de la Base de Datos = 6
-        BaseHelper(Context context) {
-            super(context, BASE_NAME, null, 6);
-            this.context = context;
-            opc = PreferenceManager.getDefaultSharedPreferences(context);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            hayCambios = true;
-            // CREAR LAS TABLAS EN LA BASE DE DATOS
-            db.execSQL(CREAR_TABLA_CALENDARIO);
-            db.execSQL(CREAR_TABLA_SERVICIOS_DIA);
-            db.execSQL(CREAR_TABLA_HORAS_AJENAS);
-            db.execSQL(CREAR_TABLA_INCIDENCIAS);
-            db.execSQL(CREAR_TABLA_RELEVOS);
-            db.execSQL(CREAR_TABLA_LINEAS);
-            db.execSQL(CREAR_TABLA_SERVICIOS);
-            db.execSQL(CREAR_TABLA_SERVICIOS_AUXILIARES);
-            db.execSQL(CREAR_TABLA_OPCIONES);
-            crearIncidencias(db);
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            hayCambios = true;
-            // Evaluamos cual es la siguiente versión a la que teníamos.
-            int nuevaVersion = oldVersion + 1;
-            // Ejecutamos la actualización, partiendo de la versión siguiente a la que tenemos.
-            // Omitiendo los Breaks, pasamos de una versión 1, por ejemplo, a una 4, incrementalmente.
-            switch (nuevaVersion) {
-                case 2:
-                    // Cambiamos el nombre de las tablas afectadas
-                    db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
-                    db.execSQL("ALTER TABLE ServiciosCalendario RENAME TO ServiciosCalendarioOld;");
-                    db.execSQL("ALTER TABLE Servicios RENAME TO ServiciosOld;");
-                    db.execSQL("ALTER TABLE ServiciosAuxiliares RENAME TO ServiciosAuxiliaresOld;");
-                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
-                    db.execSQL(CREAR_TABLA_CALENDARIO);
-                    db.execSQL(CREAR_TABLA_SERVICIOS_DIA);
-                    db.execSQL(CREAR_TABLA_SERVICIOS);
-                    db.execSQL(CREAR_TABLA_SERVICIOS_AUXILIARES);
-                    // Copiamos los datos de las tablas antiguas a las nuevas
-                    db.execSQL(COPIAR_TABLA_CALENDARIO_V2);
-                    db.execSQL(COPIAR_TABLA_SERVICIOS_DIA_V2);
-                    db.execSQL(COPIAR_TABLA_SERVICIOS_V2);
-                    db.execSQL(COPIAR_TABLA_SERVICIOS_AUXILIARES_V2);
-                    // Borramos las tablas antiguas
-                    db.execSQL("DROP TABLE CalendarioOld");
-                    db.execSQL("DROP TABLE ServiciosCalendarioOld");
-                    db.execSQL("DROP TABLE ServiciosOld");
-                    db.execSQL("DROP TABLE ServiciosAuxiliaresOld");
-                    //break;
-                case 3:
-                    // Cambiamos el nombre de las tablas afectadas
-                    db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
-                    db.execSQL("ALTER TABLE Servicios RENAME TO ServiciosOld;");
-                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
-                    db.execSQL(CREAR_TABLA_CALENDARIO);
-                    db.execSQL(CREAR_TABLA_SERVICIOS);
-                    // Copiamos los datos de las tablas antiguas a las nuevas
-                    db.execSQL(COPIAR_TABLA_CALENDARIO_V3);
-                    db.execSQL(COPIAR_TABLA_SERVICIOS_V3);
-                    // Borramos las tablas antiguas
-                    db.execSQL("DROP TABLE CalendarioOld");
-                    db.execSQL("DROP TABLE ServiciosOld");
-                    //break;
-                case 4:
-                    // Cambiamos el nombre de las tablas afectadas
-                    db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
-                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
-                    db.execSQL(CREAR_TABLA_CALENDARIO);
-                    // Copiamos los datos de las tablas antiguas a las nuevas
-                    db.execSQL(COPIAR_TABLA_CALENDARIO_V4);
-                    // Borramos las tablas antiguas
-                    db.execSQL("DROP TABLE CalendarioOld");
-                    //break;
-                case 5:
-                    // Creamos la tabla de las opciones.
-                    db.execSQL(CREAR_TABLA_OPCIONES);
-                    // Copiamos las opciones de las preferencias a la nueva tabla.
-                    ContentValues valores = new ContentValues();
-                    valores.put("PrimerMes", (opc.getInt("PrimerMes", 10)));
-                    valores.put("PrimerAño", (opc.getInt("PrimerAño", 2014)));
-                    valores.put("AcumuladasAnteriores", (Double.longBitsToDouble(opc.getLong("AcumuladasAnteriores", 0))));
-                    valores.put("RelevoFijo", (opc.getInt("RelevoFijo", 0)));
-                    valores.put("ModoBasico", (opc.getBoolean("ModoBasico", false)));
-                    valores.put("RellenarSemana", (opc.getBoolean("RellenarSemana", false)));
-                    valores.put("JorMedia", (Double.longBitsToDouble(opc.getLong("JorMedia", 0))));
-                    valores.put("JorMinima", (Double.longBitsToDouble(opc.getLong("JorMinima", 0))));
-                    valores.put("LimiteEntreServicios", (opc.getInt("LimiteEntreServicios", 60)));
-                    valores.put("JornadaAnual", (opc.getInt("JornadaAnual", 1592)));
-                    valores.put("RegularJornadaAnual", (opc.getBoolean("RegularJornadaAnual", true)));
-                    valores.put("RegularBisiestos", (opc.getBoolean("RegularBisiestos", true)));
-                    valores.put("InicioNocturnas", (opc.getInt("InicioNocturnas", 1320)));
-                    valores.put("FinalNocturnas", (opc.getInt("FinalNocturnas", 390)));
-                    valores.put("LimiteDesayuno", (opc.getInt("LimiteDesayuno", 270)));
-                    valores.put("LimiteComida1", (opc.getInt("LimiteComida1", 930)));
-                    valores.put("LimiteComida2", (opc.getInt("LimiteComida2", 810)));
-                    valores.put("LimiteCena", (opc.getInt("LimiteCena", 30)));
-                    valores.put("InferirTurnos", (opc.getBoolean("InferirTurnos", false)));
-                    valores.put("DiaBaseTurnos", (opc.getInt("DiaBaseTurnos", 3)));
-                    valores.put("MesBaseTurnos", (opc.getInt("MesBaseTurnos", 1)));
-                    valores.put("AñoBaseTurnos", (opc.getInt("AñoBaseTurnos", 2021)));
-                    valores.put("PdfHorizontal", (opc.getBoolean("PdfHorizontal", false)));
-                    valores.put("PdfIncluirServicios", (opc.getBoolean("PdfIncluirServicios", false)));
-                    valores.put("PdfIncluirNotas", (opc.getBoolean("PdfIncluirNotas", false)));
-                    valores.put("PdfAgruparNotas", (opc.getBoolean("PdfAgruparNotas", false)));
-                    valores.put("VerMesActual", (opc.getBoolean("VerMesActual", true)));
-                    valores.put("IniciarCalendario", (opc.getBoolean("IniciarCalendario", false)));
-                    valores.put("SumarTomaDeje", (opc.getBoolean("SumarTomaDeje", false)));
-                    valores.put("ActivarTecladoNumerico", (opc.getBoolean("ActivarTecladoNumerico", false)));
-                    db.insert(TABLA_OPCIONES, null, valores);
-                    //break;
-                case 6:
-                    // Cambiamos el nombre de las tablas afectadas
-                    db.execSQL("ALTER TABLE Opciones RENAME TO OpcionesOld;");
-                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
-                    db.execSQL(CREAR_TABLA_OPCIONES);
-                    // Copiamos los datos de las tablas antiguas a las nuevas
-                    db.execSQL(COPIAR_TABLA_OPCIONES_V6);
-                    // Borramos las tablas antiguas
-                    db.execSQL("DROP TABLE OpcionesOld");
-                    break;
-            }
-        }
-
-        // CREAR INCIDENCIAS PROTEGIDAS (0 AL 16)
-        private void crearIncidencias(SQLiteDatabase db) {
-            hayCambios = true;
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (0, 'Repetir Día Anterior', 0)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (1, 'Trabajo', 1)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (2, 'Franqueo', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (3, 'Vacaciones', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (4, 'F.O.D.', 3)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (5, 'Franqueo a Trabajar', 2)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (6, 'Enfermo/a', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (7, 'Accidentado/a', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (8, 'Permiso', 6)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (9, 'F.N.R. Año Actual', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (10, 'F.N.R. Año Anterior', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (11, 'Nos hacen el día', 1)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (12, 'Hacemos el día', 5)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (13, 'Sanción', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (14, 'En otro destino', 4)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (15, 'Huelga', 5)");
-            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
-                    "VALUES (16, 'Día por H. Acumuladas', 3)");
-        }
-
-        // HACER COPIA DE SEGURIDAD
-        boolean hacerCopia() {
-            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
-            String estadoMemoria = Environment.getExternalStorageState();
-            if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
-                return false;
-            }
-            // Hacemos la copia
-            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db";
-            FileHelper.exportDatabaseToPath(context, pathDestino);
-            // Cerramos la base de datos para que se guarden las operaciones pendientes.
-            close();
-            return true;
-        }
-
-        // RESTAURAR COPIA DE SEGURIDAD
-        boolean restaurarCopia() {
-            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
-            String estadoMemoria = Environment.getExternalStorageState();
-            if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
-                return false;
-            }
-            hayCambios = true;
-
-            // Definimos el path de la copia de seguridad
-            String origen = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/Quattroid/backup.db").getAbsolutePath();
-            // Evaluamos si existe una copia de seguridad
-            if (!new File(origen).exists()) return false;
-            close();
-
-            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db";
-            FileHelper.importDatabaseFromPath(context, pathDestino);
-
-            String destino = context.getDatabasePath(BASE_NAME).getPath();
-            new File(destino).setLastModified(new Date().getTime());
-            // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
-            getWritableDatabase().close();
-            return true;
-        }
-
-        // RESTAURAR COPIA DE SEGURIDAD
-        boolean restaurarCopia(Uri uriOrigen) {
-
-            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
+//    private static class BaseHelper extends SQLiteOpenHelper {
+//
+//        Context context = null;
+//        SharedPreferences opc = null;
+//
+//        // Versión de la Base de Datos = 6
+//        BaseHelper(Context context) {
+//            super(context, BASE_NAME, null, 6);
+//            this.context = context;
+//            opc = PreferenceManager.getDefaultSharedPreferences(context);
+//        }
+//
+//        @Override
+//        public void onCreate(SQLiteDatabase db) {
+//            hayCambios = true;
+//            // CREAR LAS TABLAS EN LA BASE DE DATOS
+//            db.execSQL(CREAR_TABLA_CALENDARIO);
+//            db.execSQL(CREAR_TABLA_SERVICIOS_DIA);
+//            db.execSQL(CREAR_TABLA_HORAS_AJENAS);
+//            db.execSQL(CREAR_TABLA_INCIDENCIAS);
+//            db.execSQL(CREAR_TABLA_RELEVOS);
+//            db.execSQL(CREAR_TABLA_LINEAS);
+//            db.execSQL(CREAR_TABLA_SERVICIOS);
+//            db.execSQL(CREAR_TABLA_SERVICIOS_AUXILIARES);
+//            db.execSQL(CREAR_TABLA_OPCIONES);
+//            crearIncidencias(db);
+//        }
+//
+//        @Override
+//        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+//            hayCambios = true;
+//            // Evaluamos cual es la siguiente versión a la que teníamos.
+//            int nuevaVersion = oldVersion + 1;
+//            // Ejecutamos la actualización, partiendo de la versión siguiente a la que tenemos.
+//            // Omitiendo los Breaks, pasamos de una versión 1, por ejemplo, a una 4, incrementalmente.
+//            switch (nuevaVersion) {
+//                case 2:
+//                    // Cambiamos el nombre de las tablas afectadas
+//                    db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
+//                    db.execSQL("ALTER TABLE ServiciosCalendario RENAME TO ServiciosCalendarioOld;");
+//                    db.execSQL("ALTER TABLE Servicios RENAME TO ServiciosOld;");
+//                    db.execSQL("ALTER TABLE ServiciosAuxiliares RENAME TO ServiciosAuxiliaresOld;");
+//                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
+//                    db.execSQL(CREAR_TABLA_CALENDARIO);
+//                    db.execSQL(CREAR_TABLA_SERVICIOS_DIA);
+//                    db.execSQL(CREAR_TABLA_SERVICIOS);
+//                    db.execSQL(CREAR_TABLA_SERVICIOS_AUXILIARES);
+//                    // Copiamos los datos de las tablas antiguas a las nuevas
+//                    db.execSQL(COPIAR_TABLA_CALENDARIO_V2);
+//                    db.execSQL(COPIAR_TABLA_SERVICIOS_DIA_V2);
+//                    db.execSQL(COPIAR_TABLA_SERVICIOS_V2);
+//                    db.execSQL(COPIAR_TABLA_SERVICIOS_AUXILIARES_V2);
+//                    // Borramos las tablas antiguas
+//                    db.execSQL("DROP TABLE CalendarioOld");
+//                    db.execSQL("DROP TABLE ServiciosCalendarioOld");
+//                    db.execSQL("DROP TABLE ServiciosOld");
+//                    db.execSQL("DROP TABLE ServiciosAuxiliaresOld");
+//                    //break;
+//                case 3:
+//                    // Cambiamos el nombre de las tablas afectadas
+//                    db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
+//                    db.execSQL("ALTER TABLE Servicios RENAME TO ServiciosOld;");
+//                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
+//                    db.execSQL(CREAR_TABLA_CALENDARIO);
+//                    db.execSQL(CREAR_TABLA_SERVICIOS);
+//                    // Copiamos los datos de las tablas antiguas a las nuevas
+//                    db.execSQL(COPIAR_TABLA_CALENDARIO_V3);
+//                    db.execSQL(COPIAR_TABLA_SERVICIOS_V3);
+//                    // Borramos las tablas antiguas
+//                    db.execSQL("DROP TABLE CalendarioOld");
+//                    db.execSQL("DROP TABLE ServiciosOld");
+//                    //break;
+//                case 4:
+//                    // Cambiamos el nombre de las tablas afectadas
+//                    db.execSQL("ALTER TABLE Calendario RENAME TO CalendarioOld;");
+//                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
+//                    db.execSQL(CREAR_TABLA_CALENDARIO);
+//                    // Copiamos los datos de las tablas antiguas a las nuevas
+//                    db.execSQL(COPIAR_TABLA_CALENDARIO_V4);
+//                    // Borramos las tablas antiguas
+//                    db.execSQL("DROP TABLE CalendarioOld");
+//                    //break;
+//                case 5:
+//                    // Creamos la tabla de las opciones.
+//                    db.execSQL(CREAR_TABLA_OPCIONES);
+//                    // Copiamos las opciones de las preferencias a la nueva tabla.
+//                    ContentValues valores = new ContentValues();
+//                    valores.put("PrimerMes", (opc.getInt("PrimerMes", 10)));
+//                    valores.put("PrimerAño", (opc.getInt("PrimerAño", 2014)));
+//                    valores.put("AcumuladasAnteriores", (Double.longBitsToDouble(opc.getLong("AcumuladasAnteriores", 0))));
+//                    valores.put("RelevoFijo", (opc.getInt("RelevoFijo", 0)));
+//                    valores.put("ModoBasico", (opc.getBoolean("ModoBasico", false)));
+//                    valores.put("RellenarSemana", (opc.getBoolean("RellenarSemana", false)));
+//                    valores.put("JorMedia", (Double.longBitsToDouble(opc.getLong("JorMedia", 0))));
+//                    valores.put("JorMinima", (Double.longBitsToDouble(opc.getLong("JorMinima", 0))));
+//                    valores.put("LimiteEntreServicios", (opc.getInt("LimiteEntreServicios", 60)));
+//                    valores.put("JornadaAnual", (opc.getInt("JornadaAnual", 1592)));
+//                    valores.put("RegularJornadaAnual", (opc.getBoolean("RegularJornadaAnual", true)));
+//                    valores.put("RegularBisiestos", (opc.getBoolean("RegularBisiestos", true)));
+//                    valores.put("InicioNocturnas", (opc.getInt("InicioNocturnas", 1320)));
+//                    valores.put("FinalNocturnas", (opc.getInt("FinalNocturnas", 390)));
+//                    valores.put("LimiteDesayuno", (opc.getInt("LimiteDesayuno", 270)));
+//                    valores.put("LimiteComida1", (opc.getInt("LimiteComida1", 930)));
+//                    valores.put("LimiteComida2", (opc.getInt("LimiteComida2", 810)));
+//                    valores.put("LimiteCena", (opc.getInt("LimiteCena", 30)));
+//                    valores.put("InferirTurnos", (opc.getBoolean("InferirTurnos", false)));
+//                    valores.put("DiaBaseTurnos", (opc.getInt("DiaBaseTurnos", 3)));
+//                    valores.put("MesBaseTurnos", (opc.getInt("MesBaseTurnos", 1)));
+//                    valores.put("AñoBaseTurnos", (opc.getInt("AñoBaseTurnos", 2021)));
+//                    valores.put("PdfHorizontal", (opc.getBoolean("PdfHorizontal", false)));
+//                    valores.put("PdfIncluirServicios", (opc.getBoolean("PdfIncluirServicios", false)));
+//                    valores.put("PdfIncluirNotas", (opc.getBoolean("PdfIncluirNotas", false)));
+//                    valores.put("PdfAgruparNotas", (opc.getBoolean("PdfAgruparNotas", false)));
+//                    valores.put("VerMesActual", (opc.getBoolean("VerMesActual", true)));
+//                    valores.put("IniciarCalendario", (opc.getBoolean("IniciarCalendario", false)));
+//                    valores.put("SumarTomaDeje", (opc.getBoolean("SumarTomaDeje", false)));
+//                    valores.put("ActivarTecladoNumerico", (opc.getBoolean("ActivarTecladoNumerico", false)));
+//                    db.insert(TABLA_OPCIONES, null, valores);
+//                    //break;
+//                case 6:
+//                    // Cambiamos el nombre de las tablas afectadas
+//                    db.execSQL("ALTER TABLE Opciones RENAME TO OpcionesOld;");
+//                    // Creamos de nuevo las tablas afectadas con la nueva estructura.
+//                    db.execSQL(CREAR_TABLA_OPCIONES);
+//                    // Copiamos los datos de las tablas antiguas a las nuevas
+//                    db.execSQL(COPIAR_TABLA_OPCIONES_V6);
+//                    // Borramos las tablas antiguas
+//                    db.execSQL("DROP TABLE OpcionesOld");
+//                    break;
+//            }
+//        }
+//
+//        // CREAR INCIDENCIAS PROTEGIDAS (0 AL 16)
+//        private void crearIncidencias(SQLiteDatabase db) {
+//            hayCambios = true;
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (0, 'Repetir Día Anterior', 0)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (1, 'Trabajo', 1)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (2, 'Franqueo', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (3, 'Vacaciones', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (4, 'F.O.D.', 3)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (5, 'Franqueo a Trabajar', 2)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (6, 'Enfermo/a', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (7, 'Accidentado/a', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (8, 'Permiso', 6)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (9, 'F.N.R. Año Actual', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (10, 'F.N.R. Año Anterior', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (11, 'Nos hacen el día', 1)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (12, 'Hacemos el día', 5)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (13, 'Sanción', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (14, 'En otro destino', 4)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (15, 'Huelga', 5)");
+//            db.execSQL("INSERT INTO Incidencias (Codigo, Incidencia, Tipo)" +
+//                    "VALUES (16, 'Día por H. Acumuladas', 3)");
+//        }
+//
+//        // HACER COPIA DE SEGURIDAD
+//        boolean hacerCopia() {
+//            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
+//            String estadoMemoria = Environment.getExternalStorageState();
+//            if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
+//                return false;
+//            }
+//            // Hacemos la copia
+//            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db";
+//            FileHelper.exportDatabaseToPath(context, pathDestino);
+//            // Cerramos la base de datos para que se guarden las operaciones pendientes.
+//            close();
+//            return true;
+//        }
+//
+//        // RESTAURAR COPIA DE SEGURIDAD
+//        boolean restaurarCopia() {
+//            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
 //            String estadoMemoria = Environment.getExternalStorageState();
 //            if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
 //                return false;
 //            }
 //            hayCambios = true;
-
-            // Definimos el path de la copia de seguridad
-            String origen = uriOrigen.getPath();
-
-            // Evaluamos si existe una copia de seguridad
-            if (!new File(origen).exists()) return false;
-
-            // Definimos el path de la base de datos.
-            String destino = context.getDatabasePath(BASE_NAME).getPath();
-
-            // Cerramos la base de datos para que este liberado el archivo
-            close();
-
-            // Copiamos los archivos
-            try {
-                FileInputStream archivoOrigen = new FileInputStream(origen);
-                FileOutputStream archivoDestino = new FileOutputStream(destino);
-                copiarArchivo(archivoOrigen, archivoDestino);
-                //noinspection ResultOfMethodCallIgnored
-                new File(destino).setLastModified(new Date().getTime());
-            } catch (IOException e) {
-                return false;
-            }
-            // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
-            getWritableDatabase().close();
-
-            return true;
-        }
-
-        // COPIAR UN ARCHIVO
-        static void copiarArchivo(FileInputStream origen, FileOutputStream destino) throws IOException {
-            FileChannel fromChannel = null;
-            FileChannel toChannel = null;
-            try {
-                fromChannel = origen.getChannel();
-                toChannel = destino.getChannel();
-                fromChannel.transferTo(0, fromChannel.size(), toChannel);
-            } finally {
-                try {
-                    if (fromChannel != null) {
-                        fromChannel.close();
-                    }
-                } finally {
-                    if (toChannel != null) {
-                        toChannel.close();
-                    }
-                }
-            }
-        }
-
-
-        static void copiarArchivo(String origen, String destino) throws IOException {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                Path origenPath = Paths.get(destino);
-                Path destinoPath = Paths.get(destino);
-                Files.deleteIfExists(destinoPath);
-                Files.copy(origenPath, destinoPath, StandardCopyOption.REPLACE_EXISTING);
-            }
-        }
-
-
-    }
+//
+//            // Definimos el path de la copia de seguridad
+//            String origen = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS + "/Quattroid/backup.db").getAbsolutePath();
+//            // Evaluamos si existe una copia de seguridad
+//            if (!new File(origen).exists()) return false;
+//            close();
+//
+//            String pathDestino = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/Quattroid/backup.db";
+//            FileHelper.importDatabaseFromPath(context, pathDestino);
+//
+//            String destino = context.getDatabasePath(BASE_NAME).getPath();
+//            new File(destino).setLastModified(new Date().getTime());
+//            // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
+//            getWritableDatabase().close();
+//            return true;
+//        }
+//
+//        // RESTAURAR COPIA DE SEGURIDAD
+//        boolean restaurarCopia(Uri uriOrigen) {
+//
+//            // Evaluamos si se puede escribir en la tarjeta de memoria, sino salimos
+////            String estadoMemoria = Environment.getExternalStorageState();
+////            if (!Environment.MEDIA_MOUNTED.equals(estadoMemoria)) {
+////                return false;
+////            }
+////            hayCambios = true;
+//
+//            // Definimos el path de la copia de seguridad
+//            String origen = uriOrigen.getPath();
+//
+//            // Evaluamos si existe una copia de seguridad
+//            if (!new File(origen).exists()) return false;
+//
+//            // Definimos el path de la base de datos.
+//            String destino = context.getDatabasePath(BASE_NAME).getPath();
+//
+//            // Cerramos la base de datos para que este liberado el archivo
+//            close();
+//
+//            // Copiamos los archivos
+//            try {
+//                FileInputStream archivoOrigen = new FileInputStream(origen);
+//                FileOutputStream archivoDestino = new FileOutputStream(destino);
+//                copiarArchivo(archivoOrigen, archivoDestino);
+//                //noinspection ResultOfMethodCallIgnored
+//                new File(destino).setLastModified(new Date().getTime());
+//            } catch (IOException e) {
+//                return false;
+//            }
+//            // Reabrimos la base de datos para que se establezcan las caches y se marque como creada.
+//            getWritableDatabase().close();
+//
+//            return true;
+//        }
+//
+//        // COPIAR UN ARCHIVO
+//        static void copiarArchivo(FileInputStream origen, FileOutputStream destino) throws IOException {
+//            FileChannel fromChannel = null;
+//            FileChannel toChannel = null;
+//            try {
+//                fromChannel = origen.getChannel();
+//                toChannel = destino.getChannel();
+//                fromChannel.transferTo(0, fromChannel.size(), toChannel);
+//            } finally {
+//                try {
+//                    if (fromChannel != null) {
+//                        fromChannel.close();
+//                    }
+//                } finally {
+//                    if (toChannel != null) {
+//                        toChannel.close();
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//        static void copiarArchivo(String origen, String destino) throws IOException {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                Path origenPath = Paths.get(destino);
+//                Path destinoPath = Paths.get(destino);
+//                Files.deleteIfExists(destinoPath);
+//                Files.copy(origenPath, destinoPath, StandardCopyOption.REPLACE_EXISTING);
+//            }
+//        }
+//
+//
+//    }
 
     //endregion
 

@@ -31,7 +31,7 @@ android {
             storePassword keystoreProperties["storePassword"]
         }
     }
-    namespace 'com.quattroid.Activities'
+    namespace 'com.quattroid.activities'
     compileSdkVersion 36
     //buildToolsVersion '33.0.2'
     defaultConfig {
